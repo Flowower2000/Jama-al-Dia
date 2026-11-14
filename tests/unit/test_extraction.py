@@ -569,6 +569,11 @@ def test_jama_closed_by_weather_without_snow_word_infers_snow_in_season(
         ("Autoconvocados bloquean la ruta 9 a la altura de Tilcara", "protesta"),
         ("Docentes quedaron varados en Susques por el corte de la ruta 52", "otro"),
         ("El corte de la ruta 52 en Susques dejó varados a docentes", "otro"),
+        ("Docentes regresaron de Susques tras el corte de la ruta 52", "otro"),
+        (
+            "El corte total de la ruta 52 en Salinas Grandes afecta a trabajadores del turismo",
+            "otro",
+        ),
     ],
 )
 def test_cut_by_organised_people_is_a_protest(

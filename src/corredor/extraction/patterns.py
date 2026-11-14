@@ -101,11 +101,14 @@ PROTEST_ACTORS: Final = _rx(
     r"\b(?:comunidad(?:es)?(?! educativ)|comuneros?|vecin[ao]s|manifestantes|docentes|trabajadores"
     r"|gremio(?:s|ales)?|autoconvocad[ao]s)\b"
 )
-# Actors stranded by the cut ("docentes varados por el corte", "dejó varados a docentes")
-# are not protesters.
-_STRANDED: Final = r"(?: \w+){0,5} (?:varad\w*|quedaron|evacuad\w*|afectad\w*|damnificad\w*)"
+# Actors hit by the cut ("docentes varados por el corte", "dejó varados a docentes",
+# "docentes regresaron de Susques tras el corte", "afecta a trabajadores") are not protesters.
+_STRANDED: Final = (
+    r"(?: \w+){0,5} (?:varad\w*|quedaron|evacuad\w*|afectad\w*|damnificad\w*"
+    r"|regres\w*|volvi\w*|vuelven|pudieron)"
+)
 _STRANDED_BEFORE: Final = re.compile(
-    r"\b(?:varad\w*|evacuad\w*|afectad\w*|damnificad\w*)(?: \w+){0,2} $"
+    r"\b(?:varad\w*|evacuad\w*|afecta\w*|damnificad\w*|perjudic\w*)(?: \w+){0,2} $"
 )
 
 
