@@ -105,7 +105,7 @@ PROTEST_ACTORS: Final = _rx(
 # "docentes regresaron de Susques tras el corte", "afecta a trabajadores") are not protesters.
 _STRANDED: Final = (
     r"(?: \w+){0,5} (?:varad\w*|quedaron|evacuad\w*|afectad\w*|damnificad\w*"
-    r"|(?:regres\w*|volvi\w*|vuelven)(?! (?:a la ruta|al corte|a cortar|a bloquear))|pudieron)"
+    r"|(?:regres\w*|volvi\w*|vuelven)\b(?! (?:a la ruta|al corte|a cortar|a bloquear))|pudieron)"
 )
 _STRANDED_BEFORE: Final = re.compile(
     r"\b(?:varad\w*|evacuad\w*|afecta\w*|damnificad\w*|perjudic\w*)(?: \w+){0,2} $"
