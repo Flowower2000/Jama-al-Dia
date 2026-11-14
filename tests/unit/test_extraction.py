@@ -570,6 +570,8 @@ def test_jama_closed_by_weather_without_snow_word_infers_snow_in_season(
         ("Docentes quedaron varados en Susques por el corte de la ruta 52", "otro"),
         ("El corte de la ruta 52 en Susques dejó varados a docentes", "otro"),
         ("Docentes regresaron de Susques tras el corte de la ruta 52", "otro"),
+        ("Vecinos vuelven al corte de la ruta 52 en Purmamarca", "protesta"),
+        ("Comunidades regresaron a la ruta: corte total de la ruta 52 en Purmamarca", "protesta"),
         (
             "El corte total de la ruta 52 en Salinas Grandes afecta a trabajadores del turismo",
             "otro",
