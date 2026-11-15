@@ -50,11 +50,14 @@ https://emiliano-f.github.io/corredor-quebrada-puna/ — se rearma cada hora.
 - **Cierres por mes y duración:** del catálogo de prensa local (eventos en `rn52_paso_jama`,
   sin avisos de precaución); puede faltar algún cierre. La duración usa solo cierres con una
   nota de reapertura, en días de publicación. No hay probabilidad de reapertura.
-- **Nieve y viento 72 h:** nieve acumulada y ráfaga máxima pronosticadas en Jama y en la
-  CH-27, cada una con su percentil frente a la climatología del mismo modelo de pronóstico
-  (pronósticos archivados, misma estación del año); "alto" desde el percentil
-  `jama_al_dia.percentil_alto` (90). Es descriptivo, no un umbral validado. No es un pronóstico
-  de cierre.
+- **Pronóstico para Jama — próximas 72 h:** nieve = SUMA de las próximas 72 h frente a las
+  sumas de 72 h de la climatología; ráfagas = MÁXIMO de las próximas 72 h frente a los máximos
+  de 72 h. Mismo modelo de pronóstico, misma celda y misma estación del año (Historical
+  Forecast API, desde `clima.pronostico_historico_desde` = 2021-01-01). Se calcula para Jama y
+  la CH-27 y se muestra el punto con valores más altos (nieve primero). "alto" desde el
+  percentil `jama_al_dia.percentil_alto` (90); nieve 0 → "sin nieve pronosticada", sin
+  percentil. El aviso "Se pronostican nieve y viento fuerte" aparece solo si las dos son "alto".
+  Es descriptivo, no un umbral probado con cierres. No es un pronóstico de cierre.
 - **Telegram:** publica solo cuando cambia el estado combinado (sin los cierres nocturnos por
   horario de Argentina, salvo `avisar_cierre_por_horario: true`) y un resumen a las 08:00.
   No es un canal oficial.

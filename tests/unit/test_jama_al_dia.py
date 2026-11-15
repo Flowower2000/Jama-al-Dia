@@ -10,10 +10,17 @@ import respx
 
 from corredor.jama_al_dia import cierres, pagina
 from corredor.jama_al_dia.estado import actual, bloques, estado_ar, estado_cl, horas, serie
-from corredor.jama_al_dia.pronostico import pronostico_72h
+from corredor.jama_al_dia.pronostico import (
+    Medida,
+    Pronostico72,
+    banner,
+    climatologia_rafagas,
+    elegir,
+    pronostico_72h,
+)
 from corredor.jama_al_dia.telegram import (
+    AVISO_OMITIDO,
     PIE,
-    SIN_SECRETS,
     Publicado,
     TelegramAPI,
     TelegramError,
@@ -130,8 +137,8 @@ def _sent(router: respx.MockRouter) -> list[str]:
 def test_without_secrets_skips(tmp_path: Path, caplog: pytest.LogCaptureFixture) -> None:
     a, c = _actuales()
     caplog.set_level("INFO")
-    assert notificar(None, a, c, tmp_path / "t.json", NOW, url="") == [SIN_SECRETS]
-    assert SIN_SECRETS in caplog.text
+    assert notificar(None, a, c, tmp_path / "t.json", NOW, url="") == [AVISO_OMITIDO]
+    assert AVISO_OMITIDO in caplog.text
     assert not (tmp_path / "t.json").exists()
 
 
@@ -260,8 +267,9 @@ def test_cierres_export_and_stats() -> None:
 
 # ------------------------------------------------------------------ pronóstico 72 h
 class FakeClient:
-    def __init__(self, fail: bool = False) -> None:
+    def __init__(self, fail: bool = False, snow: float = 0.5) -> None:
         self.fail = fail
+        self.snow = snow
 
     def forecast(self, point, hours, variables):  # type: ignore[no-untyped-def]
         if self.fail:
@@ -269,7 +277,7 @@ class FakeClient:
         t = pd.date_range("2026-11-08 12:00", periods=7 * 24 + hours + 1, freq="h")
         if "wind_gusts_10m" in variables:
             return pd.DataFrame({"time": t, "rafaga_kmh": 30.0})
-        return pd.DataFrame({"time": t, "precipitacion_mm": 0.0, "nieve_cm": 0.5})
+        return pd.DataFrame({"time": t, "precipitacion_mm": 0.0, "nieve_cm": self.snow})
 
     def historical_forecast(self, point, start, end, model, variables):  # type: ignore[no-untyped-def]
         t = pd.date_range("2024-01-01", "2026-11-14 23:00", freq="h")
@@ -298,6 +306,59 @@ def test_pronostico_72h_snow_and_gusts() -> None:
     (f,) = pronostico_72h(FakeClient(fail=True), [_pt()], **kw)  # type: ignore[arg-type]
     assert f.nieve.nivel is None
     assert f.rafaga.error
+
+
+def test_snow_zero_has_no_percentile() -> None:
+    now = datetime(2026, 11, 15, 12, 0)
+    kw = {"model": "m", "clim_start": date(2024, 1, 1), "now_local": now, "alto": 90}
+    (p,) = pronostico_72h(FakeClient(snow=0.0), [_pt()], **kw)  # type: ignore[arg-type]
+    assert p.nieve == Medida(0.0, None, "normal", desde=2024)
+    html = pagina._pronostico([p], NOW)
+    assert "Nieve: sin nieve pronosticada" in html
+    assert html.count("más que el") == 1  # only the gusts line
+
+
+def test_percentiles_compare_72h_sums_and_maxima() -> None:
+    class Flat(FakeClient):
+        def historical_forecast(self, point, start, end, model, variables):  # type: ignore[no-untyped-def]
+            t = pd.date_range("2024-01-01", "2026-11-14 23:00", freq="h")
+            if "wind_gusts_10m" in variables:
+                return pd.DataFrame({"time": t, "rafaga_kmh": 30.0})
+            return pd.DataFrame({"time": t, "precipitacion_mm": 0.0, "nieve_cm": 0.5})
+
+    now = datetime(2026, 11, 15, 12, 0)
+    kw = {"model": "m", "clim_start": date(2024, 1, 1), "now_local": now, "alto": 90}
+    (p,) = pronostico_72h(Flat(), [_pt()], **kw)  # type: ignore[arg-type]
+    # forecast 72 h sum (36 cm) and max (30 km/h) equal every climatology value: mid-rank 50
+    assert (p.nieve.valor, p.nieve.percentil) == (36.0, 50)
+    assert (p.rafaga.valor, p.rafaga.percentil) == (30.0, 50)
+    t = pd.date_range("2025-01-01", "2025-01-31 23:00", freq="h")
+    g = pd.Series(50.0, index=range(len(t)))
+    g[24 * 10 + 5] = 100.0  # one gust on Jan 11
+    clim = climatologia_rafagas(pd.DataFrame({"time": t, "rafaga_kmh": g}))
+    assert int((clim["DJF"] == 100.0).sum()) == 3  # windows ending Jan 11, 12, 13
+
+
+def _p(nombre: str, nieve: str | None, rafaga: str | None, cm: float) -> Pronostico72:
+    return Pronostico72(
+        nombre, nombre, "2026-11-18 12:00",
+        Medida(cm, 95 if nieve == "alto" else 40, nieve, desde=2021),
+        Medida(80.0, 95 if rafaga == "alto" else 40, rafaga, desde=2021),
+    )  # fmt: skip
+
+
+def test_banner_only_when_both_high_and_higher_point_shown() -> None:
+    both, one = _p("CH-27", "alto", "alto", 12.0), _p("Jama", "alto", "normal", 5.0)
+    assert banner(both)
+    assert not banner(one)
+    assert not banner(_p("x", "normal", "alto", 1.0))
+    assert elegir([one, both]) is both
+    html = pagina._pronostico([one, both], NOW)
+    assert "Se pronostican nieve y viento fuerte en Jama" in html
+    assert "Punto: CH-27" in html
+    assert "esta época desde 2021" in html
+    assert "Se pronostican" not in pagina._pronostico([one], NOW)
+    assert "Esto no es un pronóstico de cierre." in html
 
 
 # ------------------------------------------------------------------ página

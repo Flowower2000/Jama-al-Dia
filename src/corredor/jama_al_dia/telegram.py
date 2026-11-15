@@ -22,7 +22,7 @@ log = logging.getLogger(__name__)
 
 API = "https://api.telegram.org"
 PIE = "Fuente: partes oficiales de Argentina y Chile. No es un canal oficial."
-SIN_SECRETS = "telegram: sin secrets"  # pragma: allowlist secret (log text, not a secret)
+AVISO_OMITIDO = "telegram: sin secrets"  # pragma: allowlist secret
 
 
 class TelegramError(RuntimeError):
@@ -146,8 +146,8 @@ def notificar(
 ) -> list[str]:
     """Post what is due and update the state file; returns what was done (for the log)."""
     if api is None:
-        log.info(SIN_SECRETS)
-        return [SIN_SECRETS]
+        log.info(AVISO_OMITIDO)
+        return [AVISO_OMITIDO]
     pub = Publicado.load(estado_path)
     hechos = []
     loc = local(now)

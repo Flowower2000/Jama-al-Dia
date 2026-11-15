@@ -41,9 +41,10 @@ class Client(Protocol):
 @dataclass(frozen=True)
 class Medida:
     valor: float | None
-    percentil: float | None
+    percentil: float | None  # None with valor 0 for snow: "sin nieve pronosticada"
     nivel: str | None  # "alto" | "normal" | None (sin dato)
     error: str | None = None
+    desde: int | None = None  # first year of the model climatology
 
 
 @dataclass(frozen=True)
@@ -55,13 +56,21 @@ class Pronostico72:
     rafaga: Medida
 
 
-def _nivel(valor: float | None, pct: float | None, alto: float, need_positive: bool) -> Medida:
+def _nivel(
+    valor: float | None, pct: float | None, alto: float, snow: bool, desde: int | None
+) -> Medida:
     v = None if valor is None or np.isnan(valor) else round(float(valor), 1)
+    if snow and v == 0:
+        return Medida(0.0, None, "normal", desde=desde)
     p = None if pct is None else round(pct)
     if v is None or p is None:
-        return Medida(v, p, None, "faltan horas de pronóstico o climatología")
-    es_alto = p >= alto and (v > 0 or not need_positive)
-    return Medida(v, p, "alto" if es_alto else "normal")
+        return Medida(v, p, None, "faltan horas de pronóstico o climatología", desde)
+    return Medida(v, p, "alto" if p >= alto else "normal", desde=desde)
+
+
+def _first_year(hourly: pd.DataFrame, column: str) -> int | None:
+    t = hourly.loc[hourly[column].notna(), "time"]
+    return int(pd.Timestamp(t.min()).year) if len(t) else None
 
 
 def climatologia_rafagas(hourly: pd.DataFrame) -> dict[str, np.ndarray]:
@@ -105,21 +114,34 @@ def pronostico_72h(
         try:
             hourly = client.forecast(p, HORAS, HOURLY_VARIABLES)
             v = features_at(hourly, [t])[0][NIEVE]
-            clim = Climatologia.from_hourly(
-                client.historical_forecast(p, clim_start, clim_end, model, HOURLY_VARIABLES)
-            )
-            nieve = _nivel(v, clim.percentil(NIEVE, v, t.to_pydatetime()), alto, True)
+            hist = client.historical_forecast(p, clim_start, clim_end, model, HOURLY_VARIABLES)
+            clim = Climatologia.from_hourly(hist)
+            pct = clim.percentil(NIEVE, v, t.to_pydatetime())
+            nieve = _nivel(v, pct, alto, True, _first_year(hist, "nieve_cm"))
         except errors as exc:
             nieve = Medida(None, None, None, _motivo(exc))
         try:
             g = client.forecast(p, HORAS, GUST_VARIABLES)
             win = g[(g["time"] > base) & (g["time"] <= t)][RAFAGA]
             gv = float(win.max()) if len(win) == HORAS and win.notna().all() else float("nan")
-            gclim = climatologia_rafagas(
-                client.historical_forecast(p, clim_start, clim_end, model, GUST_VARIABLES)
-            )
-            rafaga = _nivel(gv, _pct(gclim, gv, t.to_pydatetime()), alto, False)
+            ghist = client.historical_forecast(p, clim_start, clim_end, model, GUST_VARIABLES)
+            gclim = climatologia_rafagas(ghist)
+            gpct = _pct(gclim, gv, t.to_pydatetime())
+            rafaga = _nivel(gv, gpct, alto, False, _first_year(ghist, RAFAGA))
         except errors as exc:
             rafaga = Medida(None, None, None, _motivo(exc))
         out.append(Pronostico72(p.id, p.nombre, t.strftime("%Y-%m-%d %H:%M"), nieve, rafaga))
     return out
+
+
+def elegir(ps: Sequence[Pronostico72]) -> Pronostico72 | None:
+    """The point with the higher values (snow first, then gusts); closures are usually
+    decided on the Chilean side, so CH-27 is computed too."""
+    con_dato = [p for p in ps if p.nieve.valor is not None or p.rafaga.valor is not None]
+    if not con_dato:
+        return None
+    return max(con_dato, key=lambda p: (p.nieve.valor or 0.0, p.rafaga.valor or 0.0))
+
+
+def banner(p: Pronostico72 | None) -> bool:
+    return p is not None and p.nieve.nivel == "alto" and p.rafaga.nivel == "alto"

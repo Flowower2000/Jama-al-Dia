@@ -236,7 +236,7 @@ Forecast → risk (`corredor.tablero.forecast`, #26): the forecast of
 `clima.modelo_pronostico` (`best_match`, the last 7 days + `clima.pronostico_horas` = 72 h)
 gives the same antecedent features for windows ending now (hoy), now + 24 h and now + 72 h.
 Each value becomes a percentile within THE SAME model's climatology: the Historical Forecast
-API (`historical_forecast`, same point, `clima.pronostico_historico_desde` = 2022-01-01 →
+API (`historical_forecast`, same point, `clima.pronostico_historico_desde` = 2021-01-01 →
 yesterday, same season DJF/MAM/JJA/SON, daily end-of-day windows, mid-rank percentile as in
 the calibration). A percentile threshold alerts when percentile ≥ umbral and the raw value
 > 0; a threshold in mm/cm is shown as "no comparable (modelo distinto)". A point whose

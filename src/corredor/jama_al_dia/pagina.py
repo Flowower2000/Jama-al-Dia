@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from corredor.jama_al_dia.estado import Actual, horas, local
-from corredor.jama_al_dia.pronostico import Medida, Pronostico72
+from corredor.jama_al_dia.pronostico import Medida, Pronostico72, banner, elegir
 
 ESTADO_TXT = {"abierto": "ABIERTO", "cerrado": "CERRADO", "restringido": "RESTRINGIDO"}
 NOTA_PRENSA = "según prensa local; puede faltar algún cierre"
@@ -149,33 +149,53 @@ def _duracion(d: Mapping[str, Any]) -> str:
     )
 
 
+def _num(v: float) -> str:
+    return f"{v:g}".replace(".", ",")
+
+
 def _medida(titulo: str, m: Medida, unidad: str) -> str:
-    if m.nivel is None or m.valor is None or m.percentil is None:
-        motivo = escape(m.error or "no disponible")
-        return f"<p><strong>{escape(titulo)}:</strong> sin dato ({motivo})</p>"
+    if m.nivel is None or m.valor is None:
+        return f"<p>{titulo}: sin dato ({escape(m.error or 'no disponible')})</p>"
+    if m.percentil is None:  # snow forecast = 0
+        return f"<p>{titulo}: sin nieve pronosticada</p>"
+    desde = f" desde {m.desde}" if m.desde else ""
     return (
-        f'<p><strong>{escape(titulo)}:</strong> <span class="{m.nivel}">{m.nivel.upper()}</span>'
-        f"<br>{m.valor:g} {unidad} · percentil {m.percentil:g}</p>"
+        f"<p>{titulo}: {_num(m.valor)} {unidad} · "
+        f'<span class="{m.nivel}">{m.nivel}</span> (más que el {m.percentil:g} % de lo que '
+        f"este modelo pronosticó para esta época{desde})</p>"
     )
 
 
-def _pronostico(ps: Sequence[Pronostico72], alto: float) -> str:
-    cards = []
-    for p in ps:
-        hasta = f'<p class="nota">próximas 72 h, hasta {escape(p.hasta)}</p>' if p.hasta else ""
-        cards.append(
-            f'<div class="np"><h3>{escape(p.nombre)}</h3>'
-            + _medida("Nieve acumulada", p.nieve, "cm")
-            + _medida("Ráfaga máxima", p.rafaga, "km/h")
-            + hasta
-            + "</div>"
+def _pronostico(ps: Sequence[Pronostico72], now: datetime) -> str:
+    p = elegir(ps)
+    if p is None:
+        motivos = {m.error for x in ps for m in (x.nieve, x.rafaga) if m.error}
+        body = f"<p>Sin dato ({escape('; '.join(sorted(motivos)) or 'no disponible')}).</p>"
+    else:
+        otros = [x.nombre for x in ps if x is not p]
+        cual = (
+            f"Punto: {escape(p.nombre)} (el de valores más altos; también calculamos "
+            f"{escape(', '.join(otros))})."
+            if otros
+            else f"Punto: {escape(p.nombre)}."
         )
+        body = (
+            f'<p class="nota">{cual}</p>'
+            + _medida("Nieve", p.nieve, "cm")
+            + _medida("Ráfagas", p.rafaga, "km/h")
+        )
+        if banner(p):
+            body += (
+                '<p class="banner"><strong>Se pronostican nieve y viento fuerte en Jama en las '
+                "próximas 72 h.</strong></p>"
+            )
     return (
-        f'<div class="nieve">{"".join(cards)}</div>'
-        '<p class="nota">Percentil frente a la climatología del mismo modelo de pronóstico '
-        "(Open-Meteo, pronósticos archivados desde 2022, misma estación del año). "
-        f'"Alto" = percentil {alto:g} o más. Es descriptivo: no es un umbral validado. '
-        "<strong>No es un pronóstico de cierre.</strong></p>"
+        body + '<p class="nota">Esto no es un pronóstico de cierre. Compara el pronóstico con lo '
+        "habitual para esta época según el mismo modelo (Open-Meteo). &quot;Alto&quot; quiere "
+        "decir dentro del 10 % más alto; no es un umbral probado con cierres reales. El cierre "
+        "lo deciden las autoridades de Chile y Argentina: consultá siempre el estado oficial.</p>"
+        '<p class="nota">Pronóstico y climatología: Open-Meteo (CC BY 4.0). '
+        f"Actualizado {_hhmm(now)}.</p>"
     )
 
 
@@ -223,8 +243,8 @@ def index(d: Datos) -> str:
         "<section><h2>Cuánto duran los cierres</h2>",
         _duracion(d.duraciones),
         "</section>",
-        "<section><h2>Pronóstico de nieve y viento en Jama (72 h)</h2>",
-        _pronostico(d.pronostico, d.alto),
+        "<section><h2>Pronóstico para Jama — próximas 72 h</h2>",
+        _pronostico(d.pronostico, d.now),
         "</section>",
         "<footer><p>Fuente: partes oficiales de Argentina (argentina.gob.ar) y Chile (MOP). "
         "<strong>No es un canal oficial.</strong> Ante la duda, consultá a Gendarmería o "
