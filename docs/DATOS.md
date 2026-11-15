@@ -110,6 +110,7 @@ run refreshes them).
 | `archivo/<model>/<tz>/<lat>_<lon>_<start>_<end>.parquet` | Parquet cache of the archive, keyed by (model, timezone, lat, lon, date range) with 5-decimal coordinates (a cached archive is reused when both coordinates are within 0.000015°, about 1.5 m, so re-rounded coordinates do not trigger a new download); `time`, `precipitacion_mm`, `nieve_cm`, `temp_c`. A later run reuses it and only fetches the last 7 days plus the missing ones. |
 | `pronostico/<model>/<tz>/<lat>_<lon>_<from>_<to>.parquet` | Forecast cache (one per hour window): the last 7 days plus the next `hours`. |
 | `pronostico_historico/<model>/<tz>/<lat>_<lon>_<start>_<end>.parquet` | Cache of `OpenMeteoClient.historical_forecast` (Historical Forecast API, model passed per call; same key and columns as `archivo/`). `make tablero` downloads it for `clima.modelo_pronostico` (see "Dashboard bundle"). |
+| `pronostico_rafaga_kmh/…`, `pronostico_historico_rafaga_kmh/…` | Same keys, only `time`, `rafaga_kmh` (Open-Meteo `wind_gusts_10m`, km/h): forecast and model climatology of gusts for "Jama al Día". |
 | `horario.parquet` | All points, hourly: `punto_id`, `time`, `precipitacion_mm`, `nieve_cm`, `temp_c`. |
 | `antecedentes.parquet` | One row per point and day: `punto_id`, `fecha` and the antecedent features below. |
 | `grilla.parquet` | One row per point and grid model: `punto_id`, `modelo`, `lat_grilla`, `lon_grilla`, `elev_grilla_m`, `elev_punto_m`, `diferencia_m`, `comparte_celda_con`. |
@@ -171,7 +172,8 @@ series, so they cannot be told apart by rain.
 | `error` | str | no | Why the snapshot failed (e.g. `HTTP 503`, `FetchError: …`, `DisallowedByRobots: …`, `OBJECTID 7 no está en la respuesta`). |
 
 Source file: `snapshots/jama_estado.jsonl` on the `data-snapshots` branch (never on
-`main`), one `JamaEstado` JSON object per line, appended every 3 h by
+`main`), one `JamaEstado` JSON object per line, appended every hour (every 3 h until
+2026-11-15) by
 `.github/workflows/jama_snapshot.yml` (see [SCRAPING.md](SCRAPING.md#paso-de-jama-status-snapshots-srccorredorsourcesjamapy)).
 `corredor.sources.jama.read_jsonl(path)` parses it into rows for this table.
 
@@ -195,6 +197,9 @@ Source file: `snapshots/jama_estado.jsonl` on the `data-snapshots` branch (never
 | `reports/precision.md` | `corredor precision`: `ok_corte` rate (si / no / fuera), then precision per field (fecha, punto, causa) on the `ok_corte = si` rows only, overall and per `estrato`, each with n = labelled rows. Before reporting, labels whose basis (`fecha`, `punto_id`, `causa`) changed in the catalog since labelling become `revisar` in the CSV (old value kept in `comentario`) and are listed for relabelling; `revisar` and `nd` (not decidable) are counted and left out. `ok_corte` accepts any yes-word (`ok`) as si. |
 | `reports/validacion.md` | `corredor calibrar`: threshold candidates per cause, absolute and per-cell percentile, train 2016–2022 / test 2023→, for all sources and for stable sources only, plus a variant with aluvión + crecida merged as `lluvia`. Each hit/miss/false-alarm value shows n = event-days (point, date) of that period; test cells with n < 10 are marked "muestra chica". Snow at Paso de Jama is also shown by side: `lado=CL` events against `ch27_alto` weather, `AR`/`ambos` against `rn52_paso_jama`, and combined (events with unknown side are counted and left out). |
 | `snapshots/jama_estado.jsonl` (branch `data-snapshots`) | Paso de Jama snapshots, one `jama_estado` row per line. |
+| `snapshots/telegram_estado.json` (branch `data-snapshots`) | `corredor jama-telegram`: last posted combined state `clave` (`AR=abierto;CL=cerrado`), `publicado_at`, `resumen_fecha` (last daily summary, local date), `suscriptores` + `suscriptores_at` (getChatMemberCount). No token or chat id. |
+| `assets/jama/cierres.json` | Committed. `corredor jama-cierres`: `generado` (date) and `cierres` = events at `rn52_paso_jama` with `tipo_corte` ≠ `precaucion`: `fecha_inicio`, `fecha_fin`, `reapertura` (an article dated `fecha_fin` matches the reopening pattern: only these count for durations), `causa`, `lado`, `tipo_corte`, `n_medios`. Metadata only. |
+| `sitio/` | Gitignored. `corredor jama-pagina`: static "Jama al Día" site (`index.html`, `traccion/index.html`), published to GitHub Pages by the hourly workflow. |
 | `data/checkpoints/<source_id>.json` | Resumable collection state: `units` → `{status: ok\|empty\|missing\|error, updated_at, ...}` per month (sitemaps) or year (WordPress). See SCRAPING.md. |
 | `data/recoleccion/<source_id>.json` | Counts of the last `corredor recolectar` run of that source (`CollectionStats.as_dict()`). |
 | `data/manifest.json` | Lineage of the last run: `version`, `git_commit`, `schema_version`, `sources_hash` (hash of `fuentes` in `config.yaml`), `generated_at`. |
@@ -231,7 +236,7 @@ Forecast → risk (`corredor.tablero.forecast`, #26): the forecast of
 `clima.modelo_pronostico` (`best_match`, the last 7 days + `clima.pronostico_horas` = 72 h)
 gives the same antecedent features for windows ending now (hoy), now + 24 h and now + 72 h.
 Each value becomes a percentile within THE SAME model's climatology: the Historical Forecast
-API (`historical_forecast`, same point, `clima.pronostico_historico_desde` = 2022-01-01 →
+API (`historical_forecast`, same point, `clima.pronostico_historico_desde` = 2021-01-01 →
 yesterday, same season DJF/MAM/JJA/SON, daily end-of-day windows, mid-rank percentile as in
 the calibration). A percentile threshold alerts when percentile ≥ umbral and the raw value
 > 0; a threshold in mm/cm is shown as "no comparable (modelo distinto)". A point whose

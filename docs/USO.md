@@ -38,6 +38,30 @@ y hora son los datos y el pronóstico.
 - La última captura de cada fuente oficial (Chile y Argentina) con su hora, y las capturas
   de los últimos 7 días. Si la última tiene más de 6 horas, el tablero lo avisa.
 
+## Jama al Día (página pública)
+
+https://emiliano-f.github.io/corredor-quebrada-puna/ — se rearma cada hora.
+
+- **Estado ahora:** ABIERTO / CERRADO / RESTRINGIDO por lado, según el parte oficial de cada
+  país (argentina.gob.ar y MOP Chile). "Desde hace X h" cuenta desde la primera consulta con ese
+  estado; la resolución es 1 h ("al menos" si arranca en la primera consulta que tenemos).
+  Argentina marca el paso CERRADO fuera de su horario de atención: se muestra "fuera de horario".
+- **Últimos 7 días:** un bloque por hora y por lado; gris = sin dato.
+- **Cierres por mes y duración:** del catálogo de prensa local (eventos en `rn52_paso_jama`,
+  sin avisos de precaución); puede faltar algún cierre. La duración usa solo cierres con una
+  nota de reapertura, en días de publicación. No hay probabilidad de reapertura.
+- **Pronóstico para Jama — próximas 72 h:** nieve = SUMA de las próximas 72 h frente a las
+  sumas de 72 h de la climatología; ráfagas = MÁXIMO de las próximas 72 h frente a los máximos
+  de 72 h. Mismo modelo de pronóstico, misma celda y misma estación del año (Historical
+  Forecast API, desde `clima.pronostico_historico_desde` = 2021-01-01). Se calcula para Jama y
+  la CH-27 y se muestra el punto con valores más altos (nieve primero). "alto" desde el
+  percentil `jama_al_dia.percentil_alto` (90); nieve 0 → "sin nieve pronosticada", sin
+  percentil. El aviso "Se pronostican nieve y viento fuerte" aparece solo si las dos son "alto".
+  Es descriptivo, no un umbral probado con cierres. No es un pronóstico de cierre.
+- **Telegram:** publica solo cuando cambia el estado combinado (sin los cierres nocturnos por
+  horario de Argentina, salvo `avisar_cierre_por_horario: true`) y un resumen a las 08:00.
+  No es un canal oficial.
+
 ## Qué NO significa una alerta
 
 - No significa que la ruta esté cortada ni que se vaya a cortar: indica lluvia o nieve

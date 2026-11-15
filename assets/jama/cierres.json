@@ -1,0 +1,995 @@
+{
+ "generado": "2026-11-15",
+ "cierres": [
+  {
+   "fecha_inicio": "2016-04-20",
+   "fecha_fin": "2016-04-27",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "ambos",
+   "tipo_corte": "total",
+   "n_medios": 3
+  },
+  {
+   "fecha_inicio": "2016-05-09",
+   "fecha_fin": "2016-05-13",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "ambos",
+   "tipo_corte": "total",
+   "n_medios": 3
+  },
+  {
+   "fecha_inicio": "2016-05-30",
+   "fecha_fin": "2016-05-31",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 3
+  },
+  {
+   "fecha_inicio": "2016-06-25",
+   "fecha_fin": "2016-06-26",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2016-07-05",
+   "fecha_fin": "2016-07-05",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2016-07-08",
+   "fecha_fin": "2016-07-15",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 3
+  },
+  {
+   "fecha_inicio": "2016-10-27",
+   "fecha_fin": "2016-10-27",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2016-11-04",
+   "fecha_fin": "2016-11-04",
+   "reapertura": false,
+   "causa": "otro",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2017-01-16",
+   "fecha_fin": "2017-01-16",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2017-01-23",
+   "fecha_fin": "2017-02-03",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 3
+  },
+  {
+   "fecha_inicio": "2017-02-22",
+   "fecha_fin": "2017-02-27",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2017-03-17",
+   "fecha_fin": "2017-03-17",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2017-03-30",
+   "fecha_fin": "2017-03-30",
+   "reapertura": true,
+   "causa": "obra",
+   "lado": "AR",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2017-04-19",
+   "fecha_fin": "2017-04-20",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2017-05-11",
+   "fecha_fin": "2017-05-11",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2017-05-22",
+   "fecha_fin": "2017-06-02",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2017-06-06",
+   "fecha_fin": "2017-06-08",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 3
+  },
+  {
+   "fecha_inicio": "2017-06-12",
+   "fecha_fin": "2017-06-15",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2017-06-19",
+   "fecha_fin": "2017-06-21",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2018-01-11",
+   "fecha_fin": "2018-01-13",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 3
+  },
+  {
+   "fecha_inicio": "2018-02-01",
+   "fecha_fin": "2018-02-03",
+   "reapertura": true,
+   "causa": "aluvion",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2018-02-08",
+   "fecha_fin": "2018-02-14",
+   "reapertura": true,
+   "causa": "aluvion",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2018-04-01",
+   "fecha_fin": "2018-04-01",
+   "reapertura": false,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2018-04-06",
+   "fecha_fin": "2018-04-06",
+   "reapertura": false,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2018-04-26",
+   "fecha_fin": "2018-04-26",
+   "reapertura": false,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2018-06-11",
+   "fecha_fin": "2018-06-22",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 4
+  },
+  {
+   "fecha_inicio": "2018-06-25",
+   "fecha_fin": "2018-06-30",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "ambos",
+   "tipo_corte": "total",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2018-07-18",
+   "fecha_fin": "2018-07-18",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 4
+  },
+  {
+   "fecha_inicio": "2018-07-21",
+   "fecha_fin": "2018-07-31",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 5
+  },
+  {
+   "fecha_inicio": "2018-08-04",
+   "fecha_fin": "2018-08-07",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "ambos",
+   "tipo_corte": "total",
+   "n_medios": 3
+  },
+  {
+   "fecha_inicio": "2018-09-01",
+   "fecha_fin": "2018-09-01",
+   "reapertura": false,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2018-10-24",
+   "fecha_fin": "2018-10-24",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2018-11-06",
+   "fecha_fin": "2018-11-06",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "CL",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2019-01-02",
+   "fecha_fin": "2019-01-03",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2019-01-31",
+   "fecha_fin": "2019-02-06",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "ambos",
+   "tipo_corte": "total",
+   "n_medios": 4
+  },
+  {
+   "fecha_inicio": "2019-03-06",
+   "fecha_fin": "2019-03-07",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2019-03-18",
+   "fecha_fin": "2019-03-21",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2019-04-04",
+   "fecha_fin": "2019-04-05",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2019-04-30",
+   "fecha_fin": "2019-04-30",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2019-05-03",
+   "fecha_fin": "2019-05-03",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2019-05-14",
+   "fecha_fin": "2019-05-14",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2019-05-27",
+   "fecha_fin": "2019-05-27",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2019-06-02",
+   "fecha_fin": "2019-06-02",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2019-06-17",
+   "fecha_fin": "2019-06-17",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "desconocido",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2019-06-26",
+   "fecha_fin": "2019-06-27",
+   "reapertura": true,
+   "causa": "accidente",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2019-06-30",
+   "fecha_fin": "2019-06-30",
+   "reapertura": false,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2019-09-06",
+   "fecha_fin": "2019-09-06",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2019-11-04",
+   "fecha_fin": "2019-11-04",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "total",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2020-01-28",
+   "fecha_fin": "2020-01-29",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2020-02-15",
+   "fecha_fin": "2020-02-15",
+   "reapertura": false,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2020-06-08",
+   "fecha_fin": "2020-06-09",
+   "reapertura": false,
+   "causa": "otro",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2020-11-20",
+   "fecha_fin": "2020-11-20",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "CL",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2021-01-26",
+   "fecha_fin": "2021-01-27",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 3
+  },
+  {
+   "fecha_inicio": "2021-02-06",
+   "fecha_fin": "2021-02-06",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2021-02-18",
+   "fecha_fin": "2021-02-19",
+   "reapertura": false,
+   "causa": "otro",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 5
+  },
+  {
+   "fecha_inicio": "2021-03-13",
+   "fecha_fin": "2021-03-13",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2021-05-13",
+   "fecha_fin": "2021-05-14",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "AR",
+   "tipo_corte": "desconocido",
+   "n_medios": 4
+  },
+  {
+   "fecha_inicio": "2021-05-27",
+   "fecha_fin": "2021-06-02",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 4
+  },
+  {
+   "fecha_inicio": "2021-06-08",
+   "fecha_fin": "2021-06-09",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2021-06-17",
+   "fecha_fin": "2021-06-17",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2021-06-21",
+   "fecha_fin": "2021-06-21",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2021-07-31",
+   "fecha_fin": "2021-08-03",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 3
+  },
+  {
+   "fecha_inicio": "2021-09-07",
+   "fecha_fin": "2021-09-07",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "CL",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2021-10-02",
+   "fecha_fin": "2021-10-02",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2021-11-12",
+   "fecha_fin": "2021-11-12",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2021-12-21",
+   "fecha_fin": "2021-12-21",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2022-01-10",
+   "fecha_fin": "2022-01-10",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "CL",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2022-01-15",
+   "fecha_fin": "2022-01-15",
+   "reapertura": false,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 3
+  },
+  {
+   "fecha_inicio": "2022-01-20",
+   "fecha_fin": "2022-01-21",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 4
+  },
+  {
+   "fecha_inicio": "2022-01-30",
+   "fecha_fin": "2022-01-30",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "CL",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2022-05-01",
+   "fecha_fin": "2022-05-02",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "CL",
+   "tipo_corte": "desconocido",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2022-06-07",
+   "fecha_fin": "2022-06-07",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 3
+  },
+  {
+   "fecha_inicio": "2022-06-23",
+   "fecha_fin": "2022-06-23",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2022-07-06",
+   "fecha_fin": "2022-07-06",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2022-08-08",
+   "fecha_fin": "2022-08-09",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 3
+  },
+  {
+   "fecha_inicio": "2023-01-27",
+   "fecha_fin": "2023-01-30",
+   "reapertura": true,
+   "causa": "aluvion",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2024-03-13",
+   "fecha_fin": "2024-03-19",
+   "reapertura": true,
+   "causa": "aluvion",
+   "lado": "AR",
+   "tipo_corte": "total",
+   "n_medios": 4
+  },
+  {
+   "fecha_inicio": "2024-03-22",
+   "fecha_fin": "2024-04-01",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 5
+  },
+  {
+   "fecha_inicio": "2024-05-19",
+   "fecha_fin": "2024-05-19",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2024-10-16",
+   "fecha_fin": "2024-10-16",
+   "reapertura": false,
+   "causa": "otro",
+   "lado": "AR",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2025-03-15",
+   "fecha_fin": "2025-03-15",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "CL",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2025-04-10",
+   "fecha_fin": "2025-04-10",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2025-04-23",
+   "fecha_fin": "2025-04-24",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2025-06-15",
+   "fecha_fin": "2025-06-17",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 3
+  },
+  {
+   "fecha_inicio": "2025-06-25",
+   "fecha_fin": "2025-06-25",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2025-06-28",
+   "fecha_fin": "2025-07-02",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "ambos",
+   "tipo_corte": "total",
+   "n_medios": 6
+  },
+  {
+   "fecha_inicio": "2025-07-05",
+   "fecha_fin": "2025-07-12",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "ambos",
+   "tipo_corte": "total",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2025-07-30",
+   "fecha_fin": "2025-08-08",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 7
+  },
+  {
+   "fecha_inicio": "2025-08-17",
+   "fecha_fin": "2025-08-19",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 3
+  },
+  {
+   "fecha_inicio": "2025-08-29",
+   "fecha_fin": "2025-08-29",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2025-09-07",
+   "fecha_fin": "2025-09-10",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "ambos",
+   "tipo_corte": "total",
+   "n_medios": 4
+  },
+  {
+   "fecha_inicio": "2025-10-01",
+   "fecha_fin": "2025-10-01",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2025-10-08",
+   "fecha_fin": "2025-10-08",
+   "reapertura": false,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2025-11-19",
+   "fecha_fin": "2025-11-20",
+   "reapertura": false,
+   "causa": "otro",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 2
+  },
+  {
+   "fecha_inicio": "2025-12-27",
+   "fecha_fin": "2025-12-28",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 3
+  },
+  {
+   "fecha_inicio": "2026-01-20",
+   "fecha_fin": "2026-02-09",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "ambos",
+   "tipo_corte": "total",
+   "n_medios": 7
+  },
+  {
+   "fecha_inicio": "2026-02-14",
+   "fecha_fin": "2026-02-14",
+   "reapertura": false,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2026-02-19",
+   "fecha_fin": "2026-02-20",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "CL",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2026-03-29",
+   "fecha_fin": "2026-04-05",
+   "reapertura": true,
+   "causa": "crecida",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 6
+  },
+  {
+   "fecha_inicio": "2026-05-24",
+   "fecha_fin": "2026-05-24",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "CL",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2026-06-08",
+   "fecha_fin": "2026-06-11",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 3
+  },
+  {
+   "fecha_inicio": "2026-06-17",
+   "fecha_fin": "2026-06-19",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 4
+  },
+  {
+   "fecha_inicio": "2026-07-01",
+   "fecha_fin": "2026-07-10",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 4
+  },
+  {
+   "fecha_inicio": "2026-07-16",
+   "fecha_fin": "2026-07-28",
+   "reapertura": false,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 4
+  },
+  {
+   "fecha_inicio": "2026-07-31",
+   "fecha_fin": "2026-07-31",
+   "reapertura": true,
+   "causa": "otro",
+   "lado": "desconocido",
+   "tipo_corte": "desconocido",
+   "n_medios": 1
+  },
+  {
+   "fecha_inicio": "2026-08-11",
+   "fecha_fin": "2026-09-14",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "ambos",
+   "tipo_corte": "total",
+   "n_medios": 8
+  },
+  {
+   "fecha_inicio": "2026-09-17",
+   "fecha_fin": "2026-09-23",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 5
+  },
+  {
+   "fecha_inicio": "2026-09-29",
+   "fecha_fin": "2026-10-03",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 5
+  },
+  {
+   "fecha_inicio": "2026-10-12",
+   "fecha_fin": "2026-10-20",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 5
+  },
+  {
+   "fecha_inicio": "2026-10-23",
+   "fecha_fin": "2026-11-07",
+   "reapertura": true,
+   "causa": "nieve",
+   "lado": "CL",
+   "tipo_corte": "total",
+   "n_medios": 5
+  }
+ ]
+}
