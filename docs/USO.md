@@ -45,11 +45,23 @@ https://emiliano-f.github.io/corredor-quebrada-puna/ — se rearma cada hora.
 - **Estado ahora:** ABIERTO / CERRADO / RESTRINGIDO por lado, según el parte oficial de cada
   país (argentina.gob.ar y MOP Chile). "Desde hace X h" cuenta desde la primera consulta con ese
   estado; la resolución es 1 h ("al menos" si arranca en la primera consulta que tenemos).
-  Argentina marca el paso CERRADO fuera de su horario de atención: se muestra "fuera de horario".
-- **Últimos 7 días:** un bloque por hora y por lado; gris = sin dato.
-- **Cierres por mes y duración:** del catálogo de prensa local (eventos en `rn52_paso_jama`,
-  sin avisos de precaución); puede faltar algún cierre. La duración usa solo cierres con una
-  nota de reapertura, en días de publicación. No hay probabilidad de reapertura.
+  Fuera de su horario Argentina marca el paso cerrado: se muestra "Cerrado por horario" (gris,
+  con reloj, "Abre a las HH:MM"), no en rojo (rojo = cierre real). Si la última consulta de un
+  lado tiene más de 2 h, o el parte oficial de la fuente (p. ej. FECHA/HORA del MOP) tiene más de
+  24 h, la tarjeta se pone ámbar con "Estado no confirmado" y el último dato ("Último dato:
+  Cerrado por horario, hoy 03:43" o "…, parte oficial del 09/11"). El encabezado dice "Datos de
+  las HH:MM" con la hora del dato más viejo de los dos lados. Fechas: "hoy", "ayer" o "dd/mm".
+- **Avisos:** debajo del estado (y en el pie), "Recibí los avisos por Telegram" y "¿Tenés una
+  flota? Anotate para el plan de empresas" (enlaces de `jama_al_dia` en `config.yaml`; sin
+  enlace, no se muestran).
+- **Últimos 7 días:** un bloque por hora y por lado (marcas 0/6/12/18); gris = sin dato; gris
+  oscuro = fuera de horario.
+- **Cierres por mes del año y duración:** del catálogo de prensa local (eventos en
+  `rn52_paso_jama` con corte total o parcial, sin los de confianza baja): 12 barras (ene–dic,
+  total 2016–2026, nieve y otras causas apiladas, con n) y una línea "Por año"; puede faltar
+  algún cierre. La duración usa solo cierres con una nota de reapertura, en días de publicación;
+  los cierres administrativos (sanitarios, etc.) quedan fuera de la mediana y se nombran aparte.
+  No hay probabilidad de reapertura.
 - **Pronóstico para Jama — próximas 72 h:** nieve = SUMA de las próximas 72 h frente a las
   sumas de 72 h de la climatología; ráfagas = MÁXIMO de las próximas 72 h frente a los máximos
   de 72 h. Mismo modelo de pronóstico, misma celda y misma estación del año (Historical
@@ -59,7 +71,8 @@ https://emiliano-f.github.io/corredor-quebrada-puna/ — se rearma cada hora.
   percentil. El aviso "Se pronostican nieve y viento fuerte" aparece solo si las dos son "alto".
   Es descriptivo, no un umbral probado con cierres. No es un pronóstico de cierre.
 - **Telegram:** publica solo cuando cambia el estado combinado (sin los cierres nocturnos por
-  horario de Argentina, salvo `avisar_cierre_por_horario: true`) y un resumen a las 08:00.
+  horario de Argentina, salvo `avisar_cierre_por_horario: true`, y nunca con datos de más de
+  2 h) y un resumen a las 08:00.
   No es un canal oficial.
 
 ## Qué NO significa una alerta

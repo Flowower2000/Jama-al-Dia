@@ -757,7 +757,7 @@ def jama_pagina(
     from datetime import UTC, datetime, timedelta
 
     from corredor.jama_al_dia import pagina
-    from corredor.jama_al_dia.cierres import duraciones, por_mes
+    from corredor.jama_al_dia.cierres import contables, duraciones, por_anio, por_mes_del_anio
     from corredor.jama_al_dia.estado import bloques, serie
     from corredor.jama_al_dia.pronostico import Medida, Pronostico72, pronostico_72h
     from corredor.jama_al_dia.telegram import Publicado
@@ -790,7 +790,9 @@ def jama_pagina(
     datos = pagina.Datos(
         now=now, ar=ar, cl=cl,
         bloques={"AR": bloques(serie(snaps, "AR"), now), "CL": bloques(serie(snaps, "CL"), now)},
-        por_mes=por_mes(lista, (now + timedelta(hours=-3)).date()), duraciones=duraciones(lista),
+        por_mes_anio=por_mes_del_anio(lista),
+        por_anio=por_anio(lista, (now + timedelta(hours=-3)).date()),
+        duraciones=duraciones(lista),
         pronostico=ns, url_telegram=cfg.url_telegram, url_plan_flotas=cfg.url_plan_flotas,
         catalogo_generado=doc.get("generado"), alto=cfg.percentil_alto,
     )  # fmt: skip
@@ -804,6 +806,7 @@ def jama_pagina(
     )
     faltan = [m for n in ns for m in (n.nieve, n.rafaga) if m.nivel is None]
     typer.echo(
-        f"Jama al Día → {salida}/ ({len(snaps)} snapshots, {len(lista)} cierres; "
+        f"Jama al Día → {salida}/ ({len(snaps)} snapshots, "
+        f"{len(contables(lista))} cierres contables de {len(lista)}; "
         f"pronóstico 72 h sin dato en {len(faltan)} de {2 * len(ns)} valores)"
     )

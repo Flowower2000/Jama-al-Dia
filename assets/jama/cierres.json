@@ -8,7 +8,11 @@
    "causa": "nieve",
    "lado": "ambos",
    "tipo_corte": "total",
-   "n_medios": 3
+   "n_medios": 3,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyaldia.com.ar/2016/04/20/paso-de-jama-cerrado-por-caida-de-nieve-en-chile/",
+   "url_reapertura": "https://www.jujuyalmomento.com/rutas-y-caminos/mejoran-las-condiciones-climaticas-y-habilitan-el-paso-jama-n30933"
   },
   {
    "fecha_inicio": "2016-05-09",
@@ -17,7 +21,11 @@
    "causa": "nieve",
    "lado": "ambos",
    "tipo_corte": "total",
-   "n_medios": 3
+   "n_medios": 3,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyaldia.com.ar/2016/05/09/paso-de-jama-cerrado-por-nieve-y-viento-blanco-en-chile/",
+   "url_reapertura": "https://www.jujuyaldia.com.ar/2016/05/13/habilitaron-el-paso-de-jama-7/"
   },
   {
    "fecha_inicio": "2016-05-30",
@@ -26,7 +34,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 3
+   "n_medios": 3,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyaldia.com.ar/2016/05/30/paso-de-jama-cerrado-por-hielo-nieve-y-viento-blanco-en-ruta-chilena/",
+   "url_reapertura": "https://elsubmarinojujuy.com.ar/abrieron-la-circulacion-por-el-paso-de-jama/"
   },
   {
    "fecha_inicio": "2016-06-25",
@@ -35,7 +47,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyaldia.com.ar/2016/06/25/paso-de-jama-cerrado-por-fuertes-vientos-y-tormenta-de-arena/",
+   "url_reapertura": "https://www.jujuyaldia.com.ar/2016/06/26/paso-de-jama-habilitado/"
   },
   {
    "fecha_inicio": "2016-07-05",
@@ -44,7 +60,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/jujuy/paso-jama-cerrado-nieve-y-viento-blanco-chile-n49889",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2016-07-08",
@@ -53,7 +73,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 3
+   "n_medios": 3,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyaldia.com.ar/2016/07/08/paso-de-jama-cerrado-por-nevadas-en-chile/",
+   "url_reapertura": "https://www.jujuyalmomento.com/jujuy/paso-jama-habilitado-n47624"
   },
   {
    "fecha_inicio": "2016-10-27",
@@ -62,7 +86,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/rutas-y-caminos/transito-restringido-paso-jama-paro-anef-n43448",
+   "url_reapertura": "https://www.jujuyalmomento.com/rutas-y-caminos/transito-restringido-paso-jama-paro-anef-n43448"
   },
   {
    "fecha_inicio": "2016-11-04",
@@ -71,7 +99,11 @@
    "causa": "otro",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/jujuy/jama-cerrado-paro-aduana-chilena-el-resto-las-rutas-transitables-n43119",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2017-01-16",
@@ -80,7 +112,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/estan-cortados-todos-los-accesos-a-jujuy-desde-chile/",
+   "url_reapertura": "https://elsubmarinojujuy.com.ar/estan-cortados-todos-los-accesos-a-jujuy-desde-chile/"
   },
   {
    "fecha_inicio": "2017-01-23",
@@ -89,7 +125,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 3
+   "n_medios": 3,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/jujuy/paso-jama-cerrado-acumulacion-hielo-y-nieve-n57004",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/paso-jama-habilitado-y-rutas-transitables-n57339"
   },
   {
    "fecha_inicio": "2017-02-22",
@@ -98,7 +138,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/jujuy/el-paso-jama-permanece-cerrado-n57874",
+   "url_reapertura": "https://www.jujuyalmomento.com/jujuy/paso-jama-esta-habilitado-n58902"
   },
   {
    "fecha_inicio": "2017-03-17",
@@ -107,7 +151,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/jujuy/paso-jama-cerrado-hielo-y-nieve-ruta-chilena-n58190",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/ya-se-habilito-el-paso-jama-n58552"
   },
   {
    "fecha_inicio": "2017-03-30",
@@ -116,7 +164,11 @@
    "causa": "obra",
    "lado": "AR",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/se-abrieron-los-sobres-para-realizar-obras-en-paso-de-jama/",
+   "url_reapertura": "https://elsubmarinojujuy.com.ar/se-abrieron-los-sobres-para-realizar-obras-en-paso-de-jama/"
   },
   {
    "fecha_inicio": "2017-04-19",
@@ -125,7 +177,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/paso-fronterizo/el-paso-jama-continua-cerrado-n56850",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/el-paso-jama-habilitado-las-18-n59788"
   },
   {
    "fecha_inicio": "2017-05-11",
@@ -134,7 +190,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/nieve/se-habilito-el-paso-jama-n55975",
+   "url_reapertura": "https://www.jujuyalmomento.com/nieve/se-habilito-el-paso-jama-n55975"
   },
   {
    "fecha_inicio": "2017-05-22",
@@ -143,7 +203,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/jujuy/el-paso-jama-quedara-cerrado-todo-el-dia-n60856",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/habilitaron-el-paso-jama-las-16-n61196"
   },
   {
    "fecha_inicio": "2017-06-06",
@@ -152,7 +216,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 3
+   "n_medios": 3,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/nieve/jama-cerrado-nuevamente-n54908",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2017-06-12",
@@ -161,7 +229,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/rutas-y-caminos/jama-cerrado-vientos-y-nieve-n54639",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2017-06-19",
@@ -170,7 +242,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/jujuy/se-encuentra-cerrado-el-paso-jama-n54336",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2018-01-11",
@@ -179,7 +255,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 3
+   "n_medios": 3,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/pais/habilitaron-el-paso-jama-estar-cerrado-la-presencia-gran-cantidad-nieve-n101598",
+   "url_reapertura": "https://elsubmarinojujuy.com.ar/solicitan-transitar-precaucion-la-ruta-nacional-52-fue-habilitada-solo-carril/"
   },
   {
    "fecha_inicio": "2018-02-01",
@@ -188,7 +268,11 @@
    "causa": "aluvion",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/transito/enterate-del-estado-actual-paso-jama-n63745",
+   "url_reapertura": "https://www.jujuyalmomento.com/transito/viajas-enterate-como-esta-el-paso-fronterizo-jama-n63819"
   },
   {
    "fecha_inicio": "2018-02-08",
@@ -197,7 +281,11 @@
    "causa": "aluvion",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/jujuy/jama-esta-cerrado-pero-las-principales-rutas-transitables-n102635",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/jama-habilitado-y-rutas-transitables-conoce-como-estan-los-caminos-jujuy-n102859"
   },
   {
    "fecha_inicio": "2018-04-01",
@@ -206,7 +294,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/el-parador-de-automovil-club-argentino-en-jama-estara-cerrado-por-10-dias/",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2018-04-06",
@@ -215,7 +307,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/jujuy/el-aca-del-paso-jama-estara-cerrado-y-recomiendan-prever-combustibles-y-viveres-n104923",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2018-04-26",
@@ -224,7 +320,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/jujuy/pensando-el-fin-semana-largo-el-paso-jama-estara-abierto-pero-el-aca-estara-cerrado-n105838",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2018-06-11",
@@ -233,7 +333,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 4
+   "n_medios": 4,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/jujuy/nieve-jama-cortaron-el-paso-n68565",
+   "url_reapertura": "https://www.somosjujuy.com.ar/destacadas/paso-jama-habilitado-17-n4160"
   },
   {
    "fecha_inicio": "2018-06-25",
@@ -242,7 +346,11 @@
    "causa": "otro",
    "lado": "ambos",
    "tipo_corte": "total",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/transito/precaucion-volcan-neblina-n69108",
+   "url_reapertura": "https://www.jujuyalmomento.com/jujuy/paso-jama-habilitado-n69361"
   },
   {
    "fecha_inicio": "2018-07-18",
@@ -251,7 +359,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 4
+   "n_medios": 4,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyaldia.com.ar/2018/07/18/el-paso-de-jama-se-encuentra-cerrado/",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2018-07-21",
@@ -260,7 +372,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 5
+   "n_medios": 5,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/el-paso-de-jama-esta-cerrado-por-las-condiciones-climaticas/",
+   "url_reapertura": "https://www.jujuyalmomento.com/frontera/paso-jama-habilitado-pero-precaucion-n70495"
   },
   {
    "fecha_inicio": "2018-08-04",
@@ -269,7 +385,11 @@
    "causa": "nieve",
    "lado": "ambos",
    "tipo_corte": "total",
-   "n_medios": 3
+   "n_medios": 3,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.somosjujuy.com.ar/mira-vos/permanece-cerrado-ayer-paso-jama-n5773",
+   "url_reapertura": "https://www.jujuyalmomento.com/transito/viento-norte-barcena-y-volcan-rutas-habilitadas-n70814"
   },
   {
    "fecha_inicio": "2018-09-01",
@@ -278,7 +398,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/jujuy/jama-cerrado-fuertes-ventiscas-n71798",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2018-10-24",
@@ -287,7 +411,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/jujuy/para-recaudar-fondos-habilitaran-un-peaje-el-paso-jama-n113449",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/para-recaudar-fondos-habilitaran-un-peaje-el-paso-jama-n113449"
   },
   {
    "fecha_inicio": "2018-11-06",
@@ -296,7 +424,11 @@
    "causa": "otro",
    "lado": "CL",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/rizzoti-explico-el-pedido-de-cobro-de-peaje-en-la-ruta-nacional-n-52/",
+   "url_reapertura": "https://elsubmarinojujuy.com.ar/rizzoti-explico-el-pedido-de-cobro-de-peaje-en-la-ruta-nacional-n-52/"
   },
   {
    "fecha_inicio": "2019-01-02",
@@ -305,7 +437,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/jujuy/paso-jama-cerrado-tormentas-electricas-granizo-neblina-y-calzada-hielo-n115805",
+   "url_reapertura": "https://www.jujuyalmomento.com/jujuy/jama-cerrado-y-ruta-52-habilitada-media-calzada-n76664"
   },
   {
    "fecha_inicio": "2019-01-31",
@@ -314,7 +450,11 @@
    "causa": "nieve",
    "lado": "ambos",
    "tipo_corte": "total",
-   "n_medios": 4
+   "n_medios": 4,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/paso-de-jama-esta-cerrado-por-las-condiciones-meteorologicos/",
+   "url_reapertura": "https://www.jujuyalmomento.com/transito/paso-jama-nuevamente-abierto-n77908"
   },
   {
    "fecha_inicio": "2019-03-06",
@@ -323,7 +463,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/jujuy/el-paso-jama-esta-habilitado-n78946",
+   "url_reapertura": "https://www.jujuyalmomento.com/frontera/el-paso-jama-se-encuentra-habilitado-n79004"
   },
   {
    "fecha_inicio": "2019-03-18",
@@ -332,7 +476,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/jujuy/el-paso-jama-se-encuentra-habilitado-n79445",
+   "url_reapertura": "https://www.jujuyalmomento.com/jujuy/buena-transitabilidad-el-paso-jama-n79594"
   },
   {
    "fecha_inicio": "2019-04-04",
@@ -341,7 +489,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/rutas-y-caminos/paso-jama-cerrado-acumulacion-nieve-n80147",
+   "url_reapertura": "https://www.jujuyalmomento.com/transito/el-paso-jama-esta-habilitado-n80186"
   },
   {
    "fecha_inicio": "2019-04-30",
@@ -350,7 +502,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/jujuy/el-paso-jama-se-encuentra-habilitado-n81182",
+   "url_reapertura": "https://www.jujuyalmomento.com/jujuy/el-paso-jama-se-encuentra-habilitado-n81182"
   },
   {
    "fecha_inicio": "2019-05-03",
@@ -359,7 +515,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/jujuy/el-paso-jama-se-encuentra-habilitado-n81304",
+   "url_reapertura": "https://www.jujuyalmomento.com/jujuy/el-paso-jama-se-encuentra-habilitado-n81304"
   },
   {
    "fecha_inicio": "2019-05-14",
@@ -368,7 +528,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/jujuy/el-paso-jama-se-encuentra-habilitado-n81727",
+   "url_reapertura": "https://www.jujuyalmomento.com/jujuy/el-paso-jama-se-encuentra-habilitado-n81727"
   },
   {
    "fecha_inicio": "2019-05-27",
@@ -377,7 +541,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/jujuy/el-paso-jama-se-encuentra-habilitado-n82238",
+   "url_reapertura": "https://www.jujuyalmomento.com/jujuy/el-paso-jama-se-encuentra-habilitado-n82238"
   },
   {
    "fecha_inicio": "2019-06-02",
@@ -386,7 +554,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/atencion/el-paso-jama-se-encuentra-cerrado-n82499",
+   "url_reapertura": "https://www.jujuyalmomento.com/atencion/el-paso-jama-se-encuentra-cerrado-n82499"
   },
   {
    "fecha_inicio": "2019-06-17",
@@ -395,7 +567,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "desconocido",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/atencion/el-paso-jama-se-encuentra-cerrado-n82884",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/mejoro-el-tiempo-y-habilitaron-el-paso-jama-n122228"
   },
   {
    "fecha_inicio": "2019-06-26",
@@ -404,7 +580,11 @@
    "causa": "accidente",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/jujuy/el-paso-jama-permanece-cerrado-un-accidente-n83254",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/hasta-las-16-estara-habilitado-el-paso-fronterizo-jama-n122641"
   },
   {
    "fecha_inicio": "2019-06-30",
@@ -413,7 +593,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/atencion/permance-cerrado-el-paso-jama-n83420",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2019-09-06",
@@ -422,7 +606,11 @@
    "causa": "nieve",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "baja",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/jujuy/el-paso-jama-se-cerrara-las-18-n86478",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2019-11-04",
@@ -431,7 +619,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "total",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/neblina-barcena-y-corte-la-ruta-73-santa-ana-n99242",
+   "url_reapertura": "https://www.jujuyalmomento.com/neblina-barcena-y-corte-la-ruta-73-santa-ana-n99242"
   },
   {
    "fecha_inicio": "2020-01-28",
@@ -440,7 +632,11 @@
    "causa": "nieve",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/se-encuentra-cortado-el-paso-jama-n102444",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2020-02-15",
@@ -449,7 +645,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/jama/paso-jama-cerrado-mal-tiempo-n103096",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2020-06-08",
@@ -458,7 +658,11 @@
    "causa": "otro",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": true,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/morales-cerro-jujuy-para-el-ingreso-de-camioneros-de-brasil-y-paraguay/",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2020-11-20",
@@ -467,7 +671,11 @@
    "causa": "otro",
    "lado": "CL",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/pais/esperan-habilitar-el-paso-jama-diciembre-y-enero-n142170",
+   "url_reapertura": "https://www.todojujuy.com/pais/esperan-habilitar-el-paso-jama-diciembre-y-enero-n142170"
   },
   {
    "fecha_inicio": "2021-01-26",
@@ -476,7 +684,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 3
+   "n_medios": 3,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://prensa.jujuy.gob.ar/seguridad-vial/paso-fronterizo-jama-cerrado-debido-nevadas-n100419",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/paso-jama-el-cierre-temporario-lo-habilitaron-n144844"
   },
   {
    "fecha_inicio": "2021-02-06",
@@ -485,7 +697,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.somosjujuy.com.ar/jujuy-ahora/el-paso-jama-quedo-habilitado-transporte-carga-internacional-n39810",
+   "url_reapertura": "https://www.somosjujuy.com.ar/jujuy-ahora/el-paso-jama-quedo-habilitado-transporte-carga-internacional-n39810"
   },
   {
    "fecha_inicio": "2021-02-18",
@@ -494,7 +710,11 @@
    "causa": "otro",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 5
+   "n_medios": 5,
+   "confianza": "media",
+   "administrativo": true,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/coronavirus-el-paso-de-jama-fue-cerrado-por-contacto-estrecho-del-lado-chileno/",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2021-03-13",
@@ -503,7 +723,11 @@
    "causa": "otro",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.somosjujuy.com.ar/jujuy-ahora/cerraron-paso-jama-inclemencias-climaticas-lado-chileno-n41029",
+   "url_reapertura": "https://www.somosjujuy.com.ar/jujuy-ahora/el-paso-jama-quedo-habilitado-transporte-carga-internacional-n41038"
   },
   {
    "fecha_inicio": "2021-05-13",
@@ -512,7 +736,11 @@
    "causa": "nieve",
    "lado": "AR",
    "tipo_corte": "desconocido",
-   "n_medios": 4
+   "n_medios": 4,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/el-paso-de-jama-fue-cerrado-por-la-intensa-caida-de-nieve/",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2021-05-27",
@@ -521,7 +749,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 4
+   "n_medios": 4,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.somosjujuy.com.ar/jujuy-ahora/por-caida-nieve-encuentra-cortado-paso-fronterizo-jama-n43843",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2021-06-08",
@@ -530,7 +762,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.somosjujuy.com.ar/jujuy-ahora/por-hielo-calzada-paso-jama-encuentra-cerrado-n44334",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2021-06-17",
@@ -539,7 +775,11 @@
    "causa": "nieve",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.somosjujuy.com.ar/jujuy-ahora/paso-jama-cerrado-nevada-viento-n44743",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2021-06-21",
@@ -548,7 +788,11 @@
    "causa": "otro",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/jujuy/paso-jama-esta-cerrada-la-circulacion-chile-n205485",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/paso-jama-esta-cerrada-la-circulacion-chile-n205485"
   },
   {
    "fecha_inicio": "2021-07-31",
@@ -557,7 +801,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 3
+   "n_medios": 3,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/jujuy/cerraron-el-paso-jama-fuertes-vientos-n207182",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2021-09-07",
@@ -566,7 +814,11 @@
    "causa": "otro",
    "lado": "CL",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/organizan-actividades-para-celebrar-los-30-anos-del-paso-de-jama/",
+   "url_reapertura": "https://elsubmarinojujuy.com.ar/organizan-actividades-para-celebrar-los-30-anos-del-paso-de-jama/"
   },
   {
    "fecha_inicio": "2021-10-02",
@@ -575,7 +827,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/jujuy/la-quiaca-villazon-y-paso-jama-siguen-cerrados-n209754",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/la-quiaca-villazon-y-paso-jama-siguen-cerrados-n209754"
   },
   {
    "fecha_inicio": "2021-11-12",
@@ -584,7 +840,11 @@
    "causa": "otro",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.somosjujuy.com.ar/jujuy-ahora/habilitaron-nuevamente-paso-jama-ahora-vehiculos-livianos-n51024",
+   "url_reapertura": "https://www.somosjujuy.com.ar/jujuy-ahora/habilitaron-nuevamente-paso-jama-ahora-vehiculos-livianos-n51024"
   },
   {
    "fecha_inicio": "2021-12-21",
@@ -593,7 +853,11 @@
    "causa": "otro",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/jujuy/chile-reabre-pasos-fronterizos-argentina-pero-no-jama-n213313",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/chile-reabre-pasos-fronterizos-argentina-pero-no-jama-n213313"
   },
   {
    "fecha_inicio": "2022-01-10",
@@ -602,7 +866,11 @@
    "causa": "otro",
    "lado": "CL",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/habilitan-transito-por-la-quiaca-y-jama-para-todos-y-todas/",
+   "url_reapertura": "https://elsubmarinojujuy.com.ar/habilitan-transito-por-la-quiaca-y-jama-para-todos-y-todas/"
   },
   {
    "fecha_inicio": "2022-01-15",
@@ -611,7 +879,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 3
+   "n_medios": 3,
+   "confianza": "media",
+   "administrativo": true,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/la-tercera-ola-de-coronavirus-obligo-a-cerrar-el-paso-de-jama/",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2022-01-20",
@@ -620,7 +892,11 @@
    "causa": "otro",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 4
+   "n_medios": 4,
+   "confianza": "media",
+   "administrativo": true,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/covid-alrededor-de-medio-millar-camiones-estan-varados-en-jama/",
+   "url_reapertura": "https://elsubmarinojujuy.com.ar/jama-fue-abierto-despues-de-estar-una-semana-cerrado-por-contagios-de-covid/"
   },
   {
    "fecha_inicio": "2022-01-30",
@@ -629,7 +905,11 @@
    "causa": "otro",
    "lado": "CL",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.somosjujuy.com.ar/jujuy-ahora/aclaran-chile-habilito-aun-libre-ingreso-turistas-traves-paso-jama-n54054",
+   "url_reapertura": "https://www.somosjujuy.com.ar/jujuy-ahora/aclaran-chile-habilito-aun-libre-ingreso-turistas-traves-paso-jama-n54054"
   },
   {
    "fecha_inicio": "2022-05-01",
@@ -638,7 +918,11 @@
    "causa": "otro",
    "lado": "CL",
    "tipo_corte": "desconocido",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/habilitaron-el-paso-de-jama-para-el-turismo/",
+   "url_reapertura": "https://www.somosjujuy.com.ar/jujuy-ahora/el-paso-jama-quedo-totalmente-habilitado-transito-turistas-n57806"
   },
   {
    "fecha_inicio": "2022-06-07",
@@ -647,7 +931,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 3
+   "n_medios": 3,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/el-paso-de-jama-permanece-cerrado-del-lado-chileno-por-la-nieve-acumulada/",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2022-06-23",
@@ -656,7 +944,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/mundo/el-paso-fronterizo-jama-esta-inhabilitado-nevadas-n221212",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2022-07-06",
@@ -665,7 +957,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/nieve/cerraron-el-paso-jama-nieve-y-rutas-congeladas-n139727",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2022-08-08",
@@ -674,7 +970,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 3
+   "n_medios": 3,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/el-paso-de-jama-fue-cerrado-por-las-nevadas-del-lado-chileno/",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/paso-jama-el-temporal-sigue-cerrado-n223267"
   },
   {
    "fecha_inicio": "2023-01-27",
@@ -683,7 +983,11 @@
    "causa": "aluvion",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/jujuy/cerraron-el-paso-jama-temporalmente-fuertes-tormentas-n230260",
+   "url_reapertura": "https://www.somosjujuy.com.ar/jujuy/el-paso-jama-esta-habilitado-ambos-sentidos-n68780"
   },
   {
    "fecha_inicio": "2024-03-13",
@@ -692,7 +996,11 @@
    "causa": "aluvion",
    "lado": "AR",
    "tipo_corte": "total",
-   "n_medios": 4
+   "n_medios": 4,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/pais/el-paso-jama-esta-habilitado-pero-restricciones-n247725",
+   "url_reapertura": "https://www.todojujuy.com/pais/habilitan-el-paso-jama-vehiculos-carga-y-particulares-n247991"
   },
   {
    "fecha_inicio": "2024-03-22",
@@ -701,7 +1009,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 5
+   "n_medios": 5,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/jujuy-busca-resolver-la-dramatica-situacion-de-camioneros-varados/",
+   "url_reapertura": "https://www.jujuyaldia.com.ar/2024/04/01/jujuy-habilitan-con-maxima-precaucion-rn-52/"
   },
   {
    "fecha_inicio": "2024-05-19",
@@ -710,7 +1022,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/jujuy/cerraron-el-paso-jama-acumulacion-nieve-n251404",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2024-10-16",
@@ -719,7 +1035,11 @@
    "causa": "otro",
    "lado": "AR",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyalmomento.com/ruta-52/hacia-dedo-la-ruta-y-el-hombre-que-la-recogio-intento-abusar-ella-medio-del-camino-n178703",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2025-03-15",
@@ -728,7 +1048,11 @@
    "causa": "otro",
    "lado": "CL",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.somosjujuy.com.ar/jujuy/este-horario-habilitacion-paso-internacional-jama-requisitos-ingresar-chile-n101342",
+   "url_reapertura": "https://www.somosjujuy.com.ar/jujuy/este-horario-habilitacion-paso-internacional-jama-requisitos-ingresar-chile-n101342"
   },
   {
    "fecha_inicio": "2025-04-10",
@@ -737,7 +1061,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/politica/paso-jama-habilitado-solo-el-ingreso-la-argentina-turistas-n267589",
+   "url_reapertura": "https://www.todojujuy.com/politica/paso-jama-habilitado-solo-el-ingreso-la-argentina-turistas-n267589"
   },
   {
    "fecha_inicio": "2025-04-23",
@@ -746,7 +1074,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://radioazultilcara.com.ar/cerraron-temporalmente-el-paso-de-jama-por-una-fuerte-nevada/",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/paso-jama-habilitaron-el-ingreso-chile-todo-tipo-vehiculos-n268350"
   },
   {
    "fecha_inicio": "2025-06-15",
@@ -755,7 +1087,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 3
+   "n_medios": 3,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/pais/segundo-dia-transito-el-paso-jama-intensas-nevadas-n274735",
+   "url_reapertura": "https://elsubmarinojujuy.com.ar/habilitaron-el-transito-por-el-paso-de-jama-de-ambos-lados/"
   },
   {
    "fecha_inicio": "2025-06-25",
@@ -764,7 +1100,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://radioazultilcara.com.ar/cerraron-temporalmente-el-paso-de-jama-por-las-condiciones-climaticas/",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2025-06-28",
@@ -773,7 +1113,11 @@
    "causa": "nieve",
    "lado": "ambos",
    "tipo_corte": "total",
-   "n_medios": 6
+   "n_medios": 6,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/el-paso-de-jama-esta-intransitable-por-la-nieve-rescataron-79-personas-del-lado-chileno/",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2025-07-05",
@@ -782,7 +1126,11 @@
    "causa": "nieve",
    "lado": "ambos",
    "tipo_corte": "total",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/jama-fue-abierto-del-lado-chileno-para-todo-tipo-de-vehiculos-menos-para-camiones-de-gran-porte/",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/el-paso-jama-esta-habilitado-maxima-precaucion-horarios-argentina-y-chile-n276063"
   },
   {
    "fecha_inicio": "2025-07-30",
@@ -791,7 +1139,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 7
+   "n_medios": 7,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://radioazultilcara.com.ar/cierran-paso-de-jama-por-nevadas-este-jueves-y-viernes/",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/paso-jama-argentina-chile-habilitado-precaucion-n277542"
   },
   {
    "fecha_inicio": "2025-08-17",
@@ -800,7 +1152,11 @@
    "causa": "nieve",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 3
+   "n_medios": 3,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.jujuyaldia.com.ar/2025/08/17/cierre-preventivo-del-paso-de-jama-por-condiciones-meteorologicas/",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2025-08-29",
@@ -809,7 +1165,11 @@
    "causa": "nieve",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/el-paso-de-jama-fue-cerrado-por-vientos-y-nevada/",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2025-09-07",
@@ -818,7 +1178,11 @@
    "causa": "nieve",
    "lado": "ambos",
    "tipo_corte": "total",
-   "n_medios": 4
+   "n_medios": 4,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/pais/cierre-preventivo-del-paso-jama-este-domingo-7-septiembre-n279028",
+   "url_reapertura": "https://elsubmarinojujuy.com.ar/el-paso-de-jama-fue-habilitado-luego-de-varios-dias-de-estar-intransitable/"
   },
   {
    "fecha_inicio": "2025-10-01",
@@ -827,7 +1191,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/jujuy/habilitaron-el-paso-jama-luego-solucionar-inconvenientes-tecnicos-este-miercoles-1-octubre-n280166",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/habilitaron-el-paso-jama-luego-solucionar-inconvenientes-tecnicos-este-miercoles-1-octubre-n280166"
   },
   {
    "fecha_inicio": "2025-10-08",
@@ -836,7 +1204,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://radioazultilcara.com.ar/fuertes-vientos-obligan-a-cerrar-el-paso-de-jama-para-la-carga-pesada/",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2025-11-19",
@@ -845,7 +1217,11 @@
    "causa": "otro",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 2
+   "n_medios": 2,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/jujuy/cierre-preventivo-el-paso-jama-transportes-carga-n282462",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2025-12-27",
@@ -854,7 +1230,11 @@
    "causa": "otro",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 3
+   "n_medios": 3,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://elsubmarinojujuy.com.ar/el-paso-de-jama-esta-intransitable-por-condiciones-climaticas-fue-cerrado-en-forma-preventiva/",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/habilitan-el-paso-jama-maxima-precaucion-n284099"
   },
   {
    "fecha_inicio": "2026-01-20",
@@ -863,7 +1243,11 @@
    "causa": "nieve",
    "lado": "ambos",
    "tipo_corte": "total",
-   "n_medios": 7
+   "n_medios": 7,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/jujuy/cierran-el-paso-jama-condiciones-climaticas-adversas-n285056",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2026-02-14",
@@ -872,7 +1256,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://radioazultilcara.com.ar/frontera-afectada-por-el-clima-suspenden-el-transito-en-el-paso-de-jama/",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2026-02-19",
@@ -881,7 +1269,11 @@
    "causa": "otro",
    "lado": "CL",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://radioazultilcara.com.ar/paso-de-jama-abierto-y-operativo-para-la-circulacion-de-todo-tipo-de-vehiculos/",
+   "url_reapertura": "https://radioazultilcara.com.ar/panorama-actual-en-el-paso-de-jama-gran-cantidad-de-jujenos-intentan-cruzar-hacia-chile/"
   },
   {
    "fecha_inicio": "2026-03-29",
@@ -890,7 +1282,11 @@
    "causa": "crecida",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 6
+   "n_medios": 6,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://www.todojujuy.com/jujuy/alerta-jujuy-rutas-intransitables-crecidas-y-cortes-la-rn-52-circulacion-restringida-n287946",
+   "url_reapertura": "https://radioazultilcara.com.ar/reactivan-el-paso-de-jama-horarios-actualizados-y-estado-del-cruce-hoy/"
   },
   {
    "fecha_inicio": "2026-05-24",
@@ -899,7 +1295,11 @@
    "causa": "otro",
    "lado": "CL",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://radioazultilcara.com.ar/el-estado-de-las-rutas-en-jujuy-encendio-las-alarmas-antes-del-fin-de-semana-largo/",
+   "url_reapertura": "https://radioazultilcara.com.ar/el-estado-de-las-rutas-en-jujuy-encendio-las-alarmas-antes-del-fin-de-semana-largo/"
   },
   {
    "fecha_inicio": "2026-06-08",
@@ -908,7 +1308,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 3
+   "n_medios": 3,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://jujuyonline.com/2026/06/08/paso-de-jama-suspenden-transito-camiones-fuertes-vientos/",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2026-06-17",
@@ -917,7 +1321,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 4
+   "n_medios": 4,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://jujuyonline.com/2026/06/17/cerraron-paso-de-jama-fuertes-vientos-nevadas/",
+   "url_reapertura": "https://jujuyonline.com/2026/06/19/reabrieron-paso-de-jama-habilitado-vehiculos/"
   },
   {
    "fecha_inicio": "2026-07-01",
@@ -926,7 +1334,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 4
+   "n_medios": 4,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://jujuyonline.com/2026/07/01/habilitaron-paso-de-jama-restringen-transporte-carga-vientos/",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/paso-jama-abierto-este-viernes-piden-extrema-precaucion-nieve-n292965"
   },
   {
    "fecha_inicio": "2026-07-16",
@@ -935,7 +1347,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 4
+   "n_medios": 4,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://radioazultilcara.com.ar/fuerte-temporal-en-el-paso-de-jama-como-afecta-el-transito-de-camiones/",
+   "url_reapertura": null
   },
   {
    "fecha_inicio": "2026-07-31",
@@ -944,7 +1360,11 @@
    "causa": "otro",
    "lado": "desconocido",
    "tipo_corte": "desconocido",
-   "n_medios": 1
+   "n_medios": 1,
+   "confianza": "media",
+   "administrativo": false,
+   "url_inicio": "https://eltribunodejujuy.com/informacion-general/2026-7-31-13-58-0-paso-de-jama-cerrado-para-el-transporte-de-carga-por-fuertes-vientos",
+   "url_reapertura": "https://eltribunodejujuy.com/informacion-general/2026-7-31-18-53-0-paso-de-jama-habilitado-para-todo-tipo-de-vehiculos"
   },
   {
    "fecha_inicio": "2026-08-11",
@@ -953,7 +1373,11 @@
    "causa": "nieve",
    "lado": "ambos",
    "tipo_corte": "total",
-   "n_medios": 8
+   "n_medios": 8,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://eltribunodejujuy.com/informacion-general/2026-8-11-9-38-0-paso-de-jama-cerrado-por-condiciones-meteorologicas",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/paso-jama-transito-habilitado-3c-y-viento-fuerte-n296030"
   },
   {
    "fecha_inicio": "2026-09-17",
@@ -962,7 +1386,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 5
+   "n_medios": 5,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://eltribunodejujuy.com/informacion-general/2026-9-17-15-34-0-cierran-el-paso-de-jama-por-alerta-meteorologica",
+   "url_reapertura": "https://www.todojujuy.com/jujuy/paso-jama-habilitado-ambos-sentidos-temperatura-4c-n296445"
   },
   {
    "fecha_inicio": "2026-09-29",
@@ -971,7 +1399,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 5
+   "n_medios": 5,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://eltribunodejujuy.com/informacion-general/2026-9-29-13-43-0-cierran-el-paso-de-jama-de-forma-preventiva",
+   "url_reapertura": "https://eltribunodejujuy.com/informacion-general/2026-10-3-8-11-0-se-encuentra-habilitado-el-paso-de-jama"
   },
   {
    "fecha_inicio": "2026-10-12",
@@ -980,7 +1412,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 5
+   "n_medios": 5,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://eltribunodejujuy.com/informacion-general/2026-10-12-9-18-0-paso-de-jama-cerrado-por-nevadas",
+   "url_reapertura": "https://www.jujuyalmomento.com/paso-jama/paso-jama-habilitan-el-cruce-chile-el-horario-800-2000-n208822"
   },
   {
    "fecha_inicio": "2026-10-23",
@@ -989,7 +1425,11 @@
    "causa": "nieve",
    "lado": "CL",
    "tipo_corte": "total",
-   "n_medios": 5
+   "n_medios": 5,
+   "confianza": "alta",
+   "administrativo": false,
+   "url_inicio": "https://eltribunodejujuy.com/informacion-general/2026-10-23-11-54-0-cierran-el-paso-de-jama-por-alerta-meteorologica",
+   "url_reapertura": "https://eltribunodejujuy.com/informacion-general/2026-11-7-8-6-0-paso-de-jama-habilitado-y-tramos-transitables-con-precaucion"
   }
  ]
 }

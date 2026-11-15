@@ -15,7 +15,7 @@ from pathlib import Path
 
 import httpx
 
-from corredor.jama_al_dia.estado import Actual, EstadoLado, horas, local
+from corredor.jama_al_dia.estado import Actual, EstadoLado, cuando, horas, local
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
 log = logging.getLogger(__name__)
@@ -88,8 +88,8 @@ class Publicado:
 
 def _lado_clave(a: Actual, avisar_horario: bool) -> str | None:
     e = a.ultimo
-    if e is None or e.estado is None:
-        return None
+    if e is None or e.estado is None or a.viejo:
+        return None  # stale data never changes the posted state
     if e.estado == "cerrado" and e.por_horario and not avisar_horario:
         return None  # nightly schedule closure: keep the previous value (no post either way)
     return e.estado
@@ -123,13 +123,29 @@ def _linea(nombre: str, a: Actual, now: datetime) -> str:
     e: EstadoLado | None = a.ultimo
     if e is None or e.estado is None:
         return f"{nombre}: sin dato"
-    txt = e.estado.upper() + (" (fuera de horario)" if e.por_horario else "")
+    if a.viejo:
+        return f"{nombre}: Estado no confirmado ({_ultimo_dato(a, now)})\n  {e.fuente}"
+    if e.clase == "horario":
+        txt = "Cerrado por horario" + (f" (abre a las {e.abre})" if e.abre else "")
+    else:
+        txt = e.estado.upper()
     if a.desde is not None:
         h = horas(a.desde, now)
         txt += f", desde hace {'al menos ' if a.desde_al_menos else ''}{h} h"
-    oficial = f" — parte {e.hora_oficial}" if e.hora_oficial else ""
-    viejo = " (dato viejo)" if a.viejo else ""
-    return f"{nombre}: {txt}{viejo}\n  {e.fuente}{oficial}"
+    t = e.oficial_dt
+    oficial = f" — parte {cuando(t, now)}" if t else ""
+    return f"{nombre}: {txt}\n  {e.fuente}{oficial}"
+
+
+def _ultimo_dato(a: Actual, now: datetime) -> str:
+    """'Último dato: Cerrado por horario, hoy 03:43' or '…, parte oficial del 09/11'."""
+    e = a.ultimo
+    if e is None:
+        return "sin datos"
+    t = e.oficial_dt
+    if a.parte_viejo and t is not None:
+        return f"Último dato: {e.nombre_estado}, parte oficial del {t:%d/%m}"
+    return f"Último dato: {e.nombre_estado}, {cuando(e.fetched_at, now)}"
 
 
 def mensaje(titulo: str, ar: Actual, cl: Actual, now: datetime, url: str) -> str:
