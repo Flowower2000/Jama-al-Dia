@@ -62,6 +62,7 @@ jama_al_dia:
   url_plan_flotas: "https://forms.gle/KUt6bFF8EL8dPerw6"
   waitlist_inscriptos: 0    # manual number (owner); empty = "sin dato"
   waitlist_actualizado: 2026-11-15  # AAAA-MM-DD of that number
+  canal_desde:              # AAAA-MM-DD the Telegram channel was published (/traccion header)
   puntos_nieve: [rn52_paso_jama, ch27_alto]
   percentil_alto: 90        # 72 h snow / max gust at or above this percentile of the model's climatology = "alto" (descriptive, not validated)
   avisar_cierre_por_horario: false  # nightly CERRADO by schedule (argentina.gob.ar) is not posted

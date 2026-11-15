@@ -8,6 +8,7 @@ All notable changes to this project are documented here. The format follows
 ## [Unreleased]
 
 ### Added
+- "Jama al Día" round 2: "desde las HH:MM" (< 1 h) / "desde hace N h" / "desde el dd/mm" (> 24 h); durations as median and p75 ("La mitad… 3 de cada 4…"), no range; every history block states its base ("Sobre 67 cierres de Jama en el catálogo, 2016–2026"); /traccion with "Contamos desde" (`jama_al_dia.canal_desde`), a daily series per counter (subscriber counts per day in `telegram_estado.json`), "— todavía sin dato" for missing values and the channel/form buttons.
 - "Jama al Día": channel (https://t.me/jamaaldia) and Plan Flotas form links and the waitlist number in `config.yaml`; `jama_snapshot.yml` skips the source requests (page rebuild only) when the last successful snapshot is under 20 min old, for a second hourly trigger (external `workflow_dispatch` at :47).
 - "Jama al Día" review: Telegram and fleet CTAs under the status and in the footer; "Cerrado por horario" (grey, clock, "Abre a las HH:MM") and "fuera de horario" in the grid; stale sides (last check > 2 h or official report > 24 h) turn amber "Estado no confirmado"; header "Datos de las HH:MM"; relative dates; chart by month of the year + per-year line; plain-language forecast with the method in "Cómo se calcula".
 - "Jama al Día" data fixes: "SIN DATO RECIENTE" when a side's last snapshot is older than 2 h (never posted to Telegram) and both page/last-consulted times in the header; "CERRADO POR HORARIO (abre HH:MM)" as its own grey state on the card and the 7-day grid; "último parte oficial hace N días" when the source's own report is older than 24 h; monthly chart counts only total/partial closures without `confianza=baja`, stacked nieve vs otros (67 of 110); durations say "1 día", leave administrative closures out of the median; `assets/jama/cierres.json` gains `confianza`, `administrativo`, `url_inicio`, `url_reapertura`.
@@ -88,6 +89,7 @@ All notable changes to this project are documented here. The format follows
   parser (all `User-agent: *` groups combined).
 
 ### Added
+- "Jama al Día" round 2: "desde las HH:MM" (< 1 h) / "desde hace N h" / "desde el dd/mm" (> 24 h); durations as median and p75 ("La mitad… 3 de cada 4…"), no range; every history block states its base ("Sobre 67 cierres de Jama en el catálogo, 2016–2026"); /traccion with "Contamos desde" (`jama_al_dia.canal_desde`), a daily series per counter (subscriber counts per day in `telegram_estado.json`), "— todavía sin dato" for missing values and the channel/form buttons.
 - Integration: `RuleBasedExtractor`, `EventDeduplicator` (±2 days, point or headline
   Jaccard), optional `LLMExtractor` (validated, cached, not wired to a provider),
   `ThresholdCalibrator` (absolute and per-cell seasonal percentile candidates) and the

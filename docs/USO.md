@@ -59,9 +59,15 @@ https://emiliano-f.github.io/corredor-quebrada-puna/ — se rearma cada hora.
 - **Cierres por mes del año y duración:** del catálogo de prensa local (eventos en
   `rn52_paso_jama` con corte total o parcial, sin los de confianza baja): 12 barras (ene–dic,
   total 2016–2026, nieve y otras causas apiladas, con n) y una línea "Por año"; puede faltar
-  algún cierre. La duración usa solo cierres con una nota de reapertura, en días de publicación;
-  los cierres administrativos (sanitarios, etc.) quedan fuera de la mediana y se nombran aparte.
-  No hay probabilidad de reapertura.
+  algún cierre. La duración usa solo cierres con una nota de reapertura, en días de publicación:
+  mediana y percentil 75 ("La mitad de los cierres duró… 3 de cada 4…"), sin rango (el máximo
+  encadena varios cierres por el dedup, issue #42); los cierres administrativos (sanitarios,
+  etc.) quedan fuera y se nombran aparte. Cada bloque dice su base ("Sobre 67 cierres de Jama en
+  el catálogo, 2016–2026"). No hay probabilidad de reapertura.
+- **/traccion:** "Contamos desde el …" (`jama_al_dia.canal_desde`), suscriptores del canal
+  (getChatMemberCount, cada hora) e inscriptos de la waitlist (carga manual, con su fecha), cada
+  uno con una serie de un valor por día; sin dato se ve "— todavía sin dato". Mismos botones que
+  la portada.
 - **Pronóstico para Jama — próximas 72 h:** nieve = SUMA de las próximas 72 h frente a las
   sumas de 72 h de la climatología; ráfagas = MÁXIMO de las próximas 72 h frente a los máximos
   de 72 h. Mismo modelo de pronóstico, misma celda y misma estación del año (Historical

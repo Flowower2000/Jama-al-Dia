@@ -101,6 +101,7 @@ class JamaAlDiaConfig(BaseModel):
     url_plan_flotas: str = ""
     waitlist_inscriptos: int | None = Field(default=None, ge=0)
     waitlist_actualizado: date | None = None
+    canal_desde: date | None = None
     puntos_nieve: list[str] = Field(default_factory=lambda: ["rn52_paso_jama", "ch27_alto"])
     # Descriptive cutoff for "alto" (snow and gusts vs the forecast model climatology).
     percentil_alto: float = Field(default=90, gt=0, lt=100)
