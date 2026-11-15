@@ -62,7 +62,10 @@ def exportar(eventos: pd.DataFrame, articulos: pd.DataFrame) -> list[dict[str, A
                 "n_medios": int(e["n_medios"]),
                 "confianza": e.get("confianza"),
                 "administrativo": "administrativo" in notas,
-                "url_inicio": urls[0] if urls else None,
+                "url_inicio": next(
+                    (u for u in urls if by_url.get(u, (None, ""))[0] == inicio),
+                    urls[0] if urls else None,
+                ),
                 "url_reapertura": reabre[0] if reabre else None,
             }
         )
