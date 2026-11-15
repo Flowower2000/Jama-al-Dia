@@ -47,9 +47,11 @@ https://emiliano-f.github.io/corredor-quebrada-puna/ — se rearma cada hora.
   estado; la resolución es 1 h ("al menos" si arranca en la primera consulta que tenemos).
   Fuera de su horario Argentina marca el paso cerrado: se muestra "Cerrado por horario" (gris,
   con reloj, "Abre a las HH:MM"), no en rojo (rojo = cierre real). Si la última consulta de un
-  lado tiene más de 2 h, o el parte oficial de la fuente (p. ej. FECHA/HORA del MOP) tiene más de
-  24 h, la tarjeta se pone ámbar con "Estado no confirmado" y el último dato ("Último dato:
-  Cerrado por horario, hoy 03:43" o "…, parte oficial del 09/11"). El encabezado dice "Datos de
+  lado tiene más de 2 h, la tarjeta se pone ámbar con "Estado no confirmado" y el último dato
+  ("Último dato: Cerrado por horario, hoy 03:43"). Si la consulta es reciente pero el parte
+  oficial de la fuente (p. ej. FECHA/HORA del MOP) tiene más de 24 h, sigue ámbar con "Sin parte
+  nuevo", "Último parte oficial (09/11 08:00): Abierto" y "Chile no actualiza este parte desde el
+  09/11. Consultá el estado oficial antes de cruzar." (otra fuente chilena: issue #44). El encabezado dice "Datos de
   las HH:MM" con la hora del dato más viejo de los dos lados. Fechas: "hoy", "ayer" o "dd/mm".
 - **Avisos:** debajo del estado (y en el pie), "Recibí los avisos por Telegram" y "¿Tenés una
   flota? Anotate para el plan de empresas" (enlaces de `jama_al_dia` en `config.yaml`; sin
@@ -62,7 +64,7 @@ https://emiliano-f.github.io/corredor-quebrada-puna/ — se rearma cada hora.
   algún cierre. La duración usa solo cierres con una nota de reapertura, en días de publicación:
   mediana y percentil 75 ("La mitad de los cierres duró… 3 de cada 4…"), sin rango (el máximo
   encadena varios cierres por el dedup, issue #42); los cierres administrativos (sanitarios,
-  etc.) quedan fuera y se nombran aparte. Cada bloque dice su base ("Sobre 67 cierres de Jama en
+  etc.) quedan fuera: "No incluye 1 cierre administrativo (enero 2022)." Cada bloque dice su base ("Sobre 67 cierres de Jama en
   el catálogo, 2016–2026"). No hay probabilidad de reapertura.
 - **/traccion:** "Contamos desde el …" (`jama_al_dia.canal_desde`), suscriptores del canal
   (getChatMemberCount, cada hora) e inscriptos de la waitlist (carga manual, con su fecha), cada

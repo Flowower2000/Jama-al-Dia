@@ -363,9 +363,18 @@ def test_old_official_report_is_flagged_in_days() -> None:
     e = estado_cl(cl(NOW, fecha=OLD_PARTE))  # parte 2026-11-09 08:00, NOW 15/11 12:17 local
     assert e.parte_dias(NOW) == 6
     html = pagina._lado("Chile", actual([e], NOW), NOW)
-    assert "Parte oficial del 09/11" in html
-    assert "Estado no confirmado" in html  # an old official report counts as stale
-    assert "Último dato: Abierto, parte oficial del 09/11" in html
+    assert "Sin parte nuevo" in html  # describes the source, not our check
+    assert "Estado no confirmado" not in html
+    assert "Último parte oficial (09/11 08:00): Abierto" in html
+    assert "Chile no actualiza este parte desde el 09/11. Consultá el estado oficial" in html
+    assert 'class="lado viejo"' in html  # stays amber
+    viejo = pagina._lado("Chile", actual([e], NOW + timedelta(hours=3)), NOW + timedelta(hours=3))
+    assert "Estado no confirmado" in viejo  # our own check is stale: that wins
+    from corredor.jama_al_dia.telegram import _linea
+
+    assert _linea("Chile", actual([e], NOW), NOW).startswith(
+        "Chile: Sin parte nuevo (último parte oficial 09/11 08:00: Abierto)"
+    )
     assert estado_ar(ar(NOW)).parte_dias(NOW) is None
 
 
@@ -458,8 +467,7 @@ def test_durations_leave_administrative_closures_out_and_say_dia() -> None:
     assert "1 días" not in html
     assert "Rango" not in html  # the max chains several closures via dedup
     assert "Sobre 3 cierres de Jama en el catálogo, 2016–2026" in html
-    assert "Cierres administrativos" in html
-    assert "12 días" in html
+    assert "No incluye 1 cierre administrativo (junio 2020)." in html
     assert [c["fecha_inicio"] for c in cierres.mas_largos(lista, 1)] == ["2020-06-08"]
 
 

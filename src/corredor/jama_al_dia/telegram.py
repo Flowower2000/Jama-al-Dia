@@ -15,7 +15,7 @@ from pathlib import Path
 
 import httpx
 
-from corredor.jama_al_dia.estado import Actual, EstadoLado, cuando, desde_txt, local
+from corredor.jama_al_dia.estado import VIEJO, Actual, EstadoLado, cuando, desde_txt, local
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
 log = logging.getLogger(__name__)
@@ -124,6 +124,12 @@ def _linea(nombre: str, a: Actual, now: datetime) -> str:
     e: EstadoLado | None = a.ultimo
     if e is None or e.estado is None:
         return f"{nombre}: sin dato"
+    t = e.oficial_dt
+    if a.parte_viejo and t is not None and now - e.fetched_at <= VIEJO:
+        return (
+            f"{nombre}: Sin parte nuevo (último parte oficial {t:%d/%m %H:%M}: "
+            f"{e.nombre_estado})\n  {e.fuente}"
+        )
     if a.viejo:
         return f"{nombre}: Estado no confirmado ({_ultimo_dato(a, now)})\n  {e.fuente}"
     if e.clase == "horario":
@@ -132,7 +138,6 @@ def _linea(nombre: str, a: Actual, now: datetime) -> str:
         txt = e.estado.upper()
     if a.desde is not None:
         txt += f", {desde_txt(a, now)}"
-    t = e.oficial_dt
     oficial = f" — parte {cuando(t, now)}" if t else ""
     return f"{nombre}: {txt}\n  {e.fuente}{oficial}"
 
