@@ -107,6 +107,18 @@ def clave(ar: Actual, cl: Actual, previa: str | None, avisar_horario: bool) -> s
     return ";".join(f"{k}={v or 'sin_dato'}" for k, v in partes.items())
 
 
+def _cambio_real(previa: str | None, nueva: str) -> bool:
+    """A side going from one known state to another (sin_dato → known is just filling in)."""
+    if previa is None:
+        return False
+    prev = dict(p.split("=", 1) for p in previa.split(";"))
+    new = dict(p.split("=", 1) for p in nueva.split(";"))
+    return any(
+        prev.get(k, "sin_dato") != "sin_dato" and v != "sin_dato" and prev.get(k) != v
+        for k, v in new.items()
+    )
+
+
 def _linea(nombre: str, a: Actual, now: datetime) -> str:
     e: EstadoLado | None = a.ultimo
     if e is None or e.estado is None:
@@ -176,7 +188,7 @@ def _publicar(
         api.send_message(mensaje("Paso de Jama — mensaje de prueba", ar, cl, now, url))
         hechos.append("prueba")
     if nueva is not None and nueva != pub.clave:
-        if pub.clave is not None:
+        if _cambio_real(pub.clave, nueva):
             api.send_message(mensaje("Paso de Jama — cambió el estado", ar, cl, now, url))
             hechos.append("cambio")
         else:

@@ -204,6 +204,22 @@ def test_real_closure_running_into_the_night_is_not_a_change(
     assert Publicado.load(path).clave == "AR=cerrado;CL=abierto"
 
 
+def test_first_run_at_night_then_opening_hours_is_not_a_change(
+    tmp_path: Path, tg: respx.MockRouter
+) -> None:
+    path = tmp_path / "t.json"
+    api = TelegramAPI(TOKEN, CHAT)
+    night = datetime(2026, 11, 16, 1, 0, tzinfo=UTC)
+    morning = datetime(2026, 11, 16, 13, 0, tzinfo=UTC)
+    for ts, st in ((night, "CERRADO"), (morning, "ABIERTO")):
+        snaps = [ar(ts, st), cl(ts)]
+        notificar(
+            api, actual(serie(snaps, "AR"), ts), actual(serie(snaps, "CL"), ts), path, ts, url=""
+        )
+    assert _sent(tg) == []
+    assert Publicado.load(path).clave == "AR=abierto;CL=abierto"
+
+
 def test_side_outage_does_not_post(tmp_path: Path, tg: respx.MockRouter) -> None:
     path = tmp_path / "t.json"
     api = TelegramAPI(TOKEN, CHAT)
