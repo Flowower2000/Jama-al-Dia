@@ -266,20 +266,33 @@ def test_daily_summary_once_at_eight(tmp_path: Path, tg: respx.MockRouter) -> No
     assert len(msgs[0].split("\n")) <= 4
 
 
-def test_change_is_saved_even_if_the_summary_fails(tmp_path: Path) -> None:
+def test_change_at_eight_doubles_as_the_summary(tmp_path: Path, tg: respx.MockRouter) -> None:
     path = tmp_path / "t.json"
     Publicado(clave="AR=abierto;CL=abierto").save(path)
     a, c = _actuales(cl_state="CERRADO")
     eight = datetime(2026, 11, 16, 11, 17, tzinfo=UTC)
+    hechos = notificar(TelegramAPI(TOKEN, CHAT), a, c, path, eight, url="")
+    assert "cambio" in hechos
+    assert "resumen" in hechos
+    assert len(_sent(tg)) == 1  # no identical second post
+    pub = Publicado.load(path)
+    assert pub.clave == "AR=abierto;CL=cerrado"
+    assert pub.resumen_fecha == "2026-11-16"
+
+
+def test_change_is_saved_even_if_a_later_post_fails(tmp_path: Path) -> None:
+    path = tmp_path / "t.json"
+    Publicado(clave="AR=abierto;CL=abierto", resumen_fecha="2026-11-15").save(path)
+    a, c = _actuales(cl_state="CERRADO")
+    nine = datetime(2026, 11, 16, 12, 17, tzinfo=UTC)
     with respx.mock(base_url="https://api.telegram.org") as router:
         router.post(f"/bot{TOKEN}/sendMessage").mock(
-            side_effect=[
-                httpx.Response(200, json={"ok": True, "result": {}}),
-                httpx.Response(500, json={"ok": False}),
-            ]
+            return_value=httpx.Response(200, json={"ok": True, "result": {}})
         )
-        with pytest.raises(TelegramError):
-            notificar(TelegramAPI(TOKEN, CHAT), a, c, path, eight, url="")
+        router.post(f"/bot{TOKEN}/getChatMemberCount").mock(
+            return_value=httpx.Response(500, json={"ok": False})
+        )
+        notificar(TelegramAPI(TOKEN, CHAT), a, c, path, nine, url="")
     assert Publicado.load(path).clave == "AR=abierto;CL=cerrado"
 
 

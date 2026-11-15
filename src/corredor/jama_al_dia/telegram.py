@@ -204,7 +204,8 @@ def _publicar(
         pub.clave, pub.publicado_at = nueva, now.isoformat()
     hoy = loc.date().isoformat()
     if loc.hour == hora_resumen and pub.resumen_fecha != hoy:
-        api.send_message(mensaje(ar, cl, now, url))
+        if "cambio" not in hechos:  # same text: the change post doubles as the summary
+            api.send_message(mensaje(ar, cl, now, url))
         pub.resumen_fecha = hoy
         hechos.append("resumen")
     try:
