@@ -260,8 +260,8 @@ the cache read is skipped because the endpoint is live).
   invalid JSON, an ArcGIS `error` object, a malformed payload or a missing Jama record
   becomes a line with `error` set and `payload_json` empty; the command still exits 0.
 - Schedule: [`.github/workflows/jama_snapshot.yml`](../.github/workflows/jama_snapshot.yml),
-  `cron: "17 * * * *"` (hourly, UTC; plus an external `workflow_dispatch` at :47 from cron-job.org — a run within 20 min of the last successful snapshot makes no source requests and only rebuilds the page; every 3 h until 2026-11-15; GitHub may delay scheduled
-  runs by some minutes) plus `workflow_dispatch` (input `prueba`: one Telegram test post). It
+  `cron: "17 * * * *"` (hourly, UTC; plus an external `workflow_dispatch` at :00 from cron-job.org — a run within 20 min of the last successful snapshot makes no source requests and only rebuilds the page; every 3 h until 2026-11-15; GitHub may delay scheduled
+  runs by some minutes) plus `workflow_dispatch` (input `prueba`: one Telegram test post; optional input `origen`, e.g. `cron-job.org`, only shown in the run name). It
   checks out the orphan branch `data-snapshots` (creating it if missing), runs the command,
   runs `corredor jama-telegram` (secrets `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID` only as env
   vars; the token goes in the Bot API URL path, so httpx request logging is silenced and
