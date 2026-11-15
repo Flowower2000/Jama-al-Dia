@@ -150,7 +150,26 @@ def notificar(
         log.info(AVISO_OMITIDO)
         return [AVISO_OMITIDO]
     pub = Publicado.load(estado_path)
-    hechos = []
+    hechos: list[str] = []
+    try:
+        _publicar(api, pub, hechos, ar, cl, now, url, hora_resumen, avisar_horario, prueba)
+    finally:
+        pub.save(estado_path)  # whatever was posted is recorded, even if a later call fails
+    return hechos
+
+
+def _publicar(
+    api: TelegramAPI,
+    pub: Publicado,
+    hechos: list[str],
+    ar: Actual,
+    cl: Actual,
+    now: datetime,
+    url: str,
+    hora_resumen: int,
+    avisar_horario: bool,
+    prueba: bool,
+) -> None:
     loc = local(now)
     nueva = clave(ar, cl, pub.clave, avisar_horario)
     if prueba:
@@ -173,5 +192,3 @@ def notificar(
         hechos.append("suscriptores")
     except TelegramError as exc:
         hechos.append(str(exc))
-    pub.save(estado_path)
-    return hechos

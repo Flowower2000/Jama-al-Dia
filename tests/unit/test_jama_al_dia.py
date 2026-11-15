@@ -227,6 +227,23 @@ def test_daily_summary_once_at_eight(tmp_path: Path, tg: respx.MockRouter) -> No
     assert "resumen" in msgs[0]
 
 
+def test_change_is_saved_even_if_the_summary_fails(tmp_path: Path) -> None:
+    path = tmp_path / "t.json"
+    Publicado(clave="AR=abierto;CL=abierto").save(path)
+    a, c = _actuales(cl_state="CERRADO")
+    eight = datetime(2026, 11, 16, 11, 17, tzinfo=UTC)
+    with respx.mock(base_url="https://api.telegram.org") as router:
+        router.post(f"/bot{TOKEN}/sendMessage").mock(
+            side_effect=[
+                httpx.Response(200, json={"ok": True, "result": {}}),
+                httpx.Response(500, json={"ok": False}),
+            ]
+        )
+        with pytest.raises(TelegramError):
+            notificar(TelegramAPI(TOKEN, CHAT), a, c, path, eight, url="")
+    assert Publicado.load(path).clave == "AR=abierto;CL=cerrado"
+
+
 def test_test_post(tmp_path: Path, tg: respx.MockRouter) -> None:
     a, c = _actuales()
     notificar(TelegramAPI(TOKEN, CHAT), a, c, tmp_path / "t.json", NOW, url="", prueba=True)
