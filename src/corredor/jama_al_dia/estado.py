@@ -233,6 +233,19 @@ def datos_de(ar: Actual, cl: Actual) -> datetime | None:
     return min(ts) if ts else None
 
 
+def desde_txt(a: Actual, now: datetime) -> str:
+    """'desde las 13:25' (< 1 h), 'desde hace 5 h', 'desde el 12/11' (> 24 h)."""
+    if a.desde is None:
+        return ""
+    h = horas(a.desde, now)
+    pre = "al menos " if a.desde_al_menos else ""
+    if h < 1:
+        return f"desde {pre}las {local(a.desde):%H:%M}"
+    if h > 24:
+        return f"desde {pre}el {local(a.desde):%d/%m}"
+    return f"desde hace {pre}{h} h"
+
+
 def horas(desde: datetime, now: datetime) -> int:
     """Whole hours (snapshot resolution: 1 h)."""
     return max(0, int((now - desde).total_seconds() // 3600))

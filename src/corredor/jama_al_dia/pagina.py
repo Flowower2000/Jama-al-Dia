@@ -15,7 +15,7 @@ from html import escape
 from pathlib import Path
 from typing import Any
 
-from corredor.jama_al_dia.estado import Actual, cuando, datos_de, horas
+from corredor.jama_al_dia.estado import Actual, cuando, datos_de, desde_txt
 from corredor.jama_al_dia.pronostico import Medida, Pronostico72, banner, elegir
 
 ESTADO_TXT = {"abierto": "ABIERTO", "cerrado": "CERRADO", "restringido": "RESTRINGIDO"}
@@ -106,8 +106,7 @@ def _lado(nombre: str, a: Actual, now: datetime) -> str:
     else:
         clase, big = e.clase or "", f'<div class="big">{ESTADO_TXT[e.estado]}</div>'
         if a.desde is not None:
-            h = horas(a.desde, now)
-            rows.append(f"desde hace {'al menos ' if a.desde_al_menos else ''}{h} h")
+            rows.append(desde_txt(a, now))
     t = e.oficial_dt
     if t is not None:
         rows.append(
@@ -171,10 +170,7 @@ def _grafico(por_mes: Sequence[tuple[int, int, int]]) -> str:
 def _duracion(d: Mapping[str, Any]) -> str:
     if not d.get("n"):
         return "<p>Ningún cierre del catálogo tiene fecha de reapertura conocida.</p>"
-    med = d["mediana"]
-    med_txt = f"{med:g}".replace(".", ",")
-    unidad = "día" if med == 1 else "días"
-    rango_u = "día" if d["max"] == 1 else "días"
+    med, p75 = d["mediana"], d.get("p75", d["mediana"])
     adm = d.get("administrativos") or []
     adm_txt = ""
     if adm:
@@ -186,14 +182,23 @@ def _duracion(d: Mapping[str, Any]) -> str:
             f"mediana: {len(adm)} — {lista}.</p>"
         )
     return (
-        f'<p><span class="num">{escape(med_txt)} {unidad}</span> de mediana</p>'
-        f"<p>Rango: {d['min']} a {d['max']} {rango_u} · n = {d['n']} cierres con reapertura "
-        f"conocida (de {d['total']} cierres en el catálogo).</p>"
+        f'<p class="frase">La mitad de los cierres duró <strong>{_dias_txt_f(med)} o menos'
+        f"</strong>; 3 de cada 4, <strong>{_dias_txt_f(p75)} o menos</strong> (n = {d['n']} "
+        "cierres con reapertura conocida).</p>"
+        f'<p class="nota">{escape(_base(int(d["total"])))}.</p>'
         + adm_txt
         + '<p class="nota">Días entre la primera nota del cierre y la nota de reapertura (fechas '
         "de publicación). Solo cierres con una nota de reapertura en el catálogo; "
         f"{escape(NOTA_PRENSA)}.</p>"
     )
+
+
+def _base(n: int) -> str:
+    return f"Sobre {n} cierres de Jama en el catálogo, 2016–2026"
+
+
+def _dias_txt_f(v: float) -> str:
+    return f"{_num(v)} día" if v == 1 else f"{_num(v)} días"
 
 
 def _num(v: float) -> str:
@@ -267,19 +272,23 @@ def _pronostico(ps: Sequence[Pronostico72], now: datetime, alto: float = 90) -> 
     )
 
 
-def _ctas(d: Datos) -> str:
+def _botones(url_telegram: str, url_plan_flotas: str) -> str:
     out = []
-    if d.url_telegram:
+    if url_telegram:
         out.append(
-            f'<a class="cta tg" href="{escape(d.url_telegram)}" rel="noopener">'
+            f'<a class="cta tg" href="{escape(url_telegram)}" rel="noopener">'
             "Recibí los avisos por Telegram</a>"
         )
-    if d.url_plan_flotas:
+    if url_plan_flotas:
         out.append(
-            f'<a class="cta flota" href="{escape(d.url_plan_flotas)}" rel="noopener">'
+            f'<a class="cta flota" href="{escape(url_plan_flotas)}" rel="noopener">'
             "¿Tenés una flota? Anotate para el plan de empresas</a>"
         )
     return f'<div class="ctas">{"".join(out)}</div>' if out else ""
+
+
+def _ctas(d: Datos) -> str:
+    return _botones(d.url_telegram, d.url_plan_flotas)
 
 
 def index(d: Datos) -> str:
@@ -316,8 +325,8 @@ def index(d: Datos) -> str:
         _grafico(d.por_mes_anio),
         '<div class="ley"><span class="nieve">nieve</span><span class="otros">otras causas</span>'
         "</div>"
-        f'<p class="nota">n = {total} cierres totales o parciales 2016–2026 ({nieve_total} por '
-        f"nieve), sin los de confianza baja; {escape(NOTA_PRENSA)}.</p>"
+        f'<p class="nota">{escape(_base(total))} ({nieve_total} por nieve): cortes totales o '
+        f"parciales, sin los de confianza baja; {escape(NOTA_PRENSA)}.</p>"
         f'<p class="nota">Por año: {escape(anios)}.'
         + (f" Catálogo del {escape(_fecha(d.catalogo_generado))}." if d.catalogo_generado else "")
         + "</p></section>",
@@ -339,37 +348,74 @@ def index(d: Datos) -> str:
     return _doc("Jama al Día — estado del Paso de Jama", "".join(body))
 
 
+def _serie(puntos: Sequence[tuple[str, int]]) -> str:
+    if not puntos:
+        return ""
+    w, h = 300, 40
+    mx = max(n for _, n in puntos) or 1
+    bw = min(w / max(len(puntos), 1), 14.0)
+    bars = "".join(
+        f'<rect class="bar nieve" x="{k * bw + 1:.1f}" y="{h - 2 - n / mx * (h - 4):.1f}" '
+        f'width="{max(bw - 2, 1):.1f}" height="{n / mx * (h - 4) + 2:.1f}"/>'
+        for k, (_, n) in enumerate(puntos)
+    )
+    ini, fin = _fecha(puntos[0][0])[:5], _fecha(puntos[-1][0])[:5]
+    rango = ini if ini == fin else f"{ini} → {fin}"
+    return (
+        f'<svg class="mini" viewBox="0 0 {w} {h}" role="img" aria-label="Serie diaria">{bars}'
+        f'</svg><p class="nota">Un valor por día ({escape(rango)}).</p>'
+    )
+
+
 def traccion(
     now: datetime,
     suscriptores: int | None,
     suscriptores_at: datetime | None,
     waitlist: int | None,
     waitlist_at: str | None,
+    *,
+    serie_suscriptores: Sequence[tuple[str, int]] = (),
+    canal_desde: str | None = None,
+    url_telegram: str = "",
+    url_plan_flotas: str = "",
 ) -> str:
-    def card(titulo: str, n: int | None, act: str | None, origen: str) -> str:
-        num = f"{n:,}".replace(",", ".") if n is not None else "sin dato"
+    def card(titulo: str, n: int | None, act: str | None, origen: str, serie: str) -> str:
+        if n is None:
+            num = '<p class="num-chico">— <span class="nota">todavía sin dato</span></p>'
+        else:
+            num = f'<p class="num">{escape(f"{n:,}".replace(",", "."))}</p>'
         return (
-            f'<section><h2>{escape(titulo)}</h2><p class="num">{escape(num)}</p>'
+            f"<section><h2>{escape(titulo)}</h2>{num}{serie}"
             f'<p class="nota">{escape(origen)}'
-            + (f" · actualizado {escape(act)}" if act else "")
+            + (f" · {escape(act)}" if act else "")
             + "</p></section>"
         )
 
+    wl_serie = _serie([(waitlist_at, waitlist)]) if waitlist is not None and waitlist_at else ""
+    desde = (
+        f'<p class="sub">Contamos desde el {escape(_fecha(canal_desde))}.</p>'
+        if canal_desde
+        else ""
+    )
     body = (
         "<header><h1>Tracción — Jama al Día</h1>"
-        f'<p class="sub">Página generada {cuando(now, now)} (hora argentina).</p></header>'
+        + desde
+        + f'<p class="sub">Página generada {cuando(now, now)} (hora argentina).</p></header>'
         + card(
             "Suscriptores del canal de Telegram",
             suscriptores,
-            cuando(suscriptores_at, now) if suscriptores_at else None,
+            f"actualizado {cuando(suscriptores_at, now)}" if suscriptores_at else None,
             "Telegram Bot API (getChatMemberCount), cada hora",
+            _serie(serie_suscriptores),
         )
         + card(
             "Inscriptos waitlist Plan Flotas",
             waitlist,
-            _fecha(waitlist_at) if waitlist_at else None,
+            f"actualizado a mano el {_fecha(waitlist_at)}" if waitlist_at else None,
             "carga manual",
+            wl_serie,
         )
+        + _botones(url_telegram, url_plan_flotas)
         + '<footer><p><a href="../">Volver a Jama al Día</a></p></footer>'
     )
     return _doc("Tracción — Jama al Día", body)

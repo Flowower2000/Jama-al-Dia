@@ -802,7 +802,17 @@ def jama_pagina(
     pagina.escribir(
         salida,
         pagina.index(datos),
-        pagina.traccion(now, pub.suscriptores, subs_at, cfg.waitlist_inscriptos, waitlist_at),
+        pagina.traccion(
+            now,
+            pub.suscriptores,
+            subs_at,
+            cfg.waitlist_inscriptos,
+            waitlist_at,
+            serie_suscriptores=sorted((pub.suscriptores_dia or {}).items())[-30:],
+            canal_desde=cfg.canal_desde.isoformat() if cfg.canal_desde else None,
+            url_telegram=cfg.url_telegram,
+            url_plan_flotas=cfg.url_plan_flotas,
+        ),
     )
     faltan = [m for n in ns for m in (n.nieve, n.rafaga) if m.nivel is None]
     typer.echo(

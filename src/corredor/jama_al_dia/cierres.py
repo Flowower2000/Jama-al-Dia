@@ -114,8 +114,12 @@ def duraciones(cierres: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     ds = [dias(c) for c in conocidos if not c.get("administrativo")]
     out: dict[str, Any] = {"total": len(base), "administrativos": adm}
     if not ds:
-        return {**out, "n": 0, "mediana": None, "min": None, "max": None}
-    return {**out, "n": len(ds), "mediana": statistics.median(ds), "min": min(ds), "max": max(ds)}
+        return {**out, "n": 0, "mediana": None, "p75": None, "min": None, "max": None}
+    p75 = statistics.quantiles(ds, n=4, method="inclusive")[2] if len(ds) > 1 else ds[0]
+    return {
+        **out, "n": len(ds), "mediana": statistics.median(ds), "p75": p75,
+        "min": min(ds), "max": max(ds),
+    }  # fmt: skip
 
 
 def mas_largos(cierres: Sequence[Mapping[str, Any]], n: int = 5) -> list[Mapping[str, Any]]:

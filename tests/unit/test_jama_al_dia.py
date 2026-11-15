@@ -409,7 +409,7 @@ def test_cierres_export_and_stats() -> None:
     assert list(anios)[-1] == 2026
     d = cierres.duraciones(out)
     assert d == {
-        "n": 1, "mediana": 3, "min": 3, "max": 3, "total": 2, "administrativos": []
+        "n": 1, "mediana": 3, "p75": 3, "min": 3, "max": 3, "total": 2, "administrativos": []
     }  # fmt: skip
 
 
@@ -433,6 +433,17 @@ def test_chart_counts_only_total_or_partial_without_low_confidence_stacked() -> 
     assert len(cierres.contables(lista)) == 2
 
 
+def test_desde_text_by_age() -> None:
+    from corredor.jama_al_dia.estado import Actual, desde_txt
+
+    def a(h: float) -> Actual:
+        return Actual(None, NOW - timedelta(hours=h), False, False, None)
+
+    assert desde_txt(a(0.5), NOW) == "desde las 11:47"
+    assert desde_txt(a(5), NOW) == "desde hace 5 h"
+    assert desde_txt(a(72), NOW) == "desde el 12/11"
+
+
 def test_durations_leave_administrative_closures_out_and_say_dia() -> None:
     lista = [
         _c("2024-06-01", "2024-06-02"),
@@ -443,8 +454,10 @@ def test_durations_leave_administrative_closures_out_and_say_dia() -> None:
     assert (d["n"], d["mediana"], d["max"]) == (2, 1, 1)
     assert d["administrativos"] == [{"fecha_inicio": "2020-06-08", "dias": 12}]
     html = pagina._duracion(d)
-    assert "1 día</span>" in html
+    assert "La mitad de los cierres duró <strong>1 día o menos" in html
     assert "1 días" not in html
+    assert "Rango" not in html  # the max chains several closures via dedup
+    assert "Sobre 3 cierres de Jama en el catálogo, 2016–2026" in html
     assert "Cierres administrativos" in html
     assert "12 días" in html
     assert [c["fecha_inicio"] for c in cierres.mas_largos(lista, 1)] == ["2020-06-08"]
@@ -586,4 +599,17 @@ def test_page_escapes_and_has_required_text() -> None:
     assert "probabilidad" not in html.lower()
     t = pagina.traccion(NOW, 1234, NOW, None, None)
     assert "1.234" in t
-    assert "sin dato" in t
+    assert "— <span" in t
+    assert "todavía sin dato" in t
+    t2 = pagina.traccion(
+        NOW, 3, NOW, 0, "2026-11-15",
+        serie_suscriptores=[("2026-11-14", 1), ("2026-11-15", 3)], canal_desde="2026-11-14",
+        url_telegram="https://t.me/x", url_plan_flotas="https://forms.gle/y",
+    )  # fmt: skip
+    assert "Contamos desde el 14/11/2026" in t2
+    assert "actualizado a mano el 15/11/2026" in t2
+    assert t2.count('class="mini"') == 2
+    assert "14/11 → 15/11" in t2
+    assert "Recibí los avisos por Telegram" in t2
+    assert "plan de empresas" in t2
+    assert "todavía sin dato" not in t2

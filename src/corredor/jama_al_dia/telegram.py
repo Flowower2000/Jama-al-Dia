@@ -15,7 +15,7 @@ from pathlib import Path
 
 import httpx
 
-from corredor.jama_al_dia.estado import Actual, EstadoLado, cuando, horas, local
+from corredor.jama_al_dia.estado import Actual, EstadoLado, cuando, desde_txt, local
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
 log = logging.getLogger(__name__)
@@ -72,6 +72,7 @@ class Publicado:
     resumen_fecha: str | None = None
     suscriptores: int | None = None
     suscriptores_at: str | None = None
+    suscriptores_dia: dict[str, int] | None = None  # local date → last count of that day
 
     @classmethod
     def load(cls, path: Path) -> Publicado:
@@ -130,8 +131,7 @@ def _linea(nombre: str, a: Actual, now: datetime) -> str:
     else:
         txt = e.estado.upper()
     if a.desde is not None:
-        h = horas(a.desde, now)
-        txt += f", desde hace {'al menos ' if a.desde_al_menos else ''}{h} h"
+        txt += f", {desde_txt(a, now)}"
     t = e.oficial_dt
     oficial = f" — parte {cuando(t, now)}" if t else ""
     return f"{nombre}: {txt}\n  {e.fuente}{oficial}"
@@ -217,6 +217,7 @@ def _publicar(
         hechos.append("resumen")
     try:
         pub.suscriptores, pub.suscriptores_at = api.member_count(), now.isoformat()
+        pub.suscriptores_dia = {**(pub.suscriptores_dia or {}), hoy: pub.suscriptores}
         hechos.append("suscriptores")
     except TelegramError as exc:
         hechos.append(str(exc))
