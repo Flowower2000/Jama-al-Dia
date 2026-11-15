@@ -8,7 +8,7 @@ import threading
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Any
 from urllib.parse import urlsplit
 
 import pandas as pd
@@ -500,6 +500,79 @@ OVERPASS_TIMEOUT_S = 120.0
 
 
 @app.command()
+def tablero(
+    config: ConfigOpt = None,
+    sin_red: Annotated[
+        bool, typer.Option("--sin-red", help="No descarga el pronóstico (queda como faltante).")
+    ] = False,
+) -> None:
+    """Arma tablero/dist/: sitio estático sin conexión con el paquete de datos embebido."""
+    from datetime import UTC, datetime, timedelta
+
+    from corredor.tablero.bundle import (
+        BundleInputs,
+        build_bundle,
+        markdown_blocks,
+        read_geo,
+        risk_points,
+    )
+    from corredor.tablero.forecast import fetch_forecasts
+    from corredor.tablero.site import DIST_DIR, SIZE_BUDGET, write_site
+    from corredor.weather.openmeteo import OpenMeteoClient
+
+    settings = Settings()
+    cfg = load_config(config or settings.config_path)
+    repo = DuckDBRepository(settings.db_path)
+    try:
+        eventos, articulos = repo.read("eventos"), repo.read("articulos")
+        jama_rows = [
+            JamaEstado.model_validate(r) for r in repo.read("jama_estado").to_dict("records")
+        ]
+    finally:
+        repo.close()
+    jsonl = settings.data_dir / JAMA_JSONL
+    if jsonl.exists():
+        jama_rows += _load_jsonl(jsonl)
+    jama = list({(j.fuente, j.fetched_at): j for j in jama_rows}.values())
+    grilla_path = settings.data_dir / "clima" / "grilla.parquet"
+    grilla = pd.read_parquet(grilla_path) if grilla_path.exists() else pd.DataFrame()
+    now = datetime.now(tz=UTC)
+    now_local = (now + timedelta(hours=-3)).replace(tzinfo=None)
+    pronostico = {}
+    if not sin_red:
+        fetcher = build_fetcher(cfg, settings)
+        client = OpenMeteoClient(fetcher, settings.data_dir / "clima", cfg.clima)
+        try:
+            pronostico = fetch_forecasts(
+                client, risk_points(cfg), cfg.umbrales_elegidos, model=cfg.clima.modelo_pronostico,
+                hours=cfg.clima.pronostico_horas, clim_start=cfg.clima.pronostico_historico_desde,
+                now_local=now_local,
+            )  # fmt: skip
+        finally:
+            fetcher.close()
+    bundle = build_bundle(
+        BundleInputs(
+            cfg=cfg, lineage=lineage(cfg), eventos=eventos, articulos=articulos, jama=jama,
+            grilla=grilla, geo=read_geo(Path("assets/geo")), pronostico=pronostico,
+            pronostico_hora=now.replace(minute=0, second=0, microsecond=0)
+            if any(f.con_pronostico for f in pronostico.values()) else None,
+            uso=markdown_blocks(Path("docs/USO.md").read_text(encoding="utf-8")), now=now,
+        )
+    )  # fmt: skip
+    size = write_site(bundle)
+    sin_pronostico = [p for p, f in pronostico.items() if f.error]
+    typer.echo(
+        f"Tablero → {DIST_DIR}/index.html ({size / 1024:.0f} KB); {len(bundle['eventos'])} "
+        f"eventos, {len(risk_points(cfg))} puntos, {len(cfg.umbrales_elegidos)} umbrales elegidos; "
+        f"pronóstico incompleto en {len(sin_pronostico) if pronostico else len(risk_points(cfg))} "
+        "puntos."
+    )
+    if size > SIZE_BUDGET:
+        typer.echo(f"tablero/dist supera {SIZE_BUDGET // 1024 // 1024} MB.", err=True)
+        raise typer.Exit(1)
+
+
+@app.command()
 def geo(
     config: ConfigOpt = None,
     salida: Annotated[Path, typer.Option(help="Carpeta de los GeoJSON.")] = GEO_DIR,
@@ -587,3 +660,150 @@ def snapshot_jama(
 
 if __name__ == "__main__":  # pragma: no cover
     app()
+
+
+JAMA_CIERRES = Path("assets") / "jama" / "cierres.json"
+JAMA_SITIO = Path("sitio")
+
+
+@app.command("jama-cierres")
+def jama_cierres(
+    config: ConfigOpt = None,
+    salida: Annotated[Path, typer.Option(help="JSON de cierres de Jama.")] = JAMA_CIERRES,
+) -> None:
+    """Exporta los cierres del catálogo en rn52_paso_jama (solo metadatos) para Jama al Día."""
+    from datetime import UTC, datetime
+
+    from corredor.jama_al_dia.cierres import exportar
+
+    settings = Settings()
+    load_config(config or settings.config_path)
+    repo = DuckDBRepository(settings.db_path)
+    try:
+        cierres = exportar(repo.read("eventos"), repo.read("articulos"))
+    finally:
+        repo.close()
+    salida.parent.mkdir(parents=True, exist_ok=True)
+    doc = {"generado": datetime.now(tz=UTC).date().isoformat(), "cierres": cierres}
+    salida.write_text(json.dumps(doc, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    typer.echo(f"{len(cierres)} cierres de Jama → {salida}")
+
+
+def _jama_actual(snapshots: Path) -> tuple[list[JamaEstado], Any, Any]:
+    from datetime import UTC, datetime
+
+    from corredor.jama_al_dia.estado import actual, serie
+
+    snaps = _load_jsonl(snapshots) if snapshots.exists() else []
+    now = datetime.now(tz=UTC)
+    return snaps, actual(serie(snaps, "AR"), now), actual(serie(snaps, "CL"), now)
+
+
+@app.command("jama-telegram")
+def jama_telegram(
+    config: ConfigOpt = None,
+    snapshots: Annotated[Path, typer.Option(help="JSONL de snapshots.")] = Path(
+        "data/snapshots/jama_estado.jsonl"
+    ),
+    estado: Annotated[Path, typer.Option(help="JSON del último estado publicado.")] = Path(
+        "data/snapshots/telegram_estado.json"
+    ),
+    prueba: Annotated[bool, typer.Option(help="Publica además un mensaje de prueba.")] = False,
+) -> None:
+    """Publica en Telegram solo si cambió el estado AR/CL, más el resumen diario."""
+    import os
+    from datetime import UTC, datetime
+
+    from corredor.jama_al_dia.telegram import TelegramAPI, TelegramError, notificar
+
+    settings = Settings()
+    cfg = load_config(config or settings.config_path).jama_al_dia
+    token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+    chat = os.environ.get("TELEGRAM_CHAT_ID", "").strip()
+    api = TelegramAPI(token, chat) if token and chat else None
+    _, ar, cl = _jama_actual(snapshots)
+    try:
+        hechos = notificar(
+            api, ar, cl, estado, datetime.now(tz=UTC), url=cfg.url_pagina,
+            hora_resumen=cfg.hora_resumen, avisar_horario=cfg.avisar_cierre_por_horario,
+            prueba=prueba,
+        )  # fmt: skip
+    except TelegramError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from None
+    finally:
+        if api is not None:
+            api.close()
+    if api is None:
+        typer.echo(hechos[0])
+    else:
+        typer.echo("telegram: " + (", ".join(hechos) if hechos else "nada que publicar"))
+
+
+@app.command("jama-pagina")
+def jama_pagina(
+    config: ConfigOpt = None,
+    snapshots: Annotated[Path, typer.Option(help="JSONL de snapshots.")] = Path(
+        "data/snapshots/jama_estado.jsonl"
+    ),
+    estado: Annotated[Path, typer.Option(help="JSON del último estado publicado.")] = Path(
+        "data/snapshots/telegram_estado.json"
+    ),
+    cierres: Annotated[Path, typer.Option(help="JSON de cierres de Jama.")] = JAMA_CIERRES,
+    salida: Annotated[Path, typer.Option(help="Carpeta del sitio.")] = JAMA_SITIO,
+    sin_red: Annotated[bool, typer.Option("--sin-red", help="Sin pronóstico de nieve.")] = False,
+) -> None:
+    """Arma el sitio estático "Jama al Día" (index.html y traccion/)."""
+    from datetime import UTC, datetime, timedelta
+
+    from corredor.jama_al_dia import pagina
+    from corredor.jama_al_dia.cierres import duraciones, por_mes
+    from corredor.jama_al_dia.estado import bloques, serie
+    from corredor.jama_al_dia.pronostico import Medida, Pronostico72, pronostico_72h
+    from corredor.jama_al_dia.telegram import Publicado
+    from corredor.weather.openmeteo import OpenMeteoClient
+
+    settings = Settings()
+    app_cfg = load_config(config or settings.config_path)
+    cfg = app_cfg.jama_al_dia
+    snaps, ar, cl = _jama_actual(snapshots)
+    now = datetime.now(tz=UTC)
+    doc = json.loads(cierres.read_text(encoding="utf-8")) if cierres.exists() else {}
+    lista = doc.get("cierres", [])
+    puntos = [p for p in app_cfg.puntos if p.id in cfg.puntos_nieve]
+    ns: list[Pronostico72]
+    if sin_red:
+        nada = Medida(None, None, None, "sin red")
+        ns = [Pronostico72(p.id, p.nombre, None, nada, nada) for p in puntos]
+    else:
+        fetcher = build_fetcher(app_cfg, settings)
+        client = OpenMeteoClient(fetcher, settings.data_dir / "clima", app_cfg.clima)
+        try:
+            ns = pronostico_72h(
+                client, puntos, model=app_cfg.clima.modelo_pronostico,
+                clim_start=app_cfg.clima.pronostico_historico_desde,
+                now_local=(now + timedelta(hours=-3)).replace(tzinfo=None),
+                alto=cfg.percentil_alto,
+            )  # fmt: skip
+        finally:
+            fetcher.close()
+    datos = pagina.Datos(
+        now=now, ar=ar, cl=cl,
+        bloques={"AR": bloques(serie(snaps, "AR"), now), "CL": bloques(serie(snaps, "CL"), now)},
+        por_mes=por_mes(lista, (now + timedelta(hours=-3)).date()), duraciones=duraciones(lista),
+        pronostico=ns, url_telegram=cfg.url_telegram, url_plan_flotas=cfg.url_plan_flotas,
+        catalogo_generado=doc.get("generado"), alto=cfg.percentil_alto,
+    )  # fmt: skip
+    pub = Publicado.load(estado)
+    subs_at = datetime.fromisoformat(pub.suscriptores_at) if pub.suscriptores_at else None
+    waitlist_at = cfg.waitlist_actualizado.isoformat() if cfg.waitlist_actualizado else None
+    pagina.escribir(
+        salida,
+        pagina.index(datos),
+        pagina.traccion(now, pub.suscriptores, subs_at, cfg.waitlist_inscriptos, waitlist_at),
+    )
+    faltan = [m for n in ns for m in (n.nieve, n.rafaga) if m.nivel is None]
+    typer.echo(
+        f"Jama al Día → {salida}/ ({len(snaps)} snapshots, {len(lista)} cierres; "
+        f"pronóstico 72 h sin dato en {len(faltan)} de {2 * len(ns)} valores)"
+    )

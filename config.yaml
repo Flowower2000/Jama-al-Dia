@@ -40,11 +40,33 @@ clima:
   modelos_grilla: [era5, era5_land] # era5 = precipitation/snowfall cell, era5_land = temperature cell
   max_llamadas_diarias: 1500
   reserva_pronostico: 300  # calls the archive downloads leave for the forecast build
+  pronostico_historico_desde: 2021-01-01  # forecast-model climatology (Historical Forecast API)
 
 # PROVISIONAL critical points. Coordinates looked up once on OpenStreetMap (Nominatim,
 # 2026-11-13); `osm` is the matched OSM object. Nothing here is verified: Child C
 # (feature/geo) verifies order, km and coordinates and sets `verificado: true`.
 # km values are deliberately left empty until verified (do not trust the plan's km).
+# Thresholds chosen by the owner from reports/validacion.md; `make tablero` reads them.
+# Empty = every point shows "Umbral pendiente de definición" (no default threshold).
+# One entry per rule: grupo (aluvion | crecida | lluvia | nieve), variable (a feature;
+# `_pct` suffix = per-cell seasonal percentile), umbral. Example:
+#   - {grupo: lluvia, variable: lluvia_24h_mm_pct, umbral: 95}
+umbrales_elegidos: []
+
+
+# Public page "Jama al Día" (GitHub Pages) and its Telegram channel. Empty link = button hidden.
+# Telegram credentials come only from the TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID secrets.
+jama_al_dia:
+  url_pagina: "https://emiliano-f.github.io/corredor-quebrada-puna/"
+  url_telegram: ""
+  url_plan_flotas: ""
+  waitlist_inscriptos:      # manual number (owner); empty = "sin dato"
+  waitlist_actualizado:     # AAAA-MM-DD of that number
+  puntos_nieve: [rn52_paso_jama, ch27_alto]
+  percentil_alto: 90        # 72 h snow / max gust at or above this percentile of the model's climatology = "alto" (descriptive, not validated)
+  avisar_cierre_por_horario: false  # nightly CERRADO by schedule (argentina.gob.ar) is not posted
+  hora_resumen: 8           # daily Telegram summary, Argentina time
+
 puntos:
   # Generated values (lat, lon, km, verificado, fuente_geo, fuente_km) are derived from the
   # `osm` object by `make geo` (see reports/geo_verificacion.md); `nota_geo` is manual.

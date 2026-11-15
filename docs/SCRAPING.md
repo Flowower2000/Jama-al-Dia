@@ -260,12 +260,19 @@ the cache read is skipped because the endpoint is live).
   invalid JSON, an ArcGIS `error` object, a malformed payload or a missing Jama record
   becomes a line with `error` set and `payload_json` empty; the command still exits 0.
 - Schedule: [`.github/workflows/jama_snapshot.yml`](../.github/workflows/jama_snapshot.yml),
-  `cron: "17 */3 * * *"` (UTC; GitHub may delay scheduled runs by some minutes) plus
-  `workflow_dispatch`. It checks out the orphan branch `data-snapshots` (creating it if
-  missing), runs the command, commits only `snapshots/jama_estado.jsonl` as
+  `cron: "17 * * * *"` (hourly, UTC; every 3 h until 2026-11-15; GitHub may delay scheduled
+  runs by some minutes) plus `workflow_dispatch` (input `prueba`: one Telegram test post). It
+  checks out the orphan branch `data-snapshots` (creating it if missing), runs the command,
+  runs `corredor jama-telegram` (secrets `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID` only as env
+  vars; the token goes in the Bot API URL path, so httpx request logging is silenced and
+  errors carry only method and HTTP status), commits only `snapshots/jama_estado.jsonl` and
+  `snapshots/telegram_estado.json` as
   `github-actions[bot]`, then fetches + rebases (JSONL appends merge with `merge=union`) and
-  pushes, retrying once. Concurrency group `jama-snapshot` (`cancel-in-progress: false`);
-  `contents: write` only on that job; actions pinned by SHA. Snapshots never land on
+  pushes, retrying once. It then rebuilds "Jama al Día" (`corredor jama-pagina`, Open-Meteo
+  forecast + model climatology for snowfall and `wind_gusts_10m`, cached in `data/clima` with `actions/cache`)
+  and uploads it as the Pages artifact; a separate `pages` job (main only, `pages: write` +
+  `id-token: write`, environment `github-pages`) deploys it. Concurrency group `jama-snapshot`
+  (`cancel-in-progress: false`); `contents: write` only on the snapshot job; actions pinned by SHA. Snapshots never land on
   `main`, so they do not trigger CI. GitHub disables scheduled workflows after 60 days
   without repository activity.
 - Read the data: `git fetch origin data-snapshots && git show origin/data-snapshots:snapshots/jama_estado.jsonl`.

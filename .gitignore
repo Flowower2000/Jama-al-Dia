@@ -4,6 +4,7 @@ __pycache__/
 .venv/
 build/
 dist/
+tablero/dist/
 *.egg-info/
 .mypy_cache/
 .pytest_cache/
@@ -21,3 +22,4 @@ data/
 .vscode/
 .DS_Store
 .env
+sitio/

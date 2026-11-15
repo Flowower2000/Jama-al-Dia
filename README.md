@@ -31,15 +31,26 @@ make reporte        # reports/calidad_catalogo.md y reports/revision_manual.csv
 make calibrar       # reports/validacion.md (umbrales en mm/cm y en percentil por celda)
 make precision      # precisión por campo y por estrato desde reports/revision_manual.csv etiquetado
 make cobertura      # reports/control/cobertura.md: cobertura contra la lista de control (no entra al pipeline)
+make tablero        # tablero/dist/: sitio sin conexión para el teléfono (ver docs/USO.md)
 ```
 
-El estado del Paso de Jama (Vialidad MOP Chile y argentina.gob.ar) se guarda cada 3 horas
-con un workflow de GitHub Actions en la rama `data-snapshots`. Ninguna de las dos fuentes
-tiene historial: los datos empiezan el día en que arrancó el colector.
+El estado del Paso de Jama (Vialidad MOP Chile y argentina.gob.ar) se guarda cada hora
+(cada 3 horas hasta el 2026-11-15) con un workflow de GitHub Actions en la rama
+`data-snapshots`. Ninguna de las dos fuentes tiene historial: los datos empiezan el día en que
+arrancó el colector.
+
+**Jama al Día** (https://emiliano-f.github.io/corredor-quebrada-puna/): página pública que el
+mismo workflow rearma cada hora y publica en GitHub Pages (estado por lado, últimos 7 días,
+cierres por mes del catálogo, duración de cierres, nieve y ráfagas a 72 h frente a la climatología del modelo, y `/traccion`).
+`make jama-cierres` exporta los cierres de `rn52_paso_jama` a `assets/jama/cierres.json`
+(comprometido; rehacerlo cuando cambie el catálogo) y `make jama-pagina` arma `sitio/`. El
+canal de Telegram publica solo cuando cambia el estado combinado AR/CL, más un resumen a las
+08:00; necesita los secrets de Actions `TELEGRAM_BOT_TOKEN` y `TELEGRAM_CHAT_ID` (sin ellos se
+saltea con "telegram: sin secrets"). No es un canal oficial.
 
 Etapas (una por target de Make): `make geo` (rutas, Tren Solar y puntos críticos desde
 OpenStreetMap; los GeoJSON quedan en `assets/geo/`), `make clima`, `make datos`, `make calibrar`,
-`make precision`, `make reporte`, `make cobertura`. `make tablero` queda para el día 2.
+`make precision`, `make reporte`, `make cobertura`, `make tablero`.
 
 `make clima` respeta el tope diario de llamadas a Open-Meteo (`clima.max_llamadas_diarias`
 en `config.yaml`: 1500; 500 si no se configura): si lo alcanza, se detiene con un aviso y la corrida
@@ -47,7 +58,8 @@ siguiente sigue desde la caché. Las descargas del archivo histórico dejan libr
 `clima.reserva_pronostico` (300 en `config.yaml`) para que el armado del pronóstico del tablero
 siempre tenga llamadas.
 
-La configuración vive en [`config.yaml`](config.yaml) (puntos críticos y fuentes). Ninguna
+La configuración vive en [`config.yaml`](config.yaml) (puntos críticos, fuentes y
+`umbrales_elegidos`, que lee `make tablero`; vacío = "Umbral pendiente de definición"). Ninguna
 etapa necesita claves; la extracción con LLM es opcional y solo se activa con la variable
 de entorno `LLM_API_KEY`.
 
@@ -56,6 +68,7 @@ de entorno `LLM_API_KEY`.
 - [docs/FUENTES.md](docs/FUENTES.md): relevamiento de fuentes (tiers y exclusiones).
 - [docs/SCRAPING.md](docs/SCRAPING.md): cómo se recolecta cada fuente.
 - [docs/DATOS.md](docs/DATOS.md): diccionario de datos.
+- [docs/USO.md](docs/USO.md): cómo leer el tablero (el mismo texto está en el tablero).
 - [CONTRIBUTING.md](CONTRIBUTING.md): flujo de trabajo y cómo agregar una fuente.
 - Los números (eventos, umbrales, precisión) están en `reports/`, generados por el
   pipeline; no se copian a mano en la documentación.
@@ -80,6 +93,11 @@ de entorno `LLM_API_KEY`.
   hidrológico ni un pronóstico oficial. Cada umbral se muestra en unidades de ERA5 y como
   percentil de la celda en la misma estación (2016–2022); se ajusta con 2016–2022 y se
   prueba con 2023 en adelante (ver [reports/validacion.md](reports/validacion.md)).
+- **Pronóstico de otro modelo:** el tablero usa el pronóstico `best_match` de Open-Meteo,
+  que no es ERA5. Sus valores se pasan a percentil con la climatología del mismo modelo
+  (Historical Forecast API, desde 2022) y solo se comparan con umbrales en percentil; un
+  umbral en mm se muestra como "no comparable". Una alerta no es un corte ni un aviso
+  oficial (ver [docs/USO.md](docs/USO.md)).
 - **Extracción por reglas:** los eventos salen del titular, la bajada y la URL, no del
   texto de la nota; una nota sin lugar ni km queda sin punto crítico. La precisión medida
   a mano está en `reports/precision.md`. En Paso de Jama, un cierre "por condiciones

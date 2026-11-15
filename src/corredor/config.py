@@ -6,9 +6,18 @@ import hashlib
 import json
 from datetime import date
 from pathlib import Path
+from typing import Literal
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field, HttpUrl, SecretStr, field_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    HttpUrl,
+    SecretStr,
+    field_validator,
+    model_validator,
+)
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from corredor.http import validate_hostname
@@ -76,7 +85,63 @@ class ClimaConfig(BaseModel):
     archive_url: str = "https://archive-api.open-meteo.com/v1/archive"
     forecast_url: str = "https://api.open-meteo.com/v1/forecast"
     historical_forecast_url: str = "https://historical-forecast-api.open-meteo.com/v1/forecast"
+    # Climatology of the forecast model (Historical Forecast API) for the dashboard risk.
+    pronostico_historico_desde: date = date(2022, 1, 1)
+    pronostico_horas: int = Field(default=72, ge=1, le=384)
     elevation_url: str = "https://api.open-meteo.com/v1/elevation"
+
+
+class JamaAlDiaConfig(BaseModel):
+    """Public "Jama al Día" page and Telegram channel (links come from the owner)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    url_pagina: str = ""
+    url_telegram: str = ""
+    url_plan_flotas: str = ""
+    waitlist_inscriptos: int | None = Field(default=None, ge=0)
+    waitlist_actualizado: date | None = None
+    puntos_nieve: list[str] = Field(default_factory=lambda: ["rn52_paso_jama", "ch27_alto"])
+    # Descriptive cutoff for "alto" (snow and gusts vs the forecast model climatology).
+    percentil_alto: float = Field(default=90, gt=0, lt=100)
+    # argentina.gob.ar marks the crossing CERRADO every night outside its schedule.
+    avisar_cierre_por_horario: bool = False
+    hora_resumen: int = Field(default=8, ge=0, le=23)
+
+    @field_validator("url_pagina", "url_telegram", "url_plan_flotas")
+    @classmethod
+    def _https(cls, v: str) -> str:
+        if v and not v.startswith("https://"):
+            raise ValueError("solo enlaces https://")
+        return v
+
+
+class UmbralElegido(BaseModel):
+    """A threshold the owner picked from reports/validacion.md (read by `make tablero`)."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    grupo: Literal["aluvion", "crecida", "lluvia", "nieve"]
+    variable: str  # a weather feature, with `_pct` for the per-cell seasonal percentile
+    umbral: float
+
+    @property
+    def base(self) -> str:
+        return self.variable.removesuffix("_pct")
+
+    @property
+    def es_percentil(self) -> bool:
+        return self.variable.endswith("_pct")
+
+    @model_validator(mode="after")
+    def _known_feature(self) -> UmbralElegido:
+        from corredor.weather.features import FEATURE_COLUMNS
+
+        if self.base not in FEATURE_COLUMNS:
+            raise ValueError(f"variable desconocida: {self.variable}")
+        if self.es_percentil and not 0 < self.umbral <= 100:
+            raise ValueError("un umbral en percentil va entre 0 y 100")
+        return self
 
 
 class AppConfig(BaseModel):
@@ -87,6 +152,9 @@ class AppConfig(BaseModel):
     clima: ClimaConfig = Field(default_factory=ClimaConfig)
     puntos: list[CriticalPoint]
     fuentes: list[SourceConfig]
+    # Empty until the owner picks them: the dashboard then shows "Umbral pendiente".
+    umbrales_elegidos: list[UmbralElegido] = Field(default_factory=list)
+    jama_al_dia: JamaAlDiaConfig = Field(default_factory=JamaAlDiaConfig)
 
     def enabled_sources(self) -> list[SourceConfig]:
         return [s for s in self.fuentes if s.enabled]

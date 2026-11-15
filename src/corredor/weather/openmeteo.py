@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import json
 import math
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
@@ -34,6 +34,8 @@ HOURLY_VARIABLES: dict[str, str] = {
     "temperature_2m": "temp_c",
 }
 WEATHER_COLUMNS = list(HOURLY_VARIABLES.values())
+# Optional series, requested only by "Jama al Día" (separate cache folders, `<kind>_rafagas`).
+GUST_VARIABLES: dict[str, str] = {"wind_gusts_10m": "rafaga_kmh"}
 # Archive data near today is still being produced (ERA5 lags ~5 days): when the cache is
 # extended, the last REFRESH_DAYS of the cached range are fetched again.
 REFRESH_DAYS = 7
@@ -179,7 +181,12 @@ class OpenMeteoClient:
         )
 
     def historical_forecast(
-        self, point: CriticalPoint, start: date, end: date, model: str
+        self,
+        point: CriticalPoint,
+        start: date,
+        end: date,
+        model: str,
+        variables: Mapping[str, str] = HOURLY_VARIABLES,
     ) -> pd.DataFrame:
         """Same series as `history`, from the archived runs of forecast `model`.
 
@@ -189,11 +196,24 @@ class OpenMeteoClient:
         Same request, split, cache and call-cap rules as `history`.
         """
         return self._series(
-            "pronostico_historico", self.config.historical_forecast_url, model, point, start, end
+            _kind("pronostico_historico", variables),
+            self.config.historical_forecast_url,
+            model,
+            point,
+            start,
+            end,
+            variables,
         )
 
     def _series(
-        self, kind: str, url: str, model: str, point: CriticalPoint, start: date, end: date
+        self,
+        kind: str,
+        url: str,
+        model: str,
+        point: CriticalPoint,
+        start: date,
+        end: date,
+        variables: Mapping[str, str] = HOURLY_VARIABLES,
     ) -> pd.DataFrame:
         if end < start:
             raise ValueError("end before start")
@@ -203,19 +223,24 @@ class OpenMeteoClient:
             if cached_end >= end:
                 return _slice(frame, start, end)
             tail_start = max(start, cached_end - timedelta(days=REFRESH_DAYS))
-            tail = self._fetch_archive(url, point, model, tail_start, end)
+            tail = self._fetch_archive(url, point, model, tail_start, end, variables)
             merged = pd.concat([frame[frame["time"] < pd.Timestamp(tail_start)], tail])
             self._write_cache(kind, point, model, start, end, merged)
             return _slice(merged, start, end)
         try:
-            frame = self._fetch_archive(url, point, model, start, end)
+            frame = self._fetch_archive(url, point, model, start, end, variables)
         except OpenMeteoError as exc:
             if exc.status != 400 or start.year == end.year:
                 raise
             frame = pd.concat(
                 [
                     self._fetch_archive(
-                        url, point, model, max(start, date(y, 1, 1)), min(end, date(y, 12, 31))
+                        url,
+                        point,
+                        model,
+                        max(start, date(y, 1, 1)),
+                        min(end, date(y, 12, 31)),
+                        variables,
                     )
                     for y in range(start.year, end.year + 1)
                 ],
@@ -225,12 +250,18 @@ class OpenMeteoClient:
         return frame
 
     def _fetch_archive(
-        self, url: str, point: CriticalPoint, model: str, start: date, end: date
+        self,
+        url: str,
+        point: CriticalPoint,
+        model: str,
+        start: date,
+        end: date,
+        variables: Mapping[str, str] = HOURLY_VARIABLES,
     ) -> pd.DataFrame:
-        params = self._archive_params(point, model, start, end, list(HOURLY_VARIABLES))
+        params = self._archive_params(point, model, start, end, list(variables))
         n_days = (end - start).days + 1
-        data, _ = self._get_json(url, params, len(HOURLY_VARIABLES), n_days)
-        return parse_hourly(data)
+        data, _ = self._get_json(url, params, len(variables), n_days)
+        return parse_hourly(data, variables)
 
     def _archive_params(
         self,
@@ -253,7 +284,9 @@ class OpenMeteoClient:
         }
 
     # ------------------------------------------------------------------ forecast
-    def forecast(self, point: CriticalPoint, hours: int) -> pd.DataFrame:
+    def forecast(
+        self, point: CriticalPoint, hours: int, variables: Mapping[str, str] = HOURLY_VARIABLES
+    ) -> pd.DataFrame:
         """Hourly forecast for the next `hours`, preceded by the last 7 days.
 
         Column `pronostico` is True for hours after the current hour. The URL carries the
@@ -269,7 +302,7 @@ class OpenMeteoClient:
         first = now_local - timedelta(hours=FORECAST_PAST_HOURS)
         last = now_local + timedelta(hours=hours)
         path = self._cache_path(
-            "pronostico", point, model, f"{first:%Y%m%dT%H}", f"{last:%Y%m%dT%H}"
+            _kind("pronostico", variables), point, model, f"{first:%Y%m%dT%H}", f"{last:%Y%m%dT%H}"
         )
         if path.exists():
             frame = pd.read_parquet(path)
@@ -277,17 +310,15 @@ class OpenMeteoClient:
             params = {
                 "latitude": _coord(point.lat),
                 "longitude": _coord(point.lon),
-                "hourly": ",".join(HOURLY_VARIABLES),
+                "hourly": ",".join(variables),
                 "models": model,
                 "timezone": self.config.zona_horaria,
                 "start_hour": f"{first:%Y-%m-%dT%H:%M}",
                 "end_hour": f"{last:%Y-%m-%dT%H:%M}",
             }
             n_days = (FORECAST_PAST_HOURS + hours) / 24
-            data, _ = self._get_json(
-                self.config.forecast_url, params, len(HOURLY_VARIABLES), n_days
-            )
-            frame = parse_hourly(data)
+            data, _ = self._get_json(self.config.forecast_url, params, len(variables), n_days)
+            frame = parse_hourly(data, variables)
             path.parent.mkdir(parents=True, exist_ok=True)
             frame.to_parquet(path, index=False)
         frame = frame.copy()
@@ -395,13 +426,19 @@ class OpenMeteoClient:
         return pd.read_parquet(best[1]), best[0]
 
 
-def parse_hourly(data: dict[str, Any]) -> pd.DataFrame:
+def _kind(kind: str, variables: Mapping[str, str]) -> str:
+    return kind if variables is HOURLY_VARIABLES else f"{kind}_{'_'.join(variables.values())}"
+
+
+def parse_hourly(
+    data: dict[str, Any], variables: Mapping[str, str] = HOURLY_VARIABLES
+) -> pd.DataFrame:
     """Open-Meteo `hourly` block → DataFrame(time, precipitacion_mm, nieve_cm, temp_c)."""
     hourly = data.get("hourly")
     if not isinstance(hourly, dict) or "time" not in hourly:
         raise OpenMeteoError("respuesta sin bloque 'hourly'")
     frame = pd.DataFrame({"time": pd.to_datetime(hourly["time"], format="%Y-%m-%dT%H:%M")})
-    for api_name, column in HOURLY_VARIABLES.items():
+    for api_name, column in variables.items():
         values = hourly.get(api_name)
         if values is None or len(values) != len(frame):
             raise OpenMeteoError(f"variable '{api_name}' ausente o incompleta")
