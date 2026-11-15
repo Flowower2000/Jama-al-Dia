@@ -9,7 +9,15 @@ import pytest
 import respx
 
 from corredor.jama_al_dia import cierres, pagina
-from corredor.jama_al_dia.estado import actual, bloques, estado_ar, estado_cl, horas, serie
+from corredor.jama_al_dia.estado import (
+    actual,
+    bloques,
+    estado_ar,
+    estado_cl,
+    horas,
+    serie,
+    ultima_consulta,
+)
 from corredor.jama_al_dia.pronostico import (
     Medida,
     Pronostico72,
@@ -284,6 +292,61 @@ def test_errors_never_carry_the_token() -> None:
     assert TOKEN not in str(exc.value)
 
 
+def test_stale_side_shows_sin_dato_reciente_and_never_posts(
+    tmp_path: Path, tg: respx.MockRouter
+) -> None:
+    old = NOW - timedelta(hours=3)
+    snaps = [ar(old), cl(old, "CERRADO")]
+    a, c = actual(serie(snaps, "AR"), NOW), actual(serie(snaps, "CL"), NOW)
+    assert a.viejo
+    html = pagina._lado("Chile", c, NOW)
+    assert "SIN DATO RECIENTE" in html
+    assert "último dato hace 3 h: cerrado" in html
+    assert 'class="lado "' in html  # grey, not red
+    path = tmp_path / "t.json"
+    Publicado(clave="AR=abierto;CL=abierto").save(path)
+    notificar(TelegramAPI(TOKEN, CHAT), a, c, path, NOW, url="")
+    assert _sent(tg) == []
+    assert Publicado.load(path).clave == "AR=abierto;CL=abierto"
+
+
+def test_header_shows_page_and_last_consulted_times() -> None:
+    snaps = [ar(NOW - timedelta(minutes=40)), cl(NOW - timedelta(minutes=30))]
+    a, c = actual(serie(snaps, "AR"), NOW), actual(serie(snaps, "CL"), NOW)
+    datos = pagina.Datos(
+        now=NOW, ar=a, cl=c, bloques={}, por_mes=[], duraciones={"n": 0}, pronostico=[],
+        ultima_consulta=ultima_consulta(snaps),
+    )  # fmt: skip
+    assert "Página actualizada 15/11 12:17 · último parte consultado 15/11 11:47" in pagina.index(
+        datos
+    )
+
+
+def test_schedule_closure_is_its_own_grey_state() -> None:
+    night = datetime(2026, 11, 16, 1, 0, tzinfo=UTC)  # 22:00 local
+    s = serie([ar(night, "CERRADO")], "AR")
+    a = actual(s, night + timedelta(minutes=10))
+    html = pagina._lado("Argentina", a, night + timedelta(minutes=10))
+    assert "CERRADO POR HORARIO (abre 09:00)" in html
+    assert 'class="lado horario"' in html
+    assert 'class="lado cerrado"' not in html
+    filas = bloques(s, night + timedelta(minutes=10))
+    assert "horario" in filas[-1]["celdas"]
+    assert "cerrado" not in filas[-1]["celdas"]
+    datos = pagina.Datos(
+        now=night, ar=a, cl=a, bloques={}, por_mes=[], duraciones={"n": 0}, pronostico=[]
+    )
+    assert "cerrado por horario</span>" in pagina.index(datos)
+
+
+def test_old_official_report_is_flagged_in_days() -> None:
+    e = estado_cl(cl(NOW))  # MOP FECHA 2026-11-09 08:00, NOW 2026-11-15 12:17 local
+    assert e.parte_dias(NOW) == 6
+    html = pagina._lado("Chile", actual([e], NOW), NOW)
+    assert "último parte oficial hace 6 días" in html
+    assert estado_ar(ar(NOW)).parte_dias(NOW) is None
+
+
 # ------------------------------------------------------------------ cierres
 def test_cierres_export_and_stats() -> None:
     eventos = pd.DataFrame(
@@ -312,13 +375,53 @@ def test_cierres_export_and_stats() -> None:
     )  # fmt: skip
     out = cierres.exportar(eventos, articulos)
     assert [c["reapertura"] for c in out] == [True, False]
-    meses = dict(cierres.por_mes(out, date(2026, 11, 15)))
-    assert meses["2024-06"] == 1
-    assert meses["2024-07"] == 1
-    assert meses["2016-01"] == 0
+    assert out[0]["url_reapertura"] == "u2"
+    meses = {k: (a, b) for k, a, b in cierres.por_mes(out, date(2026, 11, 15))}
+    assert meses["2024-06"] == (1, 0)
+    assert meses["2024-07"] == (1, 0)
+    assert meses["2016-01"] == (0, 0)
     assert list(meses)[-1] == "2026-11"
     d = cierres.duraciones(out)
-    assert d == {"n": 1, "mediana": 3, "min": 3, "max": 3, "total": 2}
+    assert d == {
+        "n": 1, "mediana": 3, "min": 3, "max": 3, "total": 2, "administrativos": []
+    }  # fmt: skip
+
+
+def _c(inicio: str, fin: str, **kw: object) -> dict[str, object]:
+    base = {
+        "fecha_inicio": inicio, "fecha_fin": fin, "reapertura": True, "causa": "nieve",
+        "tipo_corte": "total", "confianza": "alta", "administrativo": False,
+    }  # fmt: skip
+    return {**base, **kw}
+
+
+def test_chart_counts_only_total_or_partial_without_low_confidence_stacked() -> None:
+    lista = [
+        _c("2024-06-01", "2024-06-02"),
+        _c("2024-06-10", "2024-06-10", causa="otro", tipo_corte="parcial"),
+        _c("2024-06-12", "2024-06-12", tipo_corte="desconocido"),
+        _c("2024-06-15", "2024-06-15", confianza="baja"),
+    ]
+    meses = {k: (a, b) for k, a, b in cierres.por_mes(lista, date(2024, 12, 1))}
+    assert meses["2024-06"] == (1, 1)
+    assert len(cierres.contables(lista)) == 2
+
+
+def test_durations_leave_administrative_closures_out_and_say_dia() -> None:
+    lista = [
+        _c("2024-06-01", "2024-06-02"),
+        _c("2024-06-05", "2024-06-06"),
+        _c("2020-06-08", "2020-06-20", causa="otro", administrativo=True),
+    ]
+    d = cierres.duraciones(lista)
+    assert (d["n"], d["mediana"], d["max"]) == (2, 1, 1)
+    assert d["administrativos"] == [{"fecha_inicio": "2020-06-08", "dias": 12}]
+    html = pagina._duracion(d)
+    assert "1 día</span>" in html
+    assert "1 días" not in html
+    assert "Cierres administrativos" in html
+    assert "12 días" in html
+    assert [c["fecha_inicio"] for c in cierres.mas_largos(lista, 1)] == ["2020-06-08"]
 
 
 # ------------------------------------------------------------------ pronóstico 72 h
@@ -433,7 +536,7 @@ def test_page_escapes_and_has_required_text() -> None:
     a, c = actual(serie(snaps, "AR"), NOW), actual(serie(snaps, "CL"), NOW)
     datos = pagina.Datos(
         now=NOW, ar=a, cl=c, bloques={"AR": bloques(serie(snaps, "AR"), NOW)},
-        por_mes=[("2016-01", 2), ("2016-02", 0)],
+        por_mes=[("2016-01", 2, 1), ("2016-02", 0, 0)],
         duraciones={"n": 3, "mediana": 2, "min": 0, "max": 9, "total": 5}, pronostico=[],
         url_telegram='https://t.me/x"><script>', url_plan_flotas="",
     )  # fmt: skip

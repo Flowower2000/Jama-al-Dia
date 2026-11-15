@@ -88,8 +88,8 @@ class Publicado:
 
 def _lado_clave(a: Actual, avisar_horario: bool) -> str | None:
     e = a.ultimo
-    if e is None or e.estado is None:
-        return None
+    if e is None or e.estado is None or a.viejo:
+        return None  # stale data never changes the posted state
     if e.estado == "cerrado" and e.por_horario and not avisar_horario:
         return None  # nightly schedule closure: keep the previous value (no post either way)
     return e.estado
@@ -123,13 +123,27 @@ def _linea(nombre: str, a: Actual, now: datetime) -> str:
     e: EstadoLado | None = a.ultimo
     if e is None or e.estado is None:
         return f"{nombre}: sin dato"
-    txt = e.estado.upper() + (" (fuera de horario)" if e.por_horario else "")
+    if a.viejo:
+        return (
+            f"{nombre}: SIN DATO RECIENTE (último dato hace {horas(e.fetched_at, now)} h: "
+            f"{e.estado})\n  {e.fuente}"
+        )
+    if e.clase == "horario":
+        txt = "CERRADO POR HORARIO" + (f" (abre {e.abre})" if e.abre else "")
+    else:
+        txt = e.estado.upper()
     if a.desde is not None:
         h = horas(a.desde, now)
         txt += f", desde hace {'al menos ' if a.desde_al_menos else ''}{h} h"
     oficial = f" — parte {e.hora_oficial}" if e.hora_oficial else ""
-    viejo = " (dato viejo)" if a.viejo else ""
-    return f"{nombre}: {txt}{viejo}\n  {e.fuente}{oficial}"
+    dias = e.parte_dias(now)
+    if dias is not None:
+        oficial += f" (último parte oficial hace {_dias_txt(dias)})"
+    return f"{nombre}: {txt}\n  {e.fuente}{oficial}"
+
+
+def _dias_txt(n: int) -> str:
+    return f"{n} día" if n == 1 else f"{n} días"
 
 
 def mensaje(titulo: str, ar: Actual, cl: Actual, now: datetime, url: str) -> str:

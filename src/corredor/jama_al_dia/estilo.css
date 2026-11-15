@@ -17,6 +17,7 @@ section{background:#fff;border-radius:14px;padding:16px;margin:14px 0;box-shadow
 
 .lado p{margin:.2em 0;font-size:.85rem}
 .abierto{background:#1b7f3b}
+.horario{background:#4d6b8a}
 .cerrado{background:#c0262d}
 .restringido{background:#b45d00}
 
@@ -29,7 +30,9 @@ section{background:#fff;border-radius:14px;padding:16px;margin:14px 0;box-shadow
 
 .c{height:14px;background:#d5d9dd}
 .c.abierto{background:#1b7f3b}
+.horario{background:#4d6b8a}
 .c.cerrado{background:#c0262d}
+.c.horario{background:#8fa9c4}
 .c.restringido{background:#e08a1e}
 .c.futuro{background:transparent}
 
@@ -38,11 +41,13 @@ section{background:#fff;border-radius:14px;padding:16px;margin:14px 0;box-shadow
 
 .ley .abierto::before{background:#1b7f3b}
 .ley .cerrado::before{background:#c0262d}
+.ley .horario::before{background:#8fa9c4}
 .ley .restringido::before{background:#e08a1e}
 .ley span{background:none}
 
 svg{width:100%;height:auto}
-.bar{fill:#c0262d}
+.bar.nieve{fill:#2f6db5}
+.bar.otros{fill:#c0262d}
 .eje{fill:#5a646e;font-size:18px}
 .lin{stroke:#c9ced3}
 
@@ -55,3 +60,5 @@ svg{width:100%;height:auto}
 footer{font-size:.8rem;color:#5a646e;padding:8px 4px 32px}
 a{color:#1f6fb2}
 .banner{background:#fde8e8;border-left:4px solid #c0262d;padding:10px;border-radius:8px}
+.ley .nieve::before{background:#2f6db5}
+.ley .otros::before{background:#c0262d}

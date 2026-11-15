@@ -51,18 +51,23 @@ class Datos:
     ar: Actual
     cl: Actual
     bloques: Mapping[str, list[dict[str, Any]]]
-    por_mes: Sequence[tuple[str, int]]
+    por_mes: Sequence[tuple[str, int, int]]  # (AAAA-MM, nieve, otros)
     duraciones: Mapping[str, Any]
     pronostico: Sequence[Pronostico72]
     url_telegram: str = ""
     url_plan_flotas: str = ""
     catalogo_generado: str | None = None
     alto: float = 90
+    ultima_consulta: datetime | None = None
     extra: dict[str, Any] = field(default_factory=dict)
 
 
 def _hhmm(ts: datetime) -> str:
     return local(ts).strftime("%d/%m %H:%M")
+
+
+def _dias_txt(n: int) -> str:
+    return f"{n} día" if n == 1 else f"{n} días"
 
 
 def _lado(nombre: str, a: Actual, now: datetime) -> str:
@@ -73,25 +78,30 @@ def _lado(nombre: str, a: Actual, now: datetime) -> str:
             f'<div class="lado"><h3>{escape(nombre)}</h3><div class="big">SIN DATO</div>'
             f"<p>{escape(str(motivo))}</p></div>"
         )
-    big = ESTADO_TXT[e.estado]
     rows = []
-    if e.por_horario:
-        rows.append(f"fuera de horario ({escape(e.horario or '')})")
-    if a.desde is not None:
-        h = horas(a.desde, now)
-        rows.append(f"desde hace {'al menos ' if a.desde_al_menos else ''}{h} h")
+    if a.viejo:
+        clase, big = "", "SIN DATO RECIENTE"
+        estado_txt = "cerrado por horario" if e.clase == "horario" else e.estado
+        rows.append(f"último dato hace {horas(e.fetched_at, now)} h: {escape(estado_txt)}")
+    else:
+        clase = e.clase or ""
+        if e.clase == "horario":
+            big = "CERRADO POR HORARIO" + (f" (abre {escape(e.abre)})" if e.abre else "")
+        else:
+            big = ESTADO_TXT[e.estado]
+        if a.desde is not None:
+            h = horas(a.desde, now)
+            rows.append(f"desde hace {'al menos ' if a.desde_al_menos else ''}{h} h")
     if e.hora_oficial:
         rows.append(f"parte oficial: {escape(e.hora_oficial)}")
+    dias = e.parte_dias(now)
+    if dias is not None:
+        rows.append(f"<strong>último parte oficial hace {_dias_txt(dias)}</strong>")
     rows.append(f"consultado: {_hhmm(e.fetched_at)}")
-    if a.viejo:
-        rows.append(
-            f"<strong>dato viejo: última consulta hace {horas(e.fetched_at, now)} h</strong>"
-        )
     rows.append(escape(e.fuente))
     ps = "".join(f"<p>{r}</p>" for r in rows)
     return (
-        f'<div class="lado {e.estado}"><h3>{escape(nombre)}</h3><div class="big">{big}</div>'
-        f"{ps}</div>"
+        f'<div class="lado {clase}"><h3>{escape(nombre)}</h3><div class="big">{big}</div>{ps}</div>'
     )
 
 
@@ -108,26 +118,29 @@ def _dias(nombre: str, filas: Sequence[Mapping[str, Any]]) -> str:
     return "".join(out)
 
 
-def _grafico(por_mes: Sequence[tuple[str, int]]) -> str:
+def _grafico(por_mes: Sequence[tuple[str, int, int]]) -> str:
     if not por_mes:
         return "<p>Sin datos del catálogo.</p>"
     w, h, top, left = 640, 230, 12, 34
     bw = (w - left) / len(por_mes)
-    mx = max((n for _, n in por_mes), default=0) or 1
+    mx = max((a + b for _, a, b in por_mes), default=0) or 1
     sc = (h - top - 30) / mx
     parts = [f'<svg viewBox="0 0 {w} {h}" role="img" aria-label="Cierres de Jama por mes">']
     for k in range(0, mx + 1, max(1, mx // 3)):
         y = h - 30 - k * sc
         parts.append(f'<line class="lin" x1="{left}" x2="{w}" y1="{y:.1f}" y2="{y:.1f}"/>')
         parts.append(f'<text class="eje" x="0" y="{y + 6:.1f}">{k}</text>')
-    for i, (mes, n) in enumerate(por_mes):
+    for i, (mes, nieve, otros) in enumerate(por_mes):
         x = left + i * bw
-        if n:
-            parts.append(
-                f'<rect class="bar" x="{x:.1f}" y="{h - 30 - n * sc:.1f}" '
-                f'width="{max(bw - 1, 1):.1f}" height="{n * sc:.1f}">'
-                f"<title>{escape(mes)}: {n}</title></rect>"
-            )
+        base = float(h - 30)
+        for cls, n in (("bar nieve", nieve), ("bar otros", otros)):
+            if n:
+                parts.append(
+                    f'<rect class="{cls}" x="{x:.1f}" y="{base - n * sc:.1f}" '
+                    f'width="{max(bw - 1, 1):.1f}" height="{n * sc:.1f}">'
+                    f"<title>{escape(mes)}: {n} ({cls[4:]})</title></rect>"
+                )
+                base -= n * sc
         if mes.endswith("-01") and int(mes[:4]) % 2 == 0:
             parts.append(f'<text class="eje" x="{x:.1f}" y="{h - 6}">{escape(mes[:4])}</text>')
     parts.append("</svg>")
@@ -138,13 +151,24 @@ def _duracion(d: Mapping[str, Any]) -> str:
     if not d.get("n"):
         return "<p>Ningún cierre del catálogo tiene fecha de reapertura conocida.</p>"
     med = d["mediana"]
-    med_txt = f"{med:g}"
+    med_txt = f"{med:g}".replace(".", ",")
+    unidad = "día" if med == 1 else "días"
+    rango_u = "día" if d["max"] == 1 else "días"
+    adm = d.get("administrativos") or []
+    adm_txt = ""
+    if adm:
+        lista = ", ".join(f"{escape(a['fecha_inicio'])} ({_dias_txt(int(a['dias']))})" for a in adm)
+        adm_txt = (
+            f"<p>Cierres administrativos (no meteorológicos, p. ej. sanitarios), fuera de la "
+            f"mediana: {len(adm)} — {lista}.</p>"
+        )
     return (
-        f'<p><span class="num">{escape(med_txt)} días</span> de mediana</p>'
-        f"<p>Rango: {d['min']} a {d['max']} días · n = {d['n']} cierres con reapertura conocida "
-        f"(de {d['total']} cierres en el catálogo).</p>"
-        '<p class="nota">Días entre la primera nota del cierre y la nota de reapertura (fechas de '
-        "publicación). Solo cierres con una nota de reapertura en el catálogo; "
+        f'<p><span class="num">{escape(med_txt)} {unidad}</span> de mediana</p>'
+        f"<p>Rango: {d['min']} a {d['max']} {rango_u} · n = {d['n']} cierres con reapertura "
+        f"conocida (de {d['total']} cierres en el catálogo).</p>"
+        + adm_txt
+        + '<p class="nota">Días entre la primera nota del cierre y la nota de reapertura (fechas '
+        "de publicación). Solo cierres con una nota de reapertura en el catálogo; "
         f"{escape(NOTA_PRENSA)}.</p>"
     )
 
@@ -210,22 +234,26 @@ def index(d: Datos) -> str:
             f'<a class="btn flotas" href="{escape(d.url_plan_flotas)}" rel="noopener">'
             "Plan Flotas — anotate</a>"
         )
-    total = sum(n for _, n in d.por_mes)
+    total = sum(a + b for _, a, b in d.por_mes)
+    nieve_total = sum(a for _, a, _b in d.por_mes)
+    consulta = f" · último parte consultado {_hhmm(d.ultima_consulta)}" if d.ultima_consulta else ""
     body = [
         "<header><h1>Jama al Día</h1>",
         '<p class="sub">Paso de Jama (RN 52 · CH-27). '
-        f"Actualizado {_hhmm(d.now)} (hora argentina).</p>"
+        f"Página actualizada {_hhmm(d.now)}{consulta} (hora argentina).</p>"
         "</header>",
         '<section><h2>Estado ahora</h2><div class="lados">',
         _lado("Argentina", d.ar, d.now),
         _lado("Chile", d.cl, d.now),
         '</div><p class="nota">Resolución: 1 h (consultamos los partes oficiales cada hora). '
-        "Argentina marca el paso CERRADO fuera de su horario de atención.</p></section>",
+        "Fuera de su horario de atención Argentina marca el paso cerrado: se muestra como "
+        "&quot;cerrado por horario&quot;, no como un cierre.</p></section>",
     ]
     if botones:
         body.append(f'<section class="botones">{"".join(botones)}</section>')
     ley = (
         '<div class="ley"><span class="abierto">abierto</span><span class="cerrado">cerrado</span>'
+        '<span class="horario">cerrado por horario</span>'
         '<span class="restringido">restringido</span><span>sin dato</span></div>'
     )
     body += [
@@ -237,7 +265,10 @@ def index(d: Datos) -> str:
         "un estado se repite como máximo 3 h; si no, queda gris.</p></section>",
         "<section><h2>Cierres de Jama por mes, 2016–2026</h2>",
         _grafico(d.por_mes),
-        f'<p class="nota">{total} cierres en el catálogo; {escape(NOTA_PRENSA)}.'
+        '<div class="ley"><span class="nieve">nieve</span><span class="otros">otras causas</span>'
+        "</div>"
+        f'<p class="nota">{total} cierres totales o parciales ({nieve_total} por nieve), sin '
+        f"los de confianza baja; {escape(NOTA_PRENSA)}."
         + (f" Catálogo del {escape(d.catalogo_generado)}." if d.catalogo_generado else "")
         + "</p></section>",
         "<section><h2>Cuánto duran los cierres</h2>",
