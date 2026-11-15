@@ -8,6 +8,7 @@ All notable changes to this project are documented here. The format follows
 ## [Unreleased]
 
 ### Added
+- `reports/`: coverage, precision, manual review and validation regenerated with rules v4 (`PARSER_VERSION` 6) on the full backfill (4,570 articles, 578 events).
 - `docs/FUENTES.md`: control misses expected from outlets we do not collect.
 - `corredor recolectar --paralelo` (one queue per host), `--max-solicitudes` (0 = no cap), a
   listing pass with `--completo` (`recoleccion/<id>.plan.json`: sitemap URLs, slug-filter
