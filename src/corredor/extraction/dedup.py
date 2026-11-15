@@ -9,7 +9,9 @@ Two events are the same closure when they share the route, their points are comp
     `min_jaccard`, both with >= `min_tokens` tokens).
 A follow-up article (FOLLOW_UP: schedules, "habilitan", "reabren", "sigue cortada",
 works after a closure…) joins a cluster on the same route with compatible points within
-`follow_days` of any member, whatever its own cause, and inherits the cluster's cause.
+`follow_days` of any member and inherits the cluster's cause; without a shared point, a
+follow-up that names its own cause needs the same cause family, and a located event only
+absorbs point-less clusters of a compatible family.
 Clusters grow by single linkage over events sorted by date. The merged event keeps
 `fecha` = `fecha_inicio` (first article) and `fecha_fin` (last article). `n_medios` counts
 distinct outlets, excluding those with `republica: true`.
@@ -35,6 +37,7 @@ FOLLOW_UP = re.compile(
     r"|horarios?|alternativa|desvios?|trabajos|limpieza|pueden circular|restablec\w*)\b"
 )
 _FAMILY: dict[str, str] = {"aluvion": "lluvia", "crecida": "lluvia"}
+REPUBLISHER_NOTE = "solo fuente que republica"
 _CONFIANZA: dict[Confianza, int] = {"baja": 0, "media": 1, "alta": 2}
 _TIPO: dict[TipoCorte, int] = {"desconocido": 0, "precaucion": 1, "parcial": 2, "total": 3}
 
@@ -70,6 +73,13 @@ class _Cluster:
 
 def family(causa: str) -> str:
     return _FAMILY.get(causa, causa)
+
+
+def _compatible(a: _Cluster, b: _Cluster) -> bool:
+    """Cause families agree, or one of the clusters has no cause yet (only "otro")."""
+    fa = {family(e.causa) for e in a.events if e.causa != "otro"}
+    fb = {family(e.causa) for e in b.events if e.causa != "otro"}
+    return not fa or not fb or bool(fa & fb)
 
 
 def is_follow_up(titular: str) -> bool:
@@ -115,7 +125,12 @@ class EventDeduplicator:
                     for i in sorted((i for _, i in scored), reverse=True):
                         other = clusters[i]
                         near = abs((other.events[0].fecha - ev.fecha).days) <= self.window_days
-                        if other is not target and other.point is None and near:
+                        if (
+                            other is not target
+                            and other.point is None
+                            and near
+                            and _compatible(other, target)
+                        ):
                             target.events.extend(other.events)
                             target.titles.extend(other.titles)
                             target.follow.extend(other.follow)
@@ -127,8 +142,8 @@ class EventDeduplicator:
 
     def _score(
         self, cluster: _Cluster, ev: ClosureEvent, title: frozenset[str], follow: bool
-    ) -> tuple[int, int] | None:
-        """(point rank, day gap) if `ev` belongs to `cluster`, else None; lower is better."""
+    ) -> tuple[int, int, int] | None:
+        """(point rank, day gap, -size) if `ev` belongs to `cluster`, else None; lower wins."""
         point = cluster.point
         if ev.punto_id is not None and point is not None and ev.punto_id != point:
             return None
@@ -147,7 +162,11 @@ class EventDeduplicator:
                 and other.tipo_corte != "precaucion"  # a warning is not a closure
                 and 0 <= (ev.fecha - other.fecha).days <= (self.follow_days)
             ):
-                ok = True  # schedules, reopenings, works after a closure extend it
+                # schedules, reopenings, works after a closure extend it; without a shared
+                # point a follow-up with its own cause needs the same cause family
+                located = ev.punto_id is not None and point is not None
+                own = ev.causa not in ("otro", "obra")  # "obra" here: works after the closure
+                ok = located or not own or family(other.causa) in ("otro", family(ev.causa))
             elif gap <= self.window_days:
                 fam_a, fam_b = family(ev.causa), family(other.causa)
                 located = ev.punto_id is not None and point is not None
@@ -157,7 +176,8 @@ class EventDeduplicator:
                 )
             if ok and (best is None or gap < best):
                 best = gap
-        return None if best is None else (rank, best)
+        # ties: the event with more mentions (a follow-up joins the main closure)
+        return None if best is None else (rank, best, -len(cluster.events))
 
     def _similar(self, a: frozenset[str], b: frozenset[str]) -> bool:
         if min(len(a), len(b)) < self.min_tokens:
@@ -178,6 +198,8 @@ class EventDeduplicator:
         ]
         evs = sorted(evs, key=lambda e: (e.fecha, e.evento_id))
         first = evs[0]
+        n_medios = len(outlets - self.republishers)
+        notas = {e.notas for e in evs if e.notas} | ({REPUBLISHER_NOTE} if n_medios == 0 else set())
         return first.model_copy(
             update={
                 "evento_id": hashlib.sha1(  # noqa: S324 — identifier, not security
@@ -194,10 +216,12 @@ class EventDeduplicator:
                 "fecha": first.fecha,
                 "fecha_inicio": first.fecha,
                 "fecha_fin": max(e.fecha for e in evs),
-                "n_medios": len(outlets - self.republishers),
+                "n_medios": n_medios,
                 "metodo": "llm" if any(e.metodo == "llm" for e in evs) else "reglas",
-                "confianza": max((e.confianza for e in evs), key=_CONFIANZA.__getitem__),
-                "notas": "; ".join(sorted({e.notas for e in evs if e.notas})),
+                "confianza": "baja"
+                if n_medios == 0
+                else max((e.confianza for e in evs), key=_CONFIANZA.__getitem__),
+                "notas": "; ".join(sorted(notas)),
                 "lado": _side(e.lado for e in evs),
             }
         )

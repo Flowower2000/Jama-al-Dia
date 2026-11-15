@@ -8,7 +8,7 @@ Rules for humans and agents live in [AGENTS.md](AGENTS.md). This file covers the
 make setup        # uv sync --frozen + pre-commit install
 make check        # lint + typecheck + test + docs-check + audit
 make format       # ruff fix + format
-make clima        # Open-Meteo archive per point (respects clima.max_llamadas_diarias)
+make clima        # Open-Meteo archive per point (respects clima.max_llamadas_diarias minus clima.reserva_pronostico)
 ```
 
 `make docs-check` compares your branch against `origin/main`, so run `git fetch origin`
@@ -46,7 +46,8 @@ Follow [docs/playbooks/add_news_source.md](docs/playbooks/add_news_source.md). I
    offline tests; document the source in `docs/SCRAPING.md`.
 5. Generic outlets need one smoke test entry in `tests/unit/test_generic_smoke.py` with
    recorded fixtures under `tests/fixtures/generic/`. Try it with
-   `uv run corredor recolectar --fuente <id>` (sitemaps: sample months only).
+   `uv run corredor recolectar --fuente <id>` (sitemaps: sample months only; full backfill:
+   `--completo --paralelo --max-solicitudes 0`).
 
 ## Releases
 

@@ -44,7 +44,9 @@ OpenStreetMap; los GeoJSON quedan en `assets/geo/`), `make clima`, `make datos`,
 
 `make clima` respeta el tope diario de llamadas a Open-Meteo (`clima.max_llamadas_diarias`
 en `config.yaml`: 1500; 500 si no se configura): si lo alcanza, se detiene con un aviso y la corrida
-siguiente sigue desde la caché.
+siguiente sigue desde la caché. Las descargas del archivo histórico dejan libre
+`clima.reserva_pronostico` (300 en `config.yaml`) para que el armado del pronóstico del tablero
+siempre tenga llamadas.
 
 La configuración vive en [`config.yaml`](config.yaml) (puntos críticos, fuentes y
 `umbrales_elegidos`, que lee `make tablero`; vacío = "Umbral pendiente de definición"). Ninguna
@@ -88,7 +90,9 @@ de entorno `LLM_API_KEY`.
   oficial (ver [docs/USO.md](docs/USO.md)).
 - **Extracción por reglas:** los eventos salen del titular, la bajada y la URL, no del
   texto de la nota; una nota sin lugar ni km queda sin punto crítico. La precisión medida
-  a mano está en `reports/precision.md`.
+  a mano está en `reports/precision.md`. En Paso de Jama, un cierre "por condiciones
+  climáticas" sin la palabra nieve se cuenta como nieve solo de mayo a septiembre, con
+  confianza baja y la nota "causa inferida por temporada".
 - **Puntos críticos:** las coordenadas salen de un objeto de OpenStreetMap y solo se marcan
   `verificado: true` si están a menos de 500 m de la traza (ver
   [reports/geo_verificacion.md](reports/geo_verificacion.md)). Los km son distancias medidas

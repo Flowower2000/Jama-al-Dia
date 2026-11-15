@@ -15,8 +15,28 @@ All notable changes to this project are documented here. The format follows
   `ClosureEvent`). Forecast risk as a percentile of the
   forecast model's own climatology (Historical Forecast API, #26); `umbrales_elegidos` in
   `config.yaml` (empty → "Umbral pendiente de definición"); `docs/USO.md`.
+- `docs/FUENTES.md`: control misses expected from outlets we do not collect.
+- `corredor recolectar --paralelo` (one queue per host), `--max-solicitudes` (0 = no cap), a
+  listing pass with `--completo` (`recoleccion/<id>.plan.json`: sitemap URLs, slug-filter
+  candidates, estimated time) and `SourceBlocked` to stop one source on 403/429 storms or
+  pages without metadata.
 
 ### Changed
+- Rules extractor (`PARSER_VERSION` 6): a suggested alternate route is not a closure of
+  that route; an accented "cerró" no longer drops a per-route event; cut + protest actor
+  (comunidades, vecinos, gremio…) → `protesta`; Jama closed by unspecified weather → `nieve`
+  with `confianza=baja` only May–September; accident/freight `otro` stories without a
+  closure term are dropped. Dedup: point-less merges and absorptions need the same cause
+  family.
+- Rules extractor (`PARSER_VERSION` 5): articles naming several routes and no place give one
+  event per route, each with the cause and kind of its own clause; "N.º 9" route prefix;
+  "mano única"/"paso alternado" are partial. Dedup: ties go to the event with more mentions;
+  events whose only sources republish get `confianza=baja` and a note.
+- `make precision`: labels whose catalog value changed since labelling become `revisar`
+  (listed old → new) and, like `nd`, are left out of precision; `ok_corte` "ok" counts as si.
+- `make cobertura` reports optimistic and strict coverage (strict: a point-less event does
+  not cover a control event with a place).
+- `clima.reserva_pronostico`: calls archive downloads leave for the forecast build.
 - `SCHEMA_VERSION` 2 → 3: `eventos.fecha_inicio`, `eventos.fecha_fin`, `eventos.lado`
   (AR/CL/ambos/desconocido, Paso de Jama only) and `puntos.solo_clima`.
 - Rules extractor (`PARSER_VERSION` 4): one event per critical point named in the article;
