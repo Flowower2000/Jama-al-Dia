@@ -70,7 +70,8 @@ jama-cierres:
 jama-pagina:
 	-git fetch origin data-snapshots && mkdir -p data/snapshots && \
 	  git show origin/data-snapshots:snapshots/jama_estado.jsonl > data/snapshots/jama_estado.jsonl && \
-	  (git show origin/data-snapshots:snapshots/telegram_estado.json > data/snapshots/telegram_estado.json || true)
+	  (git show origin/data-snapshots:snapshots/telegram_estado.json > data/snapshots/telegram_estado.json || \
+	   rm -f data/snapshots/telegram_estado.json)
 	$(UV) run corredor jama-pagina
 
 # Only the integration session or the owner runs these (never child sessions).

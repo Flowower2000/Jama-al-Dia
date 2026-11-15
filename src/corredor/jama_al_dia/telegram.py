@@ -75,9 +75,10 @@ class Publicado:
 
     @classmethod
     def load(cls, path: Path) -> Publicado:
-        if not path.exists():
+        text = path.read_text(encoding="utf-8").strip() if path.exists() else ""
+        if not text:
             return cls()
-        data = json.loads(path.read_text(encoding="utf-8"))
+        data = json.loads(text)
         return cls(**{k: data.get(k) for k in cls.__dataclass_fields__})
 
     def save(self, path: Path) -> None:

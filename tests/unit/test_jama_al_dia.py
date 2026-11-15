@@ -136,6 +136,11 @@ def _sent(router: respx.MockRouter) -> list[str]:
     ]
 
 
+def test_empty_state_file_loads_as_new(tmp_path: Path) -> None:
+    (tmp_path / "t.json").write_text("")
+    assert Publicado.load(tmp_path / "t.json") == Publicado()
+
+
 def test_without_secrets_skips(tmp_path: Path, caplog: pytest.LogCaptureFixture) -> None:
     a, c = _actuales()
     caplog.set_level("INFO")
