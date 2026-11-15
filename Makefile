@@ -1,4 +1,4 @@
-.PHONY: setup lint format typecheck test docs-check audit check geo snapshot-jama clima datos calibrar precision reporte cobertura tablero release tag
+.PHONY: setup lint format typecheck test docs-check audit check geo snapshot-jama clima datos calibrar precision reporte cobertura tablero jama-cierres jama-pagina release tag
 
 UV ?= uv
 BUMP ?=
@@ -63,6 +63,15 @@ tablero:
 	-git fetch origin data-snapshots && mkdir -p data/snapshots && \
 	  git show origin/data-snapshots:snapshots/jama_estado.jsonl > data/snapshots/jama_estado.jsonl
 	$(UV) run corredor tablero
+
+jama-cierres:
+	$(UV) run corredor jama-cierres
+
+jama-pagina:
+	-git fetch origin data-snapshots && mkdir -p data/snapshots && \
+	  git show origin/data-snapshots:snapshots/jama_estado.jsonl > data/snapshots/jama_estado.jsonl && \
+	  (git show origin/data-snapshots:snapshots/telegram_estado.json > data/snapshots/telegram_estado.json || true)
+	$(UV) run corredor jama-pagina
 
 # Only the integration session or the owner runs these (never child sessions).
 # main is protected: `release` opens a release/vX.Y.Z PR; `tag` runs after it is merged.

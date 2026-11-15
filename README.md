@@ -34,9 +34,19 @@ make cobertura      # reports/control/cobertura.md: cobertura contra la lista de
 make tablero        # tablero/dist/: sitio sin conexión para el teléfono (ver docs/USO.md)
 ```
 
-El estado del Paso de Jama (Vialidad MOP Chile y argentina.gob.ar) se guarda cada 3 horas
-con un workflow de GitHub Actions en la rama `data-snapshots`. Ninguna de las dos fuentes
-tiene historial: los datos empiezan el día en que arrancó el colector.
+El estado del Paso de Jama (Vialidad MOP Chile y argentina.gob.ar) se guarda cada hora
+(cada 3 horas hasta el 2026-11-15) con un workflow de GitHub Actions en la rama
+`data-snapshots`. Ninguna de las dos fuentes tiene historial: los datos empiezan el día en que
+arrancó el colector.
+
+**Jama al Día** (https://emiliano-f.github.io/corredor-quebrada-puna/): página pública que el
+mismo workflow rearma cada hora y publica en GitHub Pages (estado por lado, últimos 7 días,
+cierres por mes del catálogo, duración de cierres, nieve y ráfagas a 72 h frente a la climatología del modelo, y `/traccion`).
+`make jama-cierres` exporta los cierres de `rn52_paso_jama` a `assets/jama/cierres.json`
+(comprometido; rehacerlo cuando cambie el catálogo) y `make jama-pagina` arma `sitio/`. El
+canal de Telegram publica solo cuando cambia el estado combinado AR/CL, más un resumen a las
+08:00; necesita los secrets de Actions `TELEGRAM_BOT_TOKEN` y `TELEGRAM_CHAT_ID` (sin ellos se
+saltea con "telegram: sin secrets"). No es un canal oficial.
 
 Etapas (una por target de Make): `make geo` (rutas, Tren Solar y puntos críticos desde
 OpenStreetMap; los GeoJSON quedan en `assets/geo/`), `make clima`, `make datos`, `make calibrar`,

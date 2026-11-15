@@ -8,6 +8,7 @@ All notable changes to this project are documented here. The format follows
 ## [Unreleased]
 
 ### Added
+- "Jama al Día": `corredor jama-pagina` (static GitHub Pages site: AR/CL status with "desde hace X h", 7-day hourly blocks, monthly closures 2016–2026 and closure durations from `assets/jama/cierres.json`, 72 h snowfall and max wind gust vs the forecast model's own climatology (`wind_gusts_10m`, optional `variables` in `OpenMeteoClient.forecast`/`historical_forecast`, separate cache folders), `/traccion`), `corredor jama-cierres`, `corredor jama-telegram` (posts only on a combined-state change plus an 08:00 summary; state in `data-snapshots`), `jama_al_dia` in `config.yaml`; `jama_snapshot.yml` now runs hourly and deploys Pages.
 - Dashboard: weather-only points (`solo_clima`, e.g. `ch27_alto`) are left out of the map, the point list and the forecast download.
 - `make tablero`: offline dashboard data layer in `tablero/dist/` (single `index.html`, bare
   unstyled views until the design brief, SVG map from `assets/geo`, no external resources, CSP

@@ -91,6 +91,31 @@ class ClimaConfig(BaseModel):
     elevation_url: str = "https://api.open-meteo.com/v1/elevation"
 
 
+class JamaAlDiaConfig(BaseModel):
+    """Public "Jama al Día" page and Telegram channel (links come from the owner)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    url_pagina: str = ""
+    url_telegram: str = ""
+    url_plan_flotas: str = ""
+    waitlist_inscriptos: int | None = Field(default=None, ge=0)
+    waitlist_actualizado: date | None = None
+    puntos_nieve: list[str] = Field(default_factory=lambda: ["rn52_paso_jama", "ch27_alto"])
+    # Descriptive cutoff for "alto" (snow and gusts vs the forecast model climatology).
+    percentil_alto: float = Field(default=90, gt=0, lt=100)
+    # argentina.gob.ar marks the crossing CERRADO every night outside its schedule.
+    avisar_cierre_por_horario: bool = False
+    hora_resumen: int = Field(default=8, ge=0, le=23)
+
+    @field_validator("url_pagina", "url_telegram", "url_plan_flotas")
+    @classmethod
+    def _https(cls, v: str) -> str:
+        if v and not v.startswith("https://"):
+            raise ValueError("solo enlaces https://")
+        return v
+
+
 class UmbralElegido(BaseModel):
     """A threshold the owner picked from reports/validacion.md (read by `make tablero`)."""
 
@@ -129,6 +154,7 @@ class AppConfig(BaseModel):
     fuentes: list[SourceConfig]
     # Empty until the owner picks them: the dashboard then shows "Umbral pendiente".
     umbrales_elegidos: list[UmbralElegido] = Field(default_factory=list)
+    jama_al_dia: JamaAlDiaConfig = Field(default_factory=JamaAlDiaConfig)
 
     def enabled_sources(self) -> list[SourceConfig]:
         return [s for s in self.fuentes if s.enabled]
