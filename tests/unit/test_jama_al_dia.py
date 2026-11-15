@@ -181,12 +181,14 @@ def test_posts_only_on_change(tmp_path: Path, tg: respx.MockRouter) -> None:
     a2, c2 = _actuales(cl_state="CERRADO")
     assert "cambio" in notificar(api, a2, c2, path, NOW + timedelta(hours=2), url=url)
     (msg,) = _sent(tg)
-    assert "Chile: CERRADO" in msg
-    assert "Argentina: ABIERTO" in msg
-    assert PIE in msg
-    assert url in msg
-    assert "MOP Chile" in msg
-    assert "parte hoy 12:12" in msg
+    lineas = msg.split("\n")
+    assert len(lineas) <= 4
+    assert lineas[0].startswith("🟢 Jama — Argentina ABIERTO desde")
+    assert lineas[1].startswith("🔴 Chile: CERRADO desde")
+    assert lineas[2] == PIE == "Fuente: Pasos Fronterizos (AR) · MOP (CL). No es un canal oficial."
+    assert lineas[3] == url
+    assert "Resolución" not in msg
+    assert "parte hoy" not in msg
     notificar(api, a2, c2, path, NOW + timedelta(hours=3), url=url)
     assert len(_sent(tg)) == 1
     pub = Publicado.load(path)
@@ -260,7 +262,8 @@ def test_daily_summary_once_at_eight(tmp_path: Path, tg: respx.MockRouter) -> No
     notificar(api, a, c, path, eight + timedelta(minutes=30), url="")
     msgs = _sent(tg)
     assert len(msgs) == 1
-    assert "resumen" in msgs[0]
+    assert msgs[0].startswith("🟢 Jama — Argentina ABIERTO")
+    assert len(msgs[0].split("\n")) <= 4
 
 
 def test_change_is_saved_even_if_the_summary_fails(tmp_path: Path) -> None:
@@ -284,7 +287,7 @@ def test_test_post(tmp_path: Path, tg: respx.MockRouter) -> None:
     a, c = _actuales()
     notificar(TelegramAPI(TOKEN, CHAT), a, c, tmp_path / "t.json", NOW, url="", prueba=True)
     (msg,) = _sent(tg)
-    assert "prueba" in msg
+    assert msg.startswith("[Prueba] 🟢 Jama — Argentina ABIERTO")
     assert PIE in msg
 
 
@@ -343,6 +346,15 @@ def test_schedule_closure_is_its_own_grey_state() -> None:
     assert "Abre a las 09:00" in html
     assert 'class="lado horario"' in html
     assert 'class="lado cerrado"' not in html
+    from corredor.jama_al_dia.telegram import _linea
+
+    assert _linea("Jama — Argentina", a, night + timedelta(minutes=10)) == (
+        "⚪ Jama — Argentina fuera de horario, abre a las 09:00"
+    )
+    late = night + timedelta(hours=3)
+    assert _linea("Jama — Argentina", actual(s, late), late).startswith(
+        "🟡 Jama — Argentina sin dato reciente (último: Cerrado por horario"
+    )
     filas = bloques(s, night + timedelta(minutes=10))
     assert "horario" in filas[-1]["celdas"]
     assert "cerrado" not in filas[-1]["celdas"]
@@ -372,8 +384,8 @@ def test_old_official_report_is_flagged_in_days() -> None:
     assert "Estado no confirmado" in viejo  # our own check is stale: that wins
     from corredor.jama_al_dia.telegram import _linea
 
-    assert _linea("Chile", actual([e], NOW), NOW).startswith(
-        "Chile: Sin parte nuevo (último parte oficial 09/11 08:00: Abierto)"
+    assert _linea("Chile:", actual([e], NOW), NOW) == (
+        "🟡 Chile: sin parte nuevo desde el 09/11 (último: Abierto)"
     )
     assert estado_ar(ar(NOW)).parte_dias(NOW) is None
 
@@ -580,6 +592,7 @@ def test_banner_only_when_both_high_and_higher_point_shown() -> None:
     assert "esta época desde 2021" in html
     assert "Se pronostican" not in pagina._pronostico([one], NOW)
     assert "Esto no es un pronóstico de cierre." in html
+    assert "Alto = dentro del 10 % más alto para esta época, según el mismo modelo." in html
 
 
 # ------------------------------------------------------------------ página

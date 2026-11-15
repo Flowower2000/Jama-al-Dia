@@ -278,6 +278,8 @@ def _pronostico(ps: Sequence[Pronostico72], now: datetime, alto: float = 90) -> 
         )
     return (
         f'<div class="prono">{body}</div>'
+        f'<p class="nota">Alto = dentro del {100 - alto:g} % más alto para esta época, según el '
+        "mismo modelo.</p>"
         '<p class="nota">Esto no es un pronóstico de cierre. Compara el pronóstico con lo '
         "habitual para esta época según el mismo modelo (Open-Meteo). El cierre lo deciden "
         " las autoridades de Chile y Argentina: consultá siempre el estado oficial.</p>"

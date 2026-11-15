@@ -21,7 +21,8 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 log = logging.getLogger(__name__)
 
 API = "https://api.telegram.org"
-PIE = "Fuente: partes oficiales de Argentina y Chile. No es un canal oficial."
+PIE = "Fuente: Pasos Fronterizos (AR) · MOP (CL). No es un canal oficial."
+ICONO = {"abierto": "🟢", "cerrado": "🔴", "restringido": "🟠"}
 AVISO_OMITIDO = "telegram: sin secrets"  # pragma: allowlist secret
 
 
@@ -121,48 +122,34 @@ def _cambio_real(previa: str | None, nueva: str) -> bool:
 
 
 def _linea(nombre: str, a: Actual, now: datetime) -> str:
+    """'🟢 Jama — Argentina ABIERTO desde las 14:46', '🟡 Chile: sin parte nuevo desde …'."""
     e: EstadoLado | None = a.ultimo
     if e is None or e.estado is None:
-        return f"{nombre}: sin dato"
+        return f"⚪ {nombre} sin dato"
     t = e.oficial_dt
     if a.parte_viejo and t is not None and now - e.fetched_at <= VIEJO:
-        return (
-            f"{nombre}: Sin parte nuevo (último parte oficial {t:%d/%m %H:%M}: "
-            f"{e.nombre_estado})\n  {e.fuente}"
-        )
+        return f"🟡 {nombre} sin parte nuevo desde el {t:%d/%m} (último: {e.nombre_estado})"
     if a.viejo:
-        return f"{nombre}: Estado no confirmado ({_ultimo_dato(a, now)})\n  {e.fuente}"
+        return (
+            f"🟡 {nombre} sin dato reciente "
+            f"(último: {e.nombre_estado}, {cuando(e.fetched_at, now)})"
+        )
     if e.clase == "horario":
-        txt = "Cerrado por horario" + (f" (abre a las {e.abre})" if e.abre else "")
-    else:
-        txt = e.estado.upper()
+        return f"⚪ {nombre} fuera de horario" + (f", abre a las {e.abre}" if e.abre else "")
+    txt = f"{ICONO.get(e.clase or '', '⚪')} {nombre} {e.nombre_estado.upper()}"
     if a.desde is not None:
-        txt += f", {desde_txt(a, now)}"
-    oficial = f" — parte {cuando(t, now)}" if t else ""
-    return f"{nombre}: {txt}\n  {e.fuente}{oficial}"
+        txt += f" {desde_txt(a, now)}"
+    return txt
 
 
-def _ultimo_dato(a: Actual, now: datetime) -> str:
-    """'Último dato: Cerrado por horario, hoy 03:43' or '…, parte oficial del 09/11'."""
-    e = a.ultimo
-    if e is None:
-        return "sin datos"
-    t = e.oficial_dt
-    if a.parte_viejo and t is not None:
-        return f"Último dato: {e.nombre_estado}, parte oficial del {t:%d/%m}"
-    return f"Último dato: {e.nombre_estado}, {cuando(e.fetched_at, now)}"
-
-
-def mensaje(titulo: str, ar: Actual, cl: Actual, now: datetime, url: str) -> str:
-    partes = [
-        titulo,
-        _linea("🇦🇷 Argentina", ar, now),
-        _linea("🇨🇱 Chile", cl, now),
-        "Resolución: 1 h (consultamos cada hora).",
-    ]
+def mensaje(ar: Actual, cl: Actual, now: datetime, url: str, *, prueba: bool = False) -> str:
+    """At most 4 lines: Argentina, Chile, source, link."""
+    primera = _linea("Jama — Argentina", ar, now)
+    if prueba:
+        primera = f"[Prueba] {primera}"
+    partes = [primera, _linea("Chile:", cl, now), PIE]
     if url:
         partes.append(url)
-    partes.append(PIE)
     return "\n".join(partes)
 
 
@@ -206,18 +193,18 @@ def _publicar(
     loc = local(now)
     nueva = clave(ar, cl, pub.clave, avisar_horario)
     if prueba:
-        api.send_message(mensaje("Paso de Jama — mensaje de prueba", ar, cl, now, url))
+        api.send_message(mensaje(ar, cl, now, url, prueba=True))
         hechos.append("prueba")
     if nueva is not None and nueva != pub.clave:
         if _cambio_real(pub.clave, nueva):
-            api.send_message(mensaje("Paso de Jama — cambió el estado", ar, cl, now, url))
+            api.send_message(mensaje(ar, cl, now, url))
             hechos.append("cambio")
         else:
             hechos.append("estado inicial guardado")
         pub.clave, pub.publicado_at = nueva, now.isoformat()
     hoy = loc.date().isoformat()
     if loc.hour == hora_resumen and pub.resumen_fecha != hoy:
-        api.send_message(mensaje("Paso de Jama — resumen de las 8", ar, cl, now, url))
+        api.send_message(mensaje(ar, cl, now, url))
         pub.resumen_fecha = hoy
         hechos.append("resumen")
     try:

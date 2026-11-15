@@ -80,8 +80,11 @@ https://emiliano-f.github.io/corredor-quebrada-puna/ — se rearma cada hora.
   Es descriptivo, no un umbral probado con cierres. No es un pronóstico de cierre.
 - **Telegram:** publica solo cuando cambia el estado combinado (sin los cierres nocturnos por
   horario de Argentina, salvo `avisar_cierre_por_horario: true`, y nunca con datos de más de
-  2 h) y un resumen a las 08:00.
-  No es un canal oficial.
+  2 h) y un resumen a las 08:00. Cada mensaje tiene hasta 4 líneas: Argentina
+  ("🟢 Jama — Argentina ABIERTO desde las 14:46"; 🔴 cerrado, 🟠 restringido, ⚪ fuera de
+  horario), Chile ("🟡 Chile: sin parte nuevo desde el 09/11 (último: Abierto)" mientras el
+  parte siga viejo), "Fuente: Pasos Fronterizos (AR) · MOP (CL). No es un canal oficial." y el
+  link a la página.
 
 ## Qué NO significa una alerta
 
