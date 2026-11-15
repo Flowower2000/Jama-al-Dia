@@ -14,6 +14,54 @@ reales, para calibrar umbrales simples de lluvia y nieve por causa.
 > Estado: base del repositorio (día 1). Las etapas del pipeline se van conectando en los
 > próximos PR; ver [CHANGELOG.md](CHANGELOG.md).
 
+## Jama al Día
+
+**Qué es.** Una página pública y un canal de Telegram con el estado del Paso de Jama (RN 52 en
+Argentina, CH-27 en Chile), pensados para choferes y flotas que cruzan a Chile:
+
+- Página: https://emiliano-f.github.io/corredor-quebrada-puna/ (estado por lado, últimos 7
+  días, cierres históricos y pronóstico de nieve y viento a 72 h).
+- Canal: https://t.me/jamaaldia. **No es un canal oficial.**
+- Tracción: https://emiliano-f.github.io/corredor-quebrada-puna/traccion/.
+
+**Fuentes.**
+
+- Estado actual: partes oficiales de Pasos Internacionales (argentina.gob.ar) para
+  Argentina y del MOP de Chile (Unidad de Pasos Fronterizos) para Chile. Se guardan solo
+  los campos de estado, sin datos personales.
+- Historia: el catálogo de este repo, armado con noticias locales (solo metadatos) entre 2016
+  y 2026. Se cuentan los cierres totales o parciales que no tienen confianza baja.
+- Pronóstico: Open-Meteo (CC BY 4.0) para el Paso de Jama y un punto de la CH-27, comparado con
+  la climatología del mismo modelo de pronóstico desde 2021.
+
+**Cómo funciona.**
+
+- Un workflow de GitHub Actions corre cada hora: el cron de GitHub al minuto 17 y un disparo
+  externo de respaldo. Consulta las fuentes, guarda el snapshot en la rama `data-snapshots`
+  y vuelve a publicar la página. Si ya hay un snapshot de hace menos de 20 minutos, solo
+  rearma la página, sin pedir nada nuevo a las fuentes.
+- Telegram publica solo cuando cambia el estado real de algún lado (abierto, cerrado o
+  restringido), más un resumen a las 08:00. Nunca publica por la apertura y el cierre por
+  horario ni con datos viejos.
+- Si un lado no se pudo consultar en las últimas 2 h, la página muestra "Estado no
+  confirmado" en vez de ABIERTO o CERRADO. Si el parte oficial tiene más de 24 h, muestra
+  "Sin parte nuevo".
+
+**Limitaciones.**
+
+- No es una fuente oficial: antes de cruzar, consultá siempre el estado oficial.
+- La resolución es de 1 h: un cambio puede tardar hasta una hora en aparecer, o más si GitHub
+  atrasa las corridas programadas.
+- El parte de Chile puede pasar días sin actualizarse. Como los snapshots arrancan el
+  13/11/2026, todavía no se puede saber si el MOP publica solo cuando cambia el estado
+  ([#44](https://github.com/emiliano-f/corredor-quebrada-puna/issues/44)).
+- La historia sale de la prensa local: puede faltar algún cierre. Además, el dedup puede
+  encadenar varios cierres seguidos en uno largo
+  ([#42](https://github.com/emiliano-f/corredor-quebrada-puna/issues/42)). Por eso se muestran
+  la mediana y el p75, no el máximo.
+- El pronóstico es descriptivo: compara con lo habitual para la época. **No es un pronóstico
+  de cierre** ni un umbral validado con cierres reales.
+
 ## Inicio rápido
 
 Requisitos: [uv](https://docs.astral.sh/uv/) (instala Python 3.11 solo).

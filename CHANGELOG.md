@@ -8,6 +8,7 @@ All notable changes to this project are documented here. The format follows
 ## [Unreleased]
 
 ### Added
+- README: "Jama al Día" section (qué es, fuentes, cómo funciona, limitaciones) for the submission form.
 - `jama_snapshot.yml`: optional `workflow_dispatch` input `origen` shown in the run name ("Jama snapshot (cron-job.org)"); scheduled runs show "schedule".
 - "Jama al Día": `canal_desde: 2026-11-15`; Chile card with a fresh check but an official parte older than 24 h says "Sin parte nuevo" / "Último parte oficial (09/11 08:00): Abierto" / "Chile no actualiza este parte desde el 09/11…" (still amber; same wording in Telegram); administrative closures as one line "No incluye 1 cierre administrativo (enero 2022)."; forecast note reduced to one line "Alto = dentro del 10 % más alto para esta época, según el mismo modelo."; Telegram posts in at most 4 lines (🟢/🔴/🟠/⚪/🟡 per side, "Fuente: Pasos Fronterizos (AR) · MOP (CL). No es un canal oficial.", link), without the resolution line or the official-report time.
 - "Jama al Día" round 2: "desde las HH:MM" (< 1 h) / "desde hace N h" / "desde el dd/mm" (> 24 h); durations as median and p75 ("La mitad… 3 de cada 4…"), no range; every history block states its base ("Sobre 67 cierres de Jama en el catálogo, 2016–2026"); /traccion with "Contamos desde" (`jama_al_dia.canal_desde`), a daily series per counter (subscriber counts per day in `telegram_estado.json`), "— todavía sin dato" for missing values and the channel/form buttons.
