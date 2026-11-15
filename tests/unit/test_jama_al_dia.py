@@ -65,6 +65,8 @@ def test_ar_states_and_schedule() -> None:
     assert (e.estado, e.por_horario) == ("cerrado", False)
     assert estado_ar(ar(day, "ABIERTO", "CERRADA")).estado == "cerrado"
     assert estado_ar(ar(day, "ABIERTO", "CONDICIONADA")).estado == "restringido"
+    e = estado_ar(ar(night, "CERRADO", "CONDICIONADA"))
+    assert (e.estado, e.por_horario) == ("cerrado", False)
     assert estado_ar(ar(day, "???")).estado is None
     assert estado_ar(err("argentina_gob_ar", day)).error == "HTTP 503"
 

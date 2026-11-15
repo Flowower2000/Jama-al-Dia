@@ -75,12 +75,17 @@ def estado_ar(snap: JamaEstado) -> EstadoLado:
     oficial = str(r["fecha_hora_consulta"])[:16] if r.get("fecha_hora_consulta") else None
     estado: Estado | None = None
     por_horario = False
-    if vialidad and not vialidad.startswith("HABILITAD"):
-        closed = ("CERRAD", "INHABILITAD", "CORTAD", "INTRANSITABLE", "SUSPENDID")
-        estado = "cerrado" if any(w in vialidad for w in closed) else "restringido"
+    closed = ("CERRAD", "INHABILITAD", "CORTAD", "INTRANSITABLE", "SUSPENDID")
+    road_ok = not vialidad or vialidad.startswith("HABILITAD")
+    if any(w in vialidad for w in closed):
+        estado = "cerrado"
     elif prioridad == "CERRADO":
         estado = "cerrado"
-        por_horario = bool(horario and _fuera_de_horario(horario, local(snap.fetched_at)))
+        por_horario = road_ok and bool(
+            horario and _fuera_de_horario(horario, local(snap.fetched_at))
+        )
+    elif not road_ok:
+        estado = "restringido"
     elif prioridad == "ABIERTO":
         estado = "abierto"
     detalle = tuple(
