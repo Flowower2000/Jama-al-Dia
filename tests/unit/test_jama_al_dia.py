@@ -502,6 +502,11 @@ def test_cutoff_uses_unrounded_values() -> None:
     assert small.percentil == 95
 
 
+def test_detail_without_climatology_keeps_the_value() -> None:
+    m = Medida(12.5, None, None, "faltan horas de pronóstico o climatología", 2021)
+    assert pagina._detalle(m, "Nieve", "cm") == "Nieve: 12,5 cm · sin climatología para comparar"
+
+
 def test_snow_zero_has_no_percentile() -> None:
     now = datetime(2026, 11, 15, 12, 0)
     kw = {"model": "m", "clim_start": date(2024, 1, 1), "now_local": now, "alto": 90}

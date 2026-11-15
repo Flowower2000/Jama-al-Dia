@@ -220,7 +220,9 @@ def _detalle(m: Medida, que: str, unidad: str) -> str:
     if m.valor is None:
         return f"{que}: sin dato"
     if m.percentil is None:
-        return f"{que}: 0 {unidad}"
+        if m.valor == 0:
+            return f"{que}: 0 {unidad}"
+        return f"{que}: {_num(m.valor)} {unidad} · sin climatología para comparar"
     desde = f" desde {m.desde}" if m.desde else ""
     return (
         f"{que}: {_num(m.valor)} {unidad} · {m.nivel} (más que el {m.percentil:g} % de lo que "
