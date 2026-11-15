@@ -331,6 +331,15 @@ def test_pronostico_72h_snow_and_gusts() -> None:
     assert f.rafaga.error
 
 
+def test_cutoff_uses_unrounded_values() -> None:
+    from corredor.jama_al_dia.pronostico import _nivel
+
+    assert _nivel(5.0, 89.6, 90, True, 2021).nivel == "normal"
+    small = _nivel(0.04, 95.0, 90, True, 2021)
+    assert small.nivel == "alto"
+    assert small.percentil == 95
+
+
 def test_snow_zero_has_no_percentile() -> None:
     now = datetime(2026, 11, 15, 12, 0)
     kw = {"model": "m", "clim_start": date(2024, 1, 1), "now_local": now, "alto": 90}

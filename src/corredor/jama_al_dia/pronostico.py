@@ -59,13 +59,14 @@ class Pronostico72:
 def _nivel(
     valor: float | None, pct: float | None, alto: float, snow: bool, desde: int | None
 ) -> Medida:
-    v = None if valor is None or np.isnan(valor) else round(float(valor), 1)
-    if snow and v == 0:
+    raw = None if valor is None or np.isnan(valor) else float(valor)
+    if snow and raw == 0:
         return Medida(0.0, None, "normal", desde=desde)
+    v = None if raw is None else round(raw, 1)
     p = None if pct is None else round(pct)
-    if v is None or p is None:
+    if v is None or pct is None:
         return Medida(v, p, None, "faltan horas de pronóstico o climatología", desde)
-    return Medida(v, p, "alto" if p >= alto else "normal", desde=desde)
+    return Medida(v, p, "alto" if pct >= alto else "normal", desde=desde)  # unrounded
 
 
 def _first_year(hourly: pd.DataFrame, column: str) -> int | None:
