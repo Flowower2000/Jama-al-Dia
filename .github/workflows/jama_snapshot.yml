@@ -65,7 +65,30 @@ jobs:
             git checkout -q --orphan "$DATA_BRANCH"
           fi
 
+      # Two triggers per hour (this cron at :17 + an external workflow_dispatch at :47): a run
+      # within 20 min of the last successful snapshot only rebuilds the page.
+      - name: Recent snapshot?
+        id: reciente
+        run: |
+          set -euo pipefail
+          python3 - "$DATA_DIR/$SNAPSHOT_FILE" >> "$GITHUB_OUTPUT" <<'PY'
+          import json, sys
+          from datetime import datetime, timezone
+          last = None
+          try:
+              for line in open(sys.argv[1], encoding="utf-8"):
+                  r = json.loads(line) if line.strip() else {}
+                  if r.get("payload_json") and not r.get("error"):
+                      t = datetime.fromisoformat(r["fetched_at"].replace("Z", "+00:00"))
+                      last = t if last is None or t > last else last
+          except FileNotFoundError:
+              pass
+          age = (datetime.now(timezone.utc) - last).total_seconds() if last else None
+          print(f"reciente={'true' if age is not None and age < 20 * 60 else 'false'}")
+          PY
+
       - name: Snapshot
+        if: steps.reciente.outputs.reciente != 'true'
         run: uv run --frozen corredor snapshot-jama --salida "$DATA_DIR/$SNAPSHOT_FILE"
 
       - name: Telegram (only on a state change, plus the daily summary)
@@ -94,6 +117,7 @@ jobs:
           export GIT_CONFIG_VALUE_0="AUTHORIZATION: basic ${basic}"
           git add "$SNAPSHOT_FILE"
           if [ -f "$TELEGRAM_FILE" ]; then git add "$TELEGRAM_FILE"; fi
+          if git diff --cached --quiet; then echo "Nada nuevo para guardar."; exit 0; fi
           git commit -q -m "data: Jama snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
           sync() {
             if git ls-remote --exit-code --heads origin "$DATA_BRANCH" >/dev/null; then
