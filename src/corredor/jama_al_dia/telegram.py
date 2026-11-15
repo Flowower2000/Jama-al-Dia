@@ -91,7 +91,7 @@ def _lado_clave(a: Actual, avisar_horario: bool) -> str | None:
     if e is None or e.estado is None:
         return None
     if e.estado == "cerrado" and e.por_horario and not avisar_horario:
-        return "abierto"
+        return None  # nightly schedule closure: keep the previous value (no post either way)
     return e.estado
 
 
