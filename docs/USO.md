@@ -45,16 +45,20 @@ https://emiliano-f.github.io/corredor-quebrada-puna/ — se rearma cada hora.
 - **Estado ahora:** ABIERTO / CERRADO / RESTRINGIDO por lado, según el parte oficial de cada
   país (argentina.gob.ar y MOP Chile). "Desde hace X h" cuenta desde la primera consulta con ese
   estado; la resolución es 1 h ("al menos" si arranca en la primera consulta que tenemos).
-  Fuera de su horario Argentina marca el paso cerrado: se muestra "CERRADO POR HORARIO (abre
-  HH:MM)" en gris azulado, no en rojo (rojo = cierre real). Si la última consulta de un lado
-  tiene más de 2 h, la tarjeta dice "SIN DATO RECIENTE" con el último estado conocido; si el
-  parte oficial de la fuente (p. ej. FECHA/HORA del MOP) tiene más de 24 h, dice "último parte
-  oficial hace N días". El encabezado muestra la hora de la página y la del último parte
-  consultado.
-- **Últimos 7 días:** un bloque por hora y por lado; gris = sin dato; azul grisáceo = cerrado
-  por horario.
-- **Cierres por mes y duración:** del catálogo de prensa local (eventos en `rn52_paso_jama` con
-  corte total o parcial, sin los de confianza baja), nieve y otras causas apiladas; puede faltar
+  Fuera de su horario Argentina marca el paso cerrado: se muestra "Cerrado por horario" (gris,
+  con reloj, "Abre a las HH:MM"), no en rojo (rojo = cierre real). Si la última consulta de un
+  lado tiene más de 2 h, o el parte oficial de la fuente (p. ej. FECHA/HORA del MOP) tiene más de
+  24 h, la tarjeta se pone ámbar con "Estado no confirmado" y el último dato ("Último dato:
+  Cerrado por horario, hoy 03:43" o "…, parte oficial del 09/11"). El encabezado dice "Datos de
+  las HH:MM" con la hora del dato más viejo de los dos lados. Fechas: "hoy", "ayer" o "dd/mm".
+- **Avisos:** debajo del estado (y en el pie), "Recibí los avisos por Telegram" y "¿Tenés una
+  flota? Anotate para el plan de empresas" (enlaces de `jama_al_dia` en `config.yaml`; sin
+  enlace, no se muestran).
+- **Últimos 7 días:** un bloque por hora y por lado (marcas 0/6/12/18); gris = sin dato; gris
+  oscuro = fuera de horario.
+- **Cierres por mes del año y duración:** del catálogo de prensa local (eventos en
+  `rn52_paso_jama` con corte total o parcial, sin los de confianza baja): 12 barras (ene–dic,
+  total 2016–2026, nieve y otras causas apiladas, con n) y una línea "Por año"; puede faltar
   algún cierre. La duración usa solo cierres con una nota de reapertura, en días de publicación;
   los cierres administrativos (sanitarios, etc.) quedan fuera de la mediana y se nombran aparte.
   No hay probabilidad de reapertura.

@@ -39,6 +39,7 @@ from corredor.models import CriticalPoint, JamaEstado
 TOKEN = "123456:SECRETO-de-prueba"  # noqa: S105 — fake token for the mocked API
 CHAT = "@canal_prueba"
 NOW = datetime(2026, 11, 15, 15, 17, tzinfo=UTC)  # 12:17 in Argentina
+OLD_PARTE = datetime(2026, 11, 9, 11, 0, tzinfo=UTC)  # 08:00 local
 
 
 def ar(ts: datetime, prioridad: str = "ABIERTO", vialidad: str = "HABILITADA") -> JamaEstado:
@@ -53,8 +54,19 @@ def ar(ts: datetime, prioridad: str = "ABIERTO", vialidad: str = "HABILITADA") -
     return JamaEstado(fuente="argentina_gob_ar", fetched_at=ts, payload_json=json.dumps([rec]))
 
 
-def cl(ts: datetime, trans: str = "TRÁNSITO SIN RESTRICCIÓN", **extra: object) -> JamaEstado:
-    rec = {"TRANSITABILIDAD": trans, "FECHA": 1794212069000, "HORA": 28800000, **extra}
+def cl(
+    ts: datetime,
+    trans: str = "TRÁNSITO SIN RESTRICCIÓN",
+    fecha: datetime | None = None,
+    **extra: object,
+) -> JamaEstado:
+    f = fecha or ts
+    loc = f - timedelta(hours=3)
+    hora = (loc.hour * 60 + loc.minute) * 60_000
+    day = datetime(loc.year, loc.month, loc.day, 12, tzinfo=UTC)
+    rec = {
+        "TRANSITABILIDAD": trans, "FECHA": int(day.timestamp() * 1000), "HORA": hora, **extra
+    }  # fmt: skip
     return JamaEstado(fuente="mop_cl", fetched_at=ts, payload_json=json.dumps([rec]))
 
 
@@ -84,7 +96,7 @@ def test_cl_states() -> None:
     assert estado_cl(cl(NOW, "CERRADO")).estado == "cerrado"
     assert estado_cl(cl(NOW, "SÓLO VEHÍCULOS 4X4")).estado == "restringido"
     assert estado_cl(cl(NOW, "TRÁNSITO SIN RESTRICCIÓN", HABILITADO="NO")).estado == "cerrado"
-    e = estado_cl(cl(NOW))
+    e = estado_cl(cl(NOW, fecha=OLD_PARTE))
     assert e.hora_oficial == "2026-11-09 08:00"
 
 
@@ -174,7 +186,7 @@ def test_posts_only_on_change(tmp_path: Path, tg: respx.MockRouter) -> None:
     assert PIE in msg
     assert url in msg
     assert "MOP Chile" in msg
-    assert "parte 2026-11-09 08:00" in msg
+    assert "parte hoy 12:12" in msg
     notificar(api, a2, c2, path, NOW + timedelta(hours=3), url=url)
     assert len(_sent(tg)) == 1
     pub = Publicado.load(path)
@@ -300,9 +312,10 @@ def test_stale_side_shows_sin_dato_reciente_and_never_posts(
     a, c = actual(serie(snaps, "AR"), NOW), actual(serie(snaps, "CL"), NOW)
     assert a.viejo
     html = pagina._lado("Chile", c, NOW)
-    assert "SIN DATO RECIENTE" in html
-    assert "último dato hace 3 h: cerrado" in html
-    assert 'class="lado "' in html  # grey, not red
+    assert "Estado no confirmado" in html
+    assert "Último dato: Cerrado, hoy 09:17" in html
+    assert 'class="lado viejo"' in html  # amber, never a big CERRADO
+    assert "CERRADO</div>" not in html
     path = tmp_path / "t.json"
     Publicado(clave="AR=abierto;CL=abierto").save(path)
     notificar(TelegramAPI(TOKEN, CHAT), a, c, path, NOW, url="")
@@ -314,12 +327,11 @@ def test_header_shows_page_and_last_consulted_times() -> None:
     snaps = [ar(NOW - timedelta(minutes=40)), cl(NOW - timedelta(minutes=30))]
     a, c = actual(serie(snaps, "AR"), NOW), actual(serie(snaps, "CL"), NOW)
     datos = pagina.Datos(
-        now=NOW, ar=a, cl=c, bloques={}, por_mes=[], duraciones={"n": 0}, pronostico=[],
-        ultima_consulta=ultima_consulta(snaps),
+        now=NOW, ar=a, cl=c, bloques={}, por_mes_anio=[], por_anio=[], duraciones={"n": 0},
+        pronostico=[],
     )  # fmt: skip
-    assert "Página actualizada 15/11 12:17 · último parte consultado 15/11 11:47" in pagina.index(
-        datos
-    )
+    assert ultima_consulta(snaps) == NOW - timedelta(minutes=30)
+    assert "Datos de las 11:37" in pagina.index(datos)  # the older of the two sides
 
 
 def test_schedule_closure_is_its_own_grey_state() -> None:
@@ -327,23 +339,33 @@ def test_schedule_closure_is_its_own_grey_state() -> None:
     s = serie([ar(night, "CERRADO")], "AR")
     a = actual(s, night + timedelta(minutes=10))
     html = pagina._lado("Argentina", a, night + timedelta(minutes=10))
-    assert "CERRADO POR HORARIO (abre 09:00)" in html
+    assert "Cerrado por horario" in html
+    assert "Abre a las 09:00" in html
     assert 'class="lado horario"' in html
     assert 'class="lado cerrado"' not in html
     filas = bloques(s, night + timedelta(minutes=10))
     assert "horario" in filas[-1]["celdas"]
     assert "cerrado" not in filas[-1]["celdas"]
     datos = pagina.Datos(
-        now=night, ar=a, cl=a, bloques={}, por_mes=[], duraciones={"n": 0}, pronostico=[]
+        now=night,
+        ar=a,
+        cl=a,
+        bloques={},
+        por_mes_anio=[],
+        por_anio=[],
+        duraciones={"n": 0},
+        pronostico=[],
     )
-    assert "cerrado por horario</span>" in pagina.index(datos)
+    assert "fuera de horario</span>" in pagina.index(datos)
 
 
 def test_old_official_report_is_flagged_in_days() -> None:
-    e = estado_cl(cl(NOW))  # MOP FECHA 2026-11-09 08:00, NOW 2026-11-15 12:17 local
+    e = estado_cl(cl(NOW, fecha=OLD_PARTE))  # parte 2026-11-09 08:00, NOW 15/11 12:17 local
     assert e.parte_dias(NOW) == 6
     html = pagina._lado("Chile", actual([e], NOW), NOW)
-    assert "último parte oficial hace 6 días" in html
+    assert "Parte oficial del 09/11" in html
+    assert "Estado no confirmado" in html  # an old official report counts as stale
+    assert "Último dato: Abierto, parte oficial del 09/11" in html
     assert estado_ar(ar(NOW)).parte_dias(NOW) is None
 
 
@@ -376,11 +398,15 @@ def test_cierres_export_and_stats() -> None:
     out = cierres.exportar(eventos, articulos)
     assert [c["reapertura"] for c in out] == [True, False]
     assert out[0]["url_reapertura"] == "u2"
-    meses = {k: (a, b) for k, a, b in cierres.por_mes(out, date(2026, 11, 15))}
-    assert meses["2024-06"] == (1, 0)
-    assert meses["2024-07"] == (1, 0)
-    assert meses["2016-01"] == (0, 0)
-    assert list(meses)[-1] == "2026-11"
+    meses = {k: (a, b) for k, a, b in cierres.por_mes_del_anio(out)}
+    assert meses[6] == (1, 0)
+    assert meses[7] == (1, 0)
+    assert meses[1] == (0, 0)
+    assert list(meses) == list(range(1, 13))
+    anios = dict(cierres.por_anio(out, date(2026, 11, 15)))
+    assert anios[2024] == 2
+    assert anios[2016] == 0
+    assert list(anios)[-1] == 2026
     d = cierres.duraciones(out)
     assert d == {
         "n": 1, "mediana": 3, "min": 3, "max": 3, "total": 2, "administrativos": []
@@ -402,8 +428,8 @@ def test_chart_counts_only_total_or_partial_without_low_confidence_stacked() -> 
         _c("2024-06-12", "2024-06-12", tipo_corte="desconocido"),
         _c("2024-06-15", "2024-06-15", confianza="baja"),
     ]
-    meses = {k: (a, b) for k, a, b in cierres.por_mes(lista, date(2024, 12, 1))}
-    assert meses["2024-06"] == (1, 1)
+    meses = {k: (a, b) for k, a, b in cierres.por_mes_del_anio(lista)}
+    assert meses[6] == (1, 1)
     assert len(cierres.contables(lista)) == 2
 
 
@@ -482,8 +508,9 @@ def test_snow_zero_has_no_percentile() -> None:
     (p,) = pronostico_72h(FakeClient(snow=0.0), [_pt()], **kw)  # type: ignore[arg-type]
     assert p.nieve == Medida(0.0, None, "normal", desde=2024)
     html = pagina._pronostico([p], NOW)
-    assert "Nieve: sin nieve pronosticada" in html
-    assert html.count("más que el") == 1  # only the gusts line
+    assert "Nieve: no se espera" in html
+    assert "Nieve: no se espera" in html
+    assert "percentil" not in html.split("<details>")[0]
 
 
 def test_percentiles_compare_72h_sums_and_maxima() -> None:
@@ -536,7 +563,7 @@ def test_page_escapes_and_has_required_text() -> None:
     a, c = actual(serie(snaps, "AR"), NOW), actual(serie(snaps, "CL"), NOW)
     datos = pagina.Datos(
         now=NOW, ar=a, cl=c, bloques={"AR": bloques(serie(snaps, "AR"), NOW)},
-        por_mes=[("2016-01", 2, 1), ("2016-02", 0, 0)],
+        por_mes_anio=[(1, 2, 1), (2, 0, 0)], por_anio=[(2016, 3)],
         duraciones={"n": 3, "mediana": 2, "min": 0, "max": 9, "total": 5}, pronostico=[],
         url_telegram='https://t.me/x"><script>', url_plan_flotas="",
     )  # fmt: skip
@@ -548,8 +575,9 @@ def test_page_escapes_and_has_required_text() -> None:
     assert "Resolución: 1 h" in html
     assert pagina.NOTA_PRENSA in html
     assert "n = 3" in html
-    assert "Seguir en Telegram" in html
-    assert "Plan Flotas" not in html  # no link configured → no button
+    assert html.count("Recibí los avisos por Telegram") == 2  # under the status and in the footer
+    assert "Anotate" not in html  # no link configured → no button
+    assert "Por año: 2016 3" in html
     assert "probabilidad" not in html.lower()
     t = pagina.traccion(NOW, 1234, NOW, None, None)
     assert "1.234" in t

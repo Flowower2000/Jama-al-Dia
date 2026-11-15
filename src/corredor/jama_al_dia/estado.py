@@ -55,19 +55,34 @@ class EstadoLado:
         m = _HORARIO.match(self.horario or "")
         return f"{int(m.group(1)):02d}:{m.group(2)}" if m else None
 
-    def parte_dias(self, now: datetime) -> int | None:
-        """Whole days since the source's own report time, if older than PARTE_VIEJO."""
+    @property
+    def oficial_dt(self) -> datetime | None:
+        """The source's own report time (local, naive), if it parses."""
         if not self.hora_oficial:
             return None
-        try:
-            t = datetime.strptime(self.hora_oficial[:16], "%Y-%m-%d %H:%M")
-        except ValueError:
+        for fmt, n in (("%Y-%m-%d %H:%M", 16), ("%Y-%m-%d", 10)):
             try:
-                t = datetime.strptime(self.hora_oficial[:10], "%Y-%m-%d")
+                return datetime.strptime(self.hora_oficial[:n], fmt)
             except ValueError:
-                return None
+                continue
+        return None
+
+    def parte_dias(self, now: datetime) -> int | None:
+        """Whole days since the source's own report time, if older than PARTE_VIEJO."""
+        t = self.oficial_dt
+        if t is None:
+            return None
         age = local(now) - t
         return age.days if age > PARTE_VIEJO else None
+
+    @property
+    def nombre_estado(self) -> str:
+        return {
+            "horario": "Cerrado por horario",
+            "abierto": "Abierto",
+            "cerrado": "Cerrado",
+            "restringido": "Restringido",
+        }.get(self.clase or "", "sin estado")
 
 
 def local(ts: datetime) -> datetime:
@@ -174,8 +189,9 @@ class Actual:
     ultimo: EstadoLado | None  # last snapshot with a known state
     desde: datetime | None  # first snapshot of the current run of that state
     desde_al_menos: bool  # the run starts at the first snapshot we have
-    viejo: bool  # last known state older than VIEJO
+    viejo: bool  # last check older than VIEJO, or the official report older than PARTE_VIEJO
     ultimo_intento: EstadoLado | None
+    parte_viejo: bool = False
 
 
 def actual(s: Sequence[EstadoLado], now: datetime) -> Actual:
@@ -190,11 +206,31 @@ def actual(s: Sequence[EstadoLado], now: datetime) -> Actual:
         and (validos[i].fetched_at - validos[i - 1].fetched_at <= MAX_HUECO + timedelta(minutes=30))
     ):
         i -= 1
-    return Actual(last, validos[i].fetched_at, i == 0, now - last.fetched_at > VIEJO, s[-1])
+    parte_viejo = last.parte_dias(now) is not None
+    viejo = now - last.fetched_at > VIEJO or parte_viejo
+    return Actual(last, validos[i].fetched_at, i == 0, viejo, s[-1], parte_viejo)
 
 
 def ultima_consulta(snaps: Sequence[JamaEstado]) -> datetime | None:
     return max((s.fetched_at for s in snaps), default=None)
+
+
+def cuando(t: datetime, now: datetime) -> str:
+    """'hoy 03:43' / 'ayer 22:10' / '09/11 08:00' (Argentina time). `t` may be aware (UTC)
+    or already local and naive."""
+    t_loc = local(t) if t.tzinfo is not None else t
+    hoy = local(now).date()
+    if t_loc.date() == hoy:
+        return f"hoy {t_loc:%H:%M}"
+    if (hoy - t_loc.date()).days == 1:
+        return f"ayer {t_loc:%H:%M}"
+    return f"{t_loc:%d/%m %H:%M}"
+
+
+def datos_de(ar: Actual, cl: Actual) -> datetime | None:
+    """Time of the oldest of the two sides' last successful checks."""
+    ts = [a.ultimo.fetched_at for a in (ar, cl) if a.ultimo is not None]
+    return min(ts) if ts else None
 
 
 def horas(desde: datetime, now: datetime) -> int:

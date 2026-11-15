@@ -78,16 +78,20 @@ def contables(cierres: Sequence[Mapping[str, Any]]) -> list[Mapping[str, Any]]:
     ]
 
 
-def por_mes(cierres: Sequence[Mapping[str, Any]], hasta: date) -> list[tuple[str, int, int]]:
-    """(AAAA-MM, nieve, otras causas) per month from DESDE, counting `contables` only."""
-    nieve = Counter(str(c["fecha_inicio"])[:7] for c in contables(cierres) if c["causa"] == "nieve")
-    otros = Counter(str(c["fecha_inicio"])[:7] for c in contables(cierres) if c["causa"] != "nieve")
-    meses, y, m = [], DESDE.year, DESDE.month
-    while (y, m) <= (hasta.year, hasta.month):
-        k = f"{y:04d}-{m:02d}"
-        meses.append((k, nieve.get(k, 0), otros.get(k, 0)))
-        y, m = (y + 1, 1) if m == 12 else (y, m + 1)
-    return meses
+def por_mes_del_anio(cierres: Sequence[Mapping[str, Any]]) -> list[tuple[int, int, int]]:
+    """(month 1–12, nieve, otras causas) summed over every year, `contables` only."""
+    out = []
+    base = contables(cierres)
+    for m in range(1, 13):
+        delmes = [c for c in base if int(str(c["fecha_inicio"])[5:7]) == m]
+        nieve = sum(1 for c in delmes if c["causa"] == "nieve")
+        out.append((m, nieve, len(delmes) - nieve))
+    return out
+
+
+def por_anio(cierres: Sequence[Mapping[str, Any]], hasta: date) -> list[tuple[int, int]]:
+    cuenta = Counter(int(str(c["fecha_inicio"])[:4]) for c in contables(cierres))
+    return [(y, cuenta.get(y, 0)) for y in range(DESDE.year, hasta.year + 1)]
 
 
 def duraciones(cierres: Sequence[Mapping[str, Any]]) -> dict[str, Any]:

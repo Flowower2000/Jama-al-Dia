@@ -757,8 +757,8 @@ def jama_pagina(
     from datetime import UTC, datetime, timedelta
 
     from corredor.jama_al_dia import pagina
-    from corredor.jama_al_dia.cierres import contables, duraciones, por_mes
-    from corredor.jama_al_dia.estado import bloques, serie, ultima_consulta
+    from corredor.jama_al_dia.cierres import contables, duraciones, por_anio, por_mes_del_anio
+    from corredor.jama_al_dia.estado import bloques, serie
     from corredor.jama_al_dia.pronostico import Medida, Pronostico72, pronostico_72h
     from corredor.jama_al_dia.telegram import Publicado
     from corredor.weather.openmeteo import OpenMeteoClient
@@ -790,10 +790,11 @@ def jama_pagina(
     datos = pagina.Datos(
         now=now, ar=ar, cl=cl,
         bloques={"AR": bloques(serie(snaps, "AR"), now), "CL": bloques(serie(snaps, "CL"), now)},
-        por_mes=por_mes(lista, (now + timedelta(hours=-3)).date()), duraciones=duraciones(lista),
+        por_mes_anio=por_mes_del_anio(lista),
+        por_anio=por_anio(lista, (now + timedelta(hours=-3)).date()),
+        duraciones=duraciones(lista),
         pronostico=ns, url_telegram=cfg.url_telegram, url_plan_flotas=cfg.url_plan_flotas,
         catalogo_generado=doc.get("generado"), alto=cfg.percentil_alto,
-        ultima_consulta=ultima_consulta(snaps),
     )  # fmt: skip
     pub = Publicado.load(estado)
     subs_at = datetime.fromisoformat(pub.suscriptores_at) if pub.suscriptores_at else None
