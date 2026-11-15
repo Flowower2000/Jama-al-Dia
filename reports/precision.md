@@ -1,6 +1,6 @@
 # Precisión de la extracción
 
-> Generado: 2026-11-14 23:30 UTC · versión `0.1.0.dev0` · commit `64883b2` · SCHEMA_VERSION 3 · fuentes `b3dab32ad1adf821`
+> Generado: 2026-11-15 15:10 UTC · versión `0.1.0.dev0` · commit `36b5484` · SCHEMA_VERSION 3 · fuentes `b3dab32ad1adf821`
 
 Etiquetas leídas de `reports/revision_manual.csv` (valores sí: 1/si/ok/x; no: 0/no/mal; vacío = sin etiquetar). Muestra estratificada por causa (semilla 42: aluvion 8, crecida 8, nieve 8, otras 6).
 
@@ -60,5 +60,5 @@ n = filas etiquetadas en ese campo. Precisión = correctos / etiquetados.
 | fecha: 2026-10-27 → 2026-10-23 | El Paso de Jama está cerrado por nieve del lado chileno | https://elsubmarinojujuy.com.ar/el-paso-de-jama-esta-cerrado-por-nieve-del-lado-chileno/ |
 | fecha: 2017-01-12 → 2017-01-10; punto_id: — → rn9_leon; ; punto_id: rn9_leon → rn9_volcan | Tras el temporal y alud en Jujuy: la ruta 9 no podría ser habilitada al menos hasta el domingo - Jujuy al día | https://www.jujuyaldia.com.ar/2017/01/12/tras-el-temporal-y-alud-en-jujuy-la-ruta-9-no-podria-ser-habilitada-al-menos-hasta-el-domingo/ |
 | causa: crecida → aluvion; ; causa: aluvion → crecida | Está habilitada media calzada de la Ruta 9 desde Maimará hacia San Salvador | https://elsubmarinojujuy.com.ar/esta-habilitada-media-calzada-de-la-ruta-9-desde-maimara-hacia-san-salvador/ |
-| fecha: 2019-02-01 → 2019-01-31; punto_id: — → rn52_paso_jama; ; causa: crecida → nieve | Piden circular con precaución por la ruta nacional N°9: Tránsito por media calzada | https://elsubmarinojujuy.com.ar/piden-circular-con-precaucion-por-la-ruta-nacional-n9-transito-por-media-calzada/ |
+| fecha: 2019-02-01 → 2019-01-31; punto_id: — → rn52_paso_jama; ; causa: crecida → nieve; ; fecha: 2019-01-31 → 2019-02-01; punto_id: rn52_paso_jama → —; causa: nieve → crecida | Piden circular con precaución por la ruta nacional N°9: Tránsito por media calzada | https://elsubmarinojujuy.com.ar/piden-circular-con-precaucion-por-la-ruta-nacional-n9-transito-por-media-calzada/ |
 | fecha: 2019-02-02 → 2019-02-01; causa: crecida → aluvion | Agua y lodo en Volcán produjo un corte sobre la ruta nacional N°9 | https://elsubmarinojujuy.com.ar/agua-y-lodo-en-volcan-produjo-un-corte-sobre-la-ruta-nacional-n9/ |
