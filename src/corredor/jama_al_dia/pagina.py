@@ -15,7 +15,7 @@ from html import escape
 from pathlib import Path
 from typing import Any
 
-from corredor.jama_al_dia.estado import Actual, cuando, datos_de, desde_txt
+from corredor.jama_al_dia.estado import VIEJO, Actual, cuando, datos_de, desde_txt
 from corredor.jama_al_dia.pronostico import Medida, Pronostico72, banner, elegir
 
 ESTADO_TXT = {"abierto": "ABIERTO", "cerrado": "CERRADO", "restringido": "RESTRINGIDO"}
@@ -26,6 +26,10 @@ RELOJ = (
     'stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
 )
 NOTA_PRENSA = "según prensa local; puede faltar algún cierre"
+MESES_LARGOS = (
+    "enero", "febrero", "marzo", "abril", "mayo", "junio",
+    "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre",
+)  # fmt: skip
 CSS = (Path(__file__).parent / "estilo.css").read_text(encoding="utf-8").strip()
 
 
@@ -95,6 +99,20 @@ def _lado(nombre: str, a: Actual, now: datetime) -> str:
             f"<p>{escape(str(motivo))}</p></div>"
         )
     rows = []
+    t = e.oficial_dt
+    if a.parte_viejo and t is not None and now - e.fetched_at <= VIEJO:
+        rows += [
+            f"Último parte oficial ({t:%d/%m %H:%M}): {escape(e.nombre_estado)}",
+            f"{escape(nombre)} no actualiza este parte desde el {t:%d/%m}. Consultá el estado "
+            "oficial antes de cruzar.",
+            f"Consultado: {cuando(e.fetched_at, now)}",
+            escape(e.fuente),
+        ]
+        ps = "".join(f"<p>{r}</p>" for r in rows)
+        return (
+            f'<div class="lado viejo"><h3>{escape(nombre)}</h3>'
+            f'<div class="big chico">Sin parte nuevo</div>{ps}</div>'
+        )
     if a.viejo:
         clase, big = "viejo", '<div class="big chico">Estado no confirmado</div>'
         rows.append(escape(_ultimo_dato(a, now)))
@@ -107,7 +125,6 @@ def _lado(nombre: str, a: Actual, now: datetime) -> str:
         clase, big = e.clase or "", f'<div class="big">{ESTADO_TXT[e.estado]}</div>'
         if a.desde is not None:
             rows.append(desde_txt(a, now))
-    t = e.oficial_dt
     if t is not None:
         rows.append(
             f"Parte oficial del {t:%d/%m}" if a.parte_viejo else f"Parte oficial: {cuando(t, now)}"
@@ -174,13 +191,12 @@ def _duracion(d: Mapping[str, Any]) -> str:
     adm = d.get("administrativos") or []
     adm_txt = ""
     if adm:
-        lista = ", ".join(
-            f"{escape(_fecha(str(a['fecha_inicio'])))} ({_dias_txt(int(a['dias']))})" for a in adm
+        cuando_adm = ", ".join(
+            f"{MESES_LARGOS[int(str(a['fecha_inicio'])[5:7]) - 1]} {str(a['fecha_inicio'])[:4]}"
+            for a in adm
         )
-        adm_txt = (
-            "<p>Cierres administrativos (no meteorológicos, p. ej. sanitarios), fuera de la "
-            f"mediana: {len(adm)} — {lista}.</p>"
-        )
+        que = "1 cierre administrativo" if len(adm) == 1 else f"{len(adm)} cierres administrativos"
+        adm_txt = f'<p class="nota">No incluye {que} ({escape(cuando_adm)}).</p>'
     return (
         f'<p class="frase">La mitad de los cierres duró <strong>{_dias_txt_f(med)} o menos'
         f"</strong>; 3 de cada 4, <strong>{_dias_txt_f(p75)} o menos</strong> (n = {d['n']} "
@@ -262,10 +278,11 @@ def _pronostico(ps: Sequence[Pronostico72], now: datetime, alto: float = 90) -> 
         )
     return (
         f'<div class="prono">{body}</div>'
+        f'<p class="nota">Alto = dentro del {100 - alto:g} % más alto para esta época, según el '
+        "mismo modelo.</p>"
         '<p class="nota">Esto no es un pronóstico de cierre. Compara el pronóstico con lo '
-        "habitual para esta época según el mismo modelo (Open-Meteo). &quot;Alto&quot; quiere "
-        "decir dentro del 10 % más alto; no es un umbral probado con cierres reales. El cierre "
-        "lo deciden las autoridades de Chile y Argentina: consultá siempre el estado oficial.</p>"
+        "habitual para esta época según el mismo modelo (Open-Meteo). El cierre lo deciden "
+        " las autoridades de Chile y Argentina: consultá siempre el estado oficial.</p>"
         + como
         + '<p class="nota">Pronóstico y climatología: Open-Meteo (CC BY 4.0). '
         f"Actualizado {cuando(now, now)}.</p>"

@@ -181,12 +181,14 @@ def test_posts_only_on_change(tmp_path: Path, tg: respx.MockRouter) -> None:
     a2, c2 = _actuales(cl_state="CERRADO")
     assert "cambio" in notificar(api, a2, c2, path, NOW + timedelta(hours=2), url=url)
     (msg,) = _sent(tg)
-    assert "Chile: CERRADO" in msg
-    assert "Argentina: ABIERTO" in msg
-    assert PIE in msg
-    assert url in msg
-    assert "MOP Chile" in msg
-    assert "parte hoy 12:12" in msg
+    lineas = msg.split("\n")
+    assert len(lineas) <= 4
+    assert lineas[0].startswith("🟢 Jama — Argentina ABIERTO desde")
+    assert lineas[1].startswith("🔴 Chile: CERRADO desde")
+    assert lineas[2] == PIE == "Fuente: Pasos Fronterizos (AR) · MOP (CL). No es un canal oficial."
+    assert lineas[3] == url
+    assert "Resolución" not in msg
+    assert "parte hoy" not in msg
     notificar(api, a2, c2, path, NOW + timedelta(hours=3), url=url)
     assert len(_sent(tg)) == 1
     pub = Publicado.load(path)
@@ -260,23 +262,37 @@ def test_daily_summary_once_at_eight(tmp_path: Path, tg: respx.MockRouter) -> No
     notificar(api, a, c, path, eight + timedelta(minutes=30), url="")
     msgs = _sent(tg)
     assert len(msgs) == 1
-    assert "resumen" in msgs[0]
+    assert msgs[0].startswith("🟢 Jama — Argentina ABIERTO")
+    assert len(msgs[0].split("\n")) <= 4
 
 
-def test_change_is_saved_even_if_the_summary_fails(tmp_path: Path) -> None:
+def test_change_at_eight_doubles_as_the_summary(tmp_path: Path, tg: respx.MockRouter) -> None:
     path = tmp_path / "t.json"
     Publicado(clave="AR=abierto;CL=abierto").save(path)
     a, c = _actuales(cl_state="CERRADO")
     eight = datetime(2026, 11, 16, 11, 17, tzinfo=UTC)
+    hechos = notificar(TelegramAPI(TOKEN, CHAT), a, c, path, eight, url="")
+    assert "cambio" in hechos
+    assert "resumen" in hechos
+    assert len(_sent(tg)) == 1  # no identical second post
+    pub = Publicado.load(path)
+    assert pub.clave == "AR=abierto;CL=cerrado"
+    assert pub.resumen_fecha == "2026-11-16"
+
+
+def test_change_is_saved_even_if_a_later_post_fails(tmp_path: Path) -> None:
+    path = tmp_path / "t.json"
+    Publicado(clave="AR=abierto;CL=abierto", resumen_fecha="2026-11-15").save(path)
+    a, c = _actuales(cl_state="CERRADO")
+    nine = datetime(2026, 11, 16, 12, 17, tzinfo=UTC)
     with respx.mock(base_url="https://api.telegram.org") as router:
         router.post(f"/bot{TOKEN}/sendMessage").mock(
-            side_effect=[
-                httpx.Response(200, json={"ok": True, "result": {}}),
-                httpx.Response(500, json={"ok": False}),
-            ]
+            return_value=httpx.Response(200, json={"ok": True, "result": {}})
         )
-        with pytest.raises(TelegramError):
-            notificar(TelegramAPI(TOKEN, CHAT), a, c, path, eight, url="")
+        router.post(f"/bot{TOKEN}/getChatMemberCount").mock(
+            return_value=httpx.Response(500, json={"ok": False})
+        )
+        notificar(TelegramAPI(TOKEN, CHAT), a, c, path, nine, url="")
     assert Publicado.load(path).clave == "AR=abierto;CL=cerrado"
 
 
@@ -284,7 +300,7 @@ def test_test_post(tmp_path: Path, tg: respx.MockRouter) -> None:
     a, c = _actuales()
     notificar(TelegramAPI(TOKEN, CHAT), a, c, tmp_path / "t.json", NOW, url="", prueba=True)
     (msg,) = _sent(tg)
-    assert "prueba" in msg
+    assert msg.startswith("[Prueba] 🟢 Jama — Argentina ABIERTO")
     assert PIE in msg
 
 
@@ -343,6 +359,15 @@ def test_schedule_closure_is_its_own_grey_state() -> None:
     assert "Abre a las 09:00" in html
     assert 'class="lado horario"' in html
     assert 'class="lado cerrado"' not in html
+    from corredor.jama_al_dia.telegram import _linea
+
+    assert _linea("Jama — Argentina", a, night + timedelta(minutes=10)) == (
+        "⚪ Jama — Argentina fuera de horario, abre a las 09:00"
+    )
+    late = night + timedelta(hours=3)
+    assert _linea("Jama — Argentina", actual(s, late), late).startswith(
+        "🟡 Jama — Argentina sin dato reciente (último: Cerrado por horario"
+    )
     filas = bloques(s, night + timedelta(minutes=10))
     assert "horario" in filas[-1]["celdas"]
     assert "cerrado" not in filas[-1]["celdas"]
@@ -363,9 +388,18 @@ def test_old_official_report_is_flagged_in_days() -> None:
     e = estado_cl(cl(NOW, fecha=OLD_PARTE))  # parte 2026-11-09 08:00, NOW 15/11 12:17 local
     assert e.parte_dias(NOW) == 6
     html = pagina._lado("Chile", actual([e], NOW), NOW)
-    assert "Parte oficial del 09/11" in html
-    assert "Estado no confirmado" in html  # an old official report counts as stale
-    assert "Último dato: Abierto, parte oficial del 09/11" in html
+    assert "Sin parte nuevo" in html  # describes the source, not our check
+    assert "Estado no confirmado" not in html
+    assert "Último parte oficial (09/11 08:00): Abierto" in html
+    assert "Chile no actualiza este parte desde el 09/11. Consultá el estado oficial" in html
+    assert 'class="lado viejo"' in html  # stays amber
+    viejo = pagina._lado("Chile", actual([e], NOW + timedelta(hours=3)), NOW + timedelta(hours=3))
+    assert "Estado no confirmado" in viejo  # our own check is stale: that wins
+    from corredor.jama_al_dia.telegram import _linea
+
+    assert _linea("Chile:", actual([e], NOW), NOW) == (
+        "🟡 Chile: sin parte nuevo desde el 09/11 (último: Abierto)"
+    )
     assert estado_ar(ar(NOW)).parte_dias(NOW) is None
 
 
@@ -458,8 +492,7 @@ def test_durations_leave_administrative_closures_out_and_say_dia() -> None:
     assert "1 días" not in html
     assert "Rango" not in html  # the max chains several closures via dedup
     assert "Sobre 3 cierres de Jama en el catálogo, 2016–2026" in html
-    assert "Cierres administrativos" in html
-    assert "12 días" in html
+    assert "No incluye 1 cierre administrativo (junio 2020)." in html
     assert [c["fecha_inicio"] for c in cierres.mas_largos(lista, 1)] == ["2020-06-08"]
 
 
@@ -572,6 +605,7 @@ def test_banner_only_when_both_high_and_higher_point_shown() -> None:
     assert "esta época desde 2021" in html
     assert "Se pronostican" not in pagina._pronostico([one], NOW)
     assert "Esto no es un pronóstico de cierre." in html
+    assert "Alto = dentro del 10 % más alto para esta época, según el mismo modelo." in html
 
 
 # ------------------------------------------------------------------ página
