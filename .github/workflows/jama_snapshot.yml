@@ -1,4 +1,5 @@
 name: Jama snapshot
+run-name: "Jama snapshot (${{ inputs.origen || github.event_name }})"
 
 # Every hour: `corredor snapshot-jama` appends one line per source to
 # snapshots/jama_estado.jsonl on the orphan branch `data-snapshots` (never on main).
@@ -14,6 +15,11 @@ on:
         description: "Publicar un mensaje de prueba en Telegram"
         type: boolean
         default: false
+      origen:
+        description: "Quién dispara la corrida (p. ej. cron-job.org); solo para el nombre"
+        type: string
+        required: false
+        default: ""
 
 permissions: {}
 
@@ -65,7 +71,7 @@ jobs:
             git checkout -q --orphan "$DATA_BRANCH"
           fi
 
-      # Two triggers per hour (this cron at :17 + an external workflow_dispatch at :47): a run
+      # Two triggers per hour (this cron at :17 + an external workflow_dispatch at :00): a run
       # within 20 min of the last successful snapshot only rebuilds the page.
       - name: Recent snapshot?
         id: reciente
