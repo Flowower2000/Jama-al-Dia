@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="Jama al Día: monitoreo de la RN 9 y la RN 52 en Jujuy, con el estado del Paso de Jama de cada lado cada hora, pronóstico de nieve y viento a 72 h y avisos por Telegram. Proyecto de la Hackathon JujuyDev 2026.">
+  <meta name="theme-color" content="#121922">
+  <title>Jama al Día — rutas y clima de Jujuy, antes de salir</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23121922'/%3E%3Cpath d='M4 24l8-12 5 7 3-4 8 9z' fill='%23e2733a'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-puna-50 font-sans text-puna-900 antialiased">
+  <a href="#contenido" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-puna-900">Saltar al contenido</a>
+
+  <header id="encabezado" class="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-puna-900/90 backdrop-blur transition-shadow">
+    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+      <a href="#inicio" class="flex items-center gap-2 text-lg font-bold text-white">
+        <svg class="h-8 w-8" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2a3442"/><path d="M4 24l8-12 5 7 3-4 8 9z" fill="#e2733a"/></svg>
+        Jama al Día
+      </a>
+      <nav class="hidden items-center gap-6 text-sm font-medium text-white/80 lg:flex" aria-label="Principal">
+        <a class="hover:text-white" href="#problema">Problema</a>
+        <a class="hover:text-white" href="#beneficios">Beneficios</a>
+        <a class="hover:text-white" href="#tecnologia">Tecnología</a>
+        <a class="hover:text-white" href="#casos">Casos de uso</a>
+        <a class="rounded-lg bg-telegram px-4 py-2 font-semibold text-white hover:brightness-110" href="https://t.me/jamaaldia" rel="noopener">Sumate al canal</a>
+      </nav>
+      <button id="menu-boton" type="button" class="flex h-11 w-11 items-center justify-center rounded-lg text-white hover:bg-white/10 lg:hidden" aria-controls="menu-movil" aria-expanded="false" aria-label="Abrir el menú">
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+    <nav id="menu-movil" class="hidden border-t border-white/10 bg-puna-900 px-4 pb-4 pt-2 lg:hidden" aria-label="Principal (móvil)">
+      <a class="block rounded-lg px-3 py-3 text-white/90 hover:bg-white/10" href="#problema">Problema y solución</a>
+      <a class="block rounded-lg px-3 py-3 text-white/90 hover:bg-white/10" href="#beneficios">Beneficios</a>
+      <a class="block rounded-lg px-3 py-3 text-white/90 hover:bg-white/10" href="#tecnologia">Tecnología</a>
+      <a class="block rounded-lg px-3 py-3 text-white/90 hover:bg-white/10" href="#casos">Casos de uso</a>
+      <a class="btn-primario mt-2 w-full" href="https://t.me/jamaaldia" rel="noopener">Sumate al canal</a>
+    </nav>
+  </header>
+
+  <main id="contenido">
+    <!-- Hero -->
+    <section id="inicio" class="relative overflow-hidden bg-gradient-to-b from-puna-950 via-puna-900 to-puna-800 pt-16 text-white">
+      <svg class="pointer-events-none absolute inset-x-0 bottom-0 h-40 w-full text-puna-700/60 sm:h-56" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+        <path fill="currentColor" d="M0 320V210l160-90 130 70 170-130 190 150 150-80 180 110 170-140 290 170v50z"/>
+        <path fill="#121922" fill-opacity=".55" d="M0 320v-60l220-70 180 50 230-90 210 80 200-50 400 100v40z"/>
+      </svg>
+      <div class="relative mx-auto grid max-w-6xl items-center gap-12 px-4 pb-28 pt-14 sm:px-6 sm:pb-36 sm:pt-20 lg:grid-cols-[1.1fr_1fr]">
+        <div>
+          <p class="mb-4 inline-flex flex-wrap items-center gap-2 rounded-full border border-arcilla-400/40 bg-arcilla-500/10 px-3 py-1 text-sm font-medium text-arcilla-300">
+            <span class="h-2 w-2 rounded-full bg-arcilla-400"></span>
+            Hackathon JujuyDev 2026 · RN 9 · RN 52 · Paso de Jama
+          </p>
+          <h1 class="text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            Sabé si la ruta está abierta <span class="text-arcilla-400">antes de salir</span>
+          </h1>
+          <p class="mt-5 max-w-xl text-lg text-white/80">
+            Jama al Día junta en un solo lugar el estado oficial del Paso de Jama de los dos lados, el
+            pronóstico de nieve y viento y diez años de cortes en la Quebrada y la Puna de Jujuy. Y te
+            avisa por Telegram cuando algo cambia.
+          </p>
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <a class="btn-acento" href="https://emiliano-f.github.io/corredor-quebrada-puna/" rel="noopener">
+              Ver el estado ahora
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a class="btn-primario" href="https://t.me/jamaaldia" rel="noopener">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.7 19.4c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-5 9.2-8.3c.4-.4-.1-.6-.6-.2L6.1 13.1l-4.9-1.5c-1-.3-1.1-1 .2-1.5L20.6 2.7c.9-.3 1.6.2 1.3 1.6z"/></svg>
+              Recibí los avisos
+            </a>
+            <a class="btn-secundario lg:hidden xl:inline-flex" href="#problema">Conocé el proyecto</a>
+          </div>
+          <p class="mt-4 text-sm text-white/60">Gratis. No es un canal oficial: ante la duda, consultá siempre el estado oficial.</p>
+        </div>
+
+        <figure class="aparecer rounded-3xl border border-white/10 bg-puna-800/80 p-4 shadow-2xl backdrop-blur sm:p-6">
+          <div class="flex items-center justify-between gap-3">
+            <p class="text-sm font-semibold">Corredor Quebrada–Puna</p>
+            <p class="rounded-full bg-white/10 px-2.5 py-1 text-xs text-white/70">15 puntos críticos</p>
+          </div>
+          <svg class="mt-4 h-auto w-full" viewBox="0 0 880 480" role="img" aria-labelledby="mapa-titulo">
+            <title id="mapa-titulo">Mapa de la RN 9, la RN 52 y el Tren Solar en Jujuy, con los puntos críticos que sigue el proyecto</title>
+            <text x="40" y="150" fill="#ffffff" fill-opacity=".35" font-size="22" font-weight="700" letter-spacing="4">CHILE</text>
+            <text x="420" y="330" fill="#ffffff" fill-opacity=".35" font-size="22" font-weight="700" letter-spacing="4">JUJUY</text>
+            <path d="M794 283 794 283 793 283 793 283 792 283 791 283 791 283 791 284 790 284 789 283 787 284 787 284 786 284 786 284 784 284 783 282 782 281 781 281 780 279 779 278 779 278 777 277 776 277 776 276 775 274 774 273 774 272 773 271 773 270 772 269 772 269 771 268 771 268 770 267 769 266 769 266 768 266 765 266 764 265 763 265 761 264 761 262 761 262 760 261 759 260 759 258 758 257 758 256 758 255 758 255 758 255 757 254 757 254 755 253 754 253 753 253 753 253 754 254 753 254 753 253 753 253 752 253 751 254 751 254 752 253 752 254 752 254 753 255 752 254 751 255 752 255 751 255 751 255 750 255 749 255 748 256 747 255 747 255 745 256 745 256 745 256 745 256 745 257 745 257 744 257 745 257 745 257 744 257 742 258 741 258 742 258 742 258 741 259 740 259 739 259 739 259 739 260 739 259 739 260 739 259 738 260 739 261 738 262 737 262 737 263 736 265 735 265 733 266 732 265 732 264 731 264 730 265 728 266 728 266 727 267 724 268 724 268 723 269 722 270 723 271 722 270 722 268 723 267 723 267 722 266 722 265 722 266 721 266 720 266 719 266 718 267 716 267 713 266 712 265 711 264 709 264 707 264 705 264 704 265 702 265 699 263 695 257 692 253 687 251 679 248 670 247 662 240 655 230 646 224 614 201 606 196 594 191 583 184 571 175 565 169 557 166 547 161 543 160 539 161 535 164 531 162 529 163 527 166 524 167 523 167 521 167 520 166 519 166 518 165 516 164 515 164 515 162 515 162 514 161 513 162 511 162 511 163 510 165 510 165 509 164 509 166 508 167 507 172 507 173 507 174 506 173 504 171 503 171 503 170 500 168 499 169 498 170 497 168 491 161 487 159 485 158 484 154 485 154 486 153 486 154 486 154 485 153 482 153 480 153 479 155 480 157 479 159 478 160 476 160 473 161 469 162 464 162 461 161 456 160 452 161 449 161 440 161 438 160 438 159 436 159 434 158 433 155 431 154 429 153 426 154 419 161 408 164 390 180 386 190 386 197 381 208 379 216 376 221 364 227 361 231 357 233 341 229 329 235 314 238 311 236 307 229 303 226 296 222 291 217 285 200 282 190 277 161 278 156 276 148 267 127 260 117 258 112 258 111 258 109 259 107 259 100 259 97 257 94 257 92 254 90 253 90 252 90 251 89 250 88 249 87 248 86 247 87 245 87 243 86 243 86 242 86 241 86 240 86 239 86" fill="none" stroke="#ec9560" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M851 457 850 456 848 455 847 455 847 454 846 454 846 452 846 452 845 451 843 451 841 450 839 449 836 448 833 447 831 446 829 445 828 444 826 442 824 440 822 438 820 433 817 429 817 428 817 426 817 426 817 425 816 425 817 424 816 419 816 414 816 411 815 410 812 404 812 402 811 401 810 399 808 397 807 393 805 392 804 389 803 387 803 385 802 384 802 382 802 380 801 379 800 377 799 375 801 369 800 368 799 367 798 367 798 365 797 366 796 365 797 365 796 364 796 365 795 364 795 363 797 356 797 354 796 352 795 350 795 349 796 347 798 341 798 334 797 333 795 329 795 327 795 324 796 321 794 319 794 316 793 314 791 311 791 308 791 307 792 304 791 299 791 298 790 295 791 291 793 285 794 283 794 283 795 280 796 275 797 274 799 272 799 270 800 266 800 265 801 263 801 261 802 259 803 257 806 251 808 247 809 246 812 243 813 241 814 238 814 237 814 237 815 235 815 234 816 233 816 232 816 229 815 228 814 226 814 225 815 223 816 222 817 219 819 218 820 217 821 214 825 205 827 201 827 198 828 193 829 190 830 187 831 186 830 185 831 183 831 181 834 174 836 168 835 166 835 161 835 157 836 154 837 149 839 145 839 142 838 137 836 130 837 123 835 120 834 116 834 114 831 107 831 105 832 101 833 98 834 90 834 82 834 81 834 79 834 77 833 75 831 71 830 69 828 62 827 58 828 55" fill="none" stroke="#7cc4f2" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M795 348 796 345 798 341 798 340 798 335 798 333 797 333 796 331 795 328 795 327 796 324 796 322 795 320 794 317 793 313 792 311 791 309 792 307 792 302 791 299 791 295 792 290 793 286 794 284 794 282 794 281 796 276 797 274 799 272 799 271 800 267 800 266 800 264 801 263 801 261 802 261 802 260 802 258 803 257 805 256 805 255 806 254 807 252 807 251 808 249 809 247 810 245 814 241 815 239 816 238 817 236 817 235 817 234 817 232 817 229 816 228 815 227 814 226 814 226 815 225 815 224 816 223 816 221 818 219 819 218" fill="none" stroke="#ffffff" stroke-width="2" stroke-dasharray="6 6"/>
+            <circle cx="817" cy="412" r="6" fill="#121922" stroke="#ffffff" stroke-width="3"/>
+            <circle cx="808" cy="394" r="6" fill="#121922" stroke="#ffffff" stroke-width="3"/>
+            <circle cx="800" cy="368" r="6" fill="#121922" stroke="#ffffff" stroke-width="3"/>
+            <circle cx="796" cy="348" r="6" fill="#121922" stroke="#ffffff" stroke-width="3"/>
+            <circle cx="795" cy="326" r="6" fill="#121922" stroke="#ffffff" stroke-width="3"/>
+            <circle cx="815" cy="237" r="6" fill="#121922" stroke="#ffffff" stroke-width="3"/>
+            <circle cx="821" cy="219" r="6" fill="#121922" stroke="#ffffff" stroke-width="3"/>
+            <circle cx="835" cy="165" r="6" fill="#121922" stroke="#ffffff" stroke-width="3"/>
+            <circle cx="778" cy="279" r="6" fill="#121922" stroke="#ffffff" stroke-width="3"/>
+            <circle cx="771" cy="268" r="6" fill="#121922" stroke="#ffffff" stroke-width="3"/>
+            <circle cx="728" cy="266" r="6" fill="#121922" stroke="#ffffff" stroke-width="3"/>
+            <circle cx="702" cy="265" r="6" fill="#121922" stroke="#ffffff" stroke-width="3"/>
+            <circle cx="649" cy="227" r="6" fill="#121922" stroke="#ffffff" stroke-width="3"/>
+            <circle cx="481" cy="152" r="6" fill="#121922" stroke="#ffffff" stroke-width="3"/>
+            <circle cx="239" cy="86" r="6" fill="#121922" stroke="#ffffff" stroke-width="3"/>
+            <circle cx="87" cy="34" r="5" fill="#121922" stroke="#ffffff" stroke-width="2" stroke-dasharray="3 3"/>
+            <circle cx="239" cy="86" r="16" fill="none" stroke="#ec9560" stroke-width="3"/>
+            <text x="219" y="128" fill="#ffffff" font-size="20" font-weight="700">Paso de Jama</text>
+            <text x="451" y="186" fill="#ffffff" fill-opacity=".8" font-size="17">Susques</text>
+            <text x="579" y="211" fill="#ffffff" fill-opacity=".8" font-size="17">Salinas Grandes</text>
+            <text x="764" y="303" fill="#ffffff" fill-opacity=".8" font-size="17" text-anchor="end">Purmamarca</text>
+            <text x="807" y="225" fill="#ffffff" fill-opacity=".8" font-size="17" text-anchor="end">Tilcara</text>
+            <text x="803" y="418" fill="#ffffff" fill-opacity=".8" font-size="17" text-anchor="end">Yala</text>
+            <text x="101" y="40" fill="#ffffff" fill-opacity=".6" font-size="15">CH-27 (clima)</text>
+          </svg>
+          <figcaption class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-xs text-white/70">
+            <span class="inline-flex items-center gap-2"><span class="h-1.5 w-5 rounded bg-arcilla-400"></span>RN 52</span>
+            <span class="inline-flex items-center gap-2"><span class="h-1.5 w-5 rounded bg-sky-300"></span>RN 9</span>
+            <span class="inline-flex items-center gap-2"><span class="w-5 border-t-2 border-dashed border-white"></span>Tren Solar</span>
+            <span class="inline-flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full border-2 border-white bg-puna-900"></span>Punto crítico</span>
+            <span class="basis-full text-white/50">Trazas y puntos de OpenStreetMap, los mismos del tablero.</span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Cifras -->
+    <section class="relative z-10 mx-auto -mt-14 max-w-6xl px-4 sm:px-6" aria-label="Datos clave">
+      <dl class="grid grid-cols-2 gap-px overflow-hidden rounded-2xl bg-puna-100 shadow-xl lg:grid-cols-4">
+        <div class="bg-white p-5 text-center sm:p-6">
+          <dt class="text-sm text-puna-700">Rutas nacionales</dt>
+          <dd class="mt-1 text-2xl font-extrabold sm:text-3xl">RN 9 y RN 52</dd>
+        </div>
+        <div class="bg-white p-5 text-center sm:p-6">
+          <dt class="text-sm text-puna-700">Estado de Jama</dt>
+          <dd class="mt-1 text-2xl font-extrabold sm:text-3xl">Cada 1 h</dd>
+        </div>
+        <div class="bg-white p-5 text-center sm:p-6">
+          <dt class="text-sm text-puna-700">Pronóstico de nieve y viento</dt>
+          <dd class="mt-1 text-2xl font-extrabold sm:text-3xl">72 h</dd>
+        </div>
+        <div class="bg-white p-5 text-center sm:p-6">
+          <dt class="text-sm text-puna-700">Cierres de Jama desde 2016</dt>
+          <dd class="mt-1 text-2xl font-extrabold sm:text-3xl">67</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- Problema y solución -->
+    <section id="problema" class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+      <div class="aparecer mx-auto max-w-2xl text-center">
+        <p class="eyebrow">El problema y la solución</p>
+        <h2 class="titulo">Un corredor clave que se corta sin aviso</h2>
+        <p class="mt-4 text-lg text-puna-700">
+          Por la RN 52 pasa el corredor bioceánico hacia los puertos de Chile y la zona del litio; por la
+          RN 9, la Quebrada de Humahuaca y el Tren Solar. Cuando se cortan, quien está en la ruta suele
+          enterarse tarde.
+        </p>
+      </div>
+
+      <div class="mt-14 grid gap-6 lg:grid-cols-2">
+        <article class="aparecer rounded-3xl border border-cerrado/15 bg-white p-6 shadow-sm sm:p-8">
+          <div class="flex items-center gap-3">
+            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-cerrado/10 text-cerrado">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+            </span>
+            <h3 class="text-xl font-bold">El problema</h3>
+          </div>
+          <ul class="mt-6 space-y-5">
+            <li class="flex gap-3">
+              <span class="mt-2 h-2 w-2 flex-none rounded-full bg-cerrado"></span>
+              <p><strong>El Paso de Jama se cierra de golpe.</strong> De los 67 cierres que registró la prensa local desde 2016, 51 fueron por nieve, y junio y julio son los meses con más.</p>
+            </li>
+            <li class="flex gap-3">
+              <span class="mt-2 h-2 w-2 flex-none rounded-full bg-cerrado"></span>
+              <p><strong>La información está repartida.</strong> Argentina y Chile publican partes por separado, en sitios distintos, y el chileno puede pasar días sin actualizarse.</p>
+            </li>
+            <li class="flex gap-3">
+              <span class="mt-2 h-2 w-2 flex-none rounded-full bg-cerrado"></span>
+              <p><strong>El cierre suele venir de Chile.</strong> En 55 de esos 67 cierres el paso estaba cerrado solo del lado chileno: mirar un solo país no alcanza.</p>
+            </li>
+            <li class="flex gap-3">
+              <span class="mt-2 h-2 w-2 flex-none rounded-full bg-cerrado"></span>
+              <p><strong>No hay historia oficial.</strong> Ninguna de las dos fuentes guarda historial, y en la RN 9 y la Cuesta de Lipán los aluviones y las crecidas también cortan la ruta.</p>
+            </li>
+          </ul>
+        </article>
+
+        <article class="aparecer rounded-3xl bg-puna-900 p-6 text-white shadow-xl sm:p-8">
+          <div class="flex items-center gap-3">
+            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-abierto/20 text-emerald-300">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+            </span>
+            <h3 class="text-xl font-bold">Nuestra solución</h3>
+          </div>
+          <ol class="mt-6 space-y-5">
+            <li class="flex gap-4">
+              <span class="paso">1</span>
+              <p><strong>Monitoreamos cada hora.</strong> Consultamos los partes oficiales de Pasos Internacionales (Argentina) y del MOP (Chile) y mostramos el estado de cada lado.</p>
+            </li>
+            <li class="flex gap-4">
+              <span class="paso">2</span>
+              <p><strong>Cruzamos con el clima.</strong> El pronóstico de nieve y ráfagas a 72 h para el paso y la CH-27, comparado con lo habitual para la época.</p>
+            </li>
+            <li class="flex gap-4">
+              <span class="paso">3</span>
+              <p><strong>Armamos la historia.</strong> Un catálogo de cortes de la RN 9 y la RN 52 desde 2016, hecho con noticias de medios locales y cruzado con datos de clima reales.</p>
+            </li>
+            <li class="flex gap-4">
+              <span class="paso">4</span>
+              <p><strong>Avisamos.</strong> Un mensaje en Telegram cuando cambia el estado real de algún lado, y un tablero para el celular que funciona sin conexión.</p>
+            </li>
+          </ol>
+        </article>
+      </div>
+    </section>
+
+    <!-- Beneficios -->
+    <section id="beneficios" class="bg-white py-20 sm:py-24">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <div class="aparecer mx-auto max-w-2xl text-center">
+          <p class="eyebrow">Propuesta de valor</p>
+          <h2 class="titulo">Para quien vive, trabaja o viaja por la ruta</h2>
+          <p class="mt-4 text-lg text-puna-700">Menos viajes en vano y decisiones con datos, sin instalar nada.</p>
+        </div>
+
+        <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <article class="tarjeta aparecer">
+            <div class="icono">
+              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            </div>
+            <h3 class="text-lg font-bold">Choferes de carga</h3>
+            <p class="mt-2 text-puna-700">Saber antes de salir si conviene arrancar o esperar, en vez de quedar varado en Susques o en la frontera.</p>
+          </article>
+          <article class="tarjeta aparecer">
+            <div class="icono">
+              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg>
+            </div>
+            <h3 class="text-lg font-bold">Empresas y flotas</h3>
+            <p class="mt-2 text-puna-700">Planificar despachos con el estado por lado y la historia de cierres por mes. Estamos armando un plan para empresas.</p>
+          </article>
+          <article class="tarjeta aparecer">
+            <div class="icono">
+              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            </div>
+            <h3 class="text-lg font-bold">Viajeros y turismo</h3>
+            <p class="mt-2 text-puna-700">Ver de un vistazo cómo están la Quebrada, Purmamarca, Salinas Grandes y el paso a San Pedro de Atacama.</p>
+          </article>
+          <article class="tarjeta aparecer">
+            <div class="icono">
+              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>
+            </div>
+            <h3 class="text-lg font-bold">Comunidad y gestión</h3>
+            <p class="mt-2 text-puna-700">Datos abiertos sobre dónde y por qué se corta la ruta, para discutir obras y prevención con evidencia.</p>
+          </article>
+        </div>
+
+        <ul class="aparecer mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <li class="beneficio"><span class="check">✓</span>Gratis y sin registrarse</li>
+          <li class="beneficio"><span class="check">✓</span>Liviana, pensada para el celular</li>
+          <li class="beneficio"><span class="check">✓</span>Avisa solo cuando cambia algo</li>
+          <li class="beneficio"><span class="check">✓</span>Dice cuándo un dato no está confirmado</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Tecnología -->
+    <section id="tecnologia" class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+      <div class="aparecer mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Características técnicas</p>
+        <h2 class="titulo">Clima, alertas y mapas, en piloto automático</h2>
+        <p class="mt-4 text-lg text-puna-700">Un pipeline abierto en Python que corre solo en GitHub Actions y publica una página estática.</p>
+      </div>
+
+      <div class="mt-14 grid gap-6 lg:grid-cols-3">
+        <article class="tarjeta-destacada aparecer">
+          <div class="icono-oscuro">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 2v20M4.9 6.5l14.2 11M4.9 17.5l14.2-11"/></svg>
+          </div>
+          <h3 class="text-xl font-bold">Clima</h3>
+          <ul class="mt-4 space-y-2 text-white/80">
+            <li>Nieve y ráfagas a 72 h de Open-Meteo para el Paso de Jama y la CH-27.</li>
+            <li>Cada valor se compara con la climatología del mismo modelo: "alto" es más que el 90 % de lo habitual para la época.</li>
+            <li>Clima horario real desde 2016 para cada punto crítico, para calibrar umbrales.</li>
+          </ul>
+        </article>
+        <article class="tarjeta-destacada aparecer">
+          <div class="icono-oscuro">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          </div>
+          <h3 class="text-xl font-bold">Alertas automatizadas</h3>
+          <ul class="mt-4 space-y-2 text-white/80">
+            <li>Un workflow corre cada hora, con un disparo externo de respaldo.</li>
+            <li>Telegram publica solo cuando cambia el estado real (abierto, cerrado o restringido), más un resumen a las 08:00.</li>
+            <li>Nunca avisa con datos viejos ni por la apertura y el cierre por horario.</li>
+          </ul>
+        </article>
+        <article class="tarjeta-destacada aparecer">
+          <div class="icono-oscuro">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4zM8 2v16M16 6v16"/></svg>
+          </div>
+          <h3 class="text-xl font-bold">Mapas</h3>
+          <ul class="mt-4 space-y-2 text-white/80">
+            <li>La RN 9, la RN 52 y el Tren Solar, con 15 puntos críticos ubicados con OpenStreetMap.</li>
+            <li>Un tablero para el celular que funciona sin conexión: tocás un punto y ves su riesgo y sus cortes históricos.</li>
+            <li>"Usar mi ubicación" muestra el punto crítico más cercano; la ubicación no sale del teléfono.</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="mt-6 grid gap-6 sm:grid-cols-3">
+        <article class="aparecer rounded-2xl border border-puna-100 bg-white p-5">
+          <h3 class="font-bold">Catálogo histórico</h3>
+          <p class="mt-1 text-sm text-puna-700">Noticias de medios locales desde 2016: guardamos solo enlace, medio, fecha y titular, y deduplicamos los cortes.</p>
+        </article>
+        <article class="aparecer rounded-2xl border border-puna-100 bg-white p-5">
+          <h3 class="font-bold">Recolección responsable</h3>
+          <p class="mt-1 text-sm text-puna-700">Respeta robots.txt, se identifica y espera al menos 2 s entre pedidos a cada sitio. Nada de redes sociales.</p>
+        </article>
+        <article class="aparecer rounded-2xl border border-puna-100 bg-white p-5">
+          <h3 class="font-bold">Código abierto y probado</h3>
+          <p class="mt-1 text-sm text-puna-700">Python con tipos estrictos, más de 450 tests automáticos y CI en cada cambio.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Casos de uso -->
+    <section id="casos" class="bg-white py-20 sm:py-24">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <div class="aparecer mx-auto max-w-2xl text-center">
+          <p class="eyebrow">Casos de uso</p>
+          <h2 class="titulo">Historias de la ruta</h2>
+          <p class="mt-4 text-lg text-puna-700">Quienes viven, trabajan y viajan por la Quebrada y la Puna de Jujuy.</p>
+        </div>
+
+        <div class="mt-14 grid gap-6 md:grid-cols-3">
+          <figure class="testimonio aparecer flex flex-col">
+            <svg class="h-8 w-8 text-arcilla-500" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.5 6C6.5 6.6 4 9.3 4 13v5h6v-6H7c0-2.2 1.2-3.7 3-4.2zM19.5 6c-3 .6-5.5 3.3-5.5 7v5h6v-6h-3c0-2.2 1.2-3.7 3-4.2z"/></svg>
+            <blockquote class="mt-4 flex-1 text-lg leading-relaxed">"Antes salía a la ruta a ciegas y me enteraba de los cortes o el viento blanco en la Cuesta de Lipán cuando ya estaba a mitad de camino. Con Jama al Día puedo planificar el viaje con anticipación y cuidar tanto el tiempo como el vehículo."</blockquote>
+            <figcaption class="mt-6 flex items-center gap-3 border-t border-puna-100 pt-5">
+              <span class="avatar">RG</span>
+              <span><strong class="block">Roberto Gómez</strong><span class="text-sm text-puna-700">Transportista de carga en la RN 9 y la RN 52</span></span>
+            </figcaption>
+          </figure>
+          <figure class="testimonio aparecer flex flex-col">
+            <svg class="h-8 w-8 text-arcilla-500" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.5 6C6.5 6.6 4 9.3 4 13v5h6v-6H7c0-2.2 1.2-3.7 3-4.2zM19.5 6c-3 .6-5.5 3.3-5.5 7v5h6v-6h-3c0-2.2 1.2-3.7 3-4.2z"/></svg>
+            <blockquote class="mt-4 flex-1 text-lg leading-relaxed">"Mover mercadería entre la Quebrada y la Puna requiere precisión logística. Saber el estado real de las rutas y las alertas meteorológicas nos evita demoras críticas que afectan directamente las entregas."</blockquote>
+            <figcaption class="mt-6 flex items-center gap-3 border-t border-puna-100 pt-5">
+              <span class="avatar">MA</span>
+              <span><strong class="block">Marcela Apaza</strong><span class="text-sm text-puna-700">Productora en la Puna</span></span>
+            </figcaption>
+          </figure>
+          <figure class="testimonio aparecer flex flex-col">
+            <svg class="h-8 w-8 text-arcilla-500" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.5 6C6.5 6.6 4 9.3 4 13v5h6v-6H7c0-2.2 1.2-3.7 3-4.2zM19.5 6c-3 .6-5.5 3.3-5.5 7v5h6v-6h-3c0-2.2 1.2-3.7 3-4.2z"/></svg>
+            <blockquote class="mt-4 flex-1 text-lg leading-relaxed">"Viajar por Jujuy es una experiencia hermosa pero exigente por el clima de altura. Tener un acceso rápido y en tiempo real al estado del Paso de Jama nos da una tranquilidad enorme al volante."</blockquote>
+            <figcaption class="mt-6 flex items-center gap-3 border-t border-puna-100 pt-5">
+              <span class="avatar">LF</span>
+              <span><strong class="block">Lucas Fernández</strong><span class="text-sm text-puna-700">Turista y viajero frecuente</span></span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- Alertas y contacto -->
+    <section id="alertas" class="bg-gradient-to-b from-puna-900 to-puna-950 py-20 text-white sm:py-24">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <div class="aparecer mx-auto max-w-2xl text-center">
+          <p class="eyebrow text-arcilla-400">Sumate</p>
+          <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">Enterate antes de salir</h2>
+          <p class="mt-4 text-lg text-white/70">Elegí cómo querés seguir el estado de la ruta.</p>
+        </div>
+
+        <div class="mt-12 grid gap-6 md:grid-cols-3">
+          <article class="aparecer flex flex-col rounded-2xl border border-white/10 bg-white/5 p-6">
+            <h3 class="text-lg font-bold">Canal de Telegram</h3>
+            <p class="mt-2 flex-1 text-white/70">Avisos cuando cambia el estado y un resumen diario a las 08:00.</p>
+            <a class="btn-primario mt-6 w-full" href="https://t.me/jamaaldia" rel="noopener">Sumate al canal</a>
+          </article>
+          <article class="aparecer flex flex-col rounded-2xl border border-white/10 bg-white/5 p-6">
+            <h3 class="text-lg font-bold">Plan para flotas</h3>
+            <p class="mt-2 flex-1 text-white/70">¿Tenés una empresa de transporte? Anotate en la lista de espera del plan de empresas.</p>
+            <a class="btn-secundario mt-6 w-full" href="https://forms.gle/KUt6bFF8EL8dPerw6" rel="noopener">Anotar mi flota</a>
+          </article>
+          <article class="aparecer flex flex-col rounded-2xl border border-white/10 bg-white/5 p-6">
+            <h3 class="text-lg font-bold">Errores y sugerencias</h3>
+            <p class="mt-2 flex-1 text-white/70">¿Viste un dato mal o falta una fuente? Contanos con un issue en GitHub.</p>
+            <a class="btn-secundario mt-6 w-full" href="https://github.com/emiliano-f/corredor-quebrada-puna/issues" rel="noopener">Abrir un issue</a>
+          </article>
+        </div>
+
+        <div class="aparecer mt-10 rounded-2xl border border-arcilla-400/30 bg-arcilla-500/10 p-5 text-sm text-white/80">
+          <p class="font-semibold text-white">Lo que tenés que saber</p>
+          <p class="mt-1">No es una fuente oficial: antes de cruzar, consultá a Gendarmería o Vialidad. Un cambio puede tardar hasta una hora en aparecer, el parte de Chile puede pasar días sin actualizarse y la historia sale de la prensa local, así que puede faltar algún cierre. El pronóstico compara con lo habitual para la época: no es un pronóstico de cierre.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-puna-950 py-10 text-sm text-white/60">
+    <div class="mx-auto flex max-w-6xl flex-col gap-6 px-4 sm:px-6 md:flex-row md:items-center md:justify-between">
+      <p>Jama al Día · Hackathon JujuyDev 2026. <strong class="text-white/80">No es un canal oficial.</strong></p>
+      <p class="max-w-md">Fuentes: argentina.gob.ar · MOP Chile · Open-Meteo (CC BY 4.0) · OpenStreetMap · prensa local de Jujuy (solo metadatos).</p>
+      <nav class="flex gap-5" aria-label="Pie">
+        <a class="hover:text-white" href="https://emiliano-f.github.io/corredor-quebrada-puna/" rel="noopener">Estado</a>
+        <a class="hover:text-white" href="https://t.me/jamaaldia" rel="noopener">Telegram</a>
+        <a class="hover:text-white" href="https://github.com/emiliano-f/corredor-quebrada-puna" rel="noopener">Código</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
