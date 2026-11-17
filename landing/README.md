@@ -31,6 +31,19 @@ tailwindcss -c tailwind.config.js -i src/input.css -o styles.css --minify
 
 ## Contenido
 
-Los enlaces (canal, página de estado, formulario del plan de flotas) son los de `jama_al_dia`
-en `config.yaml`. La página no muestra datos en vivo: el aviso de Telegram del encabezado es un
-ejemplo del formato y está rotulado como tal. Todavía no la publica ningún workflow.
+Secciones: Hero, El problema y la solución, Beneficios, Características técnicas, Testimonios,
+Próximos pasos y Sumate (alertas y contacto).
+
+- **Cifras fijas.** "67 cierres desde 2016", "51 por nieve" y "55 solo del lado chileno"
+  salen de `assets/jama/cierres.json` (cierres totales o parciales sin confianza baja, el
+  mismo criterio de la página de estado). "15 puntos críticos" sale de `assets/geo/puntos.geojson`.
+  Si cambia el catálogo, hay que actualizarlas a mano.
+- **Mapa.** El SVG del Hero se generó una vez con las trazas de `assets/geo/rutas.geojson`, el
+  Tren Solar de `assets/geo/ferrocarril.geojson` y los puntos de `assets/geo/puntos.geojson`
+  (proyección equirectangular, una de cada 12 coordenadas de ruta). No muestra riesgo.
+- **Testimonios.** Son ejemplos ilustrativos y están rotulados como tales: reemplazarlos por
+  citas reales, con permiso, antes de presentarlos como testimonios.
+- **Enlaces.** El canal, la página de estado y el formulario del plan de flotas son los de
+  `jama_al_dia` en `config.yaml`.
+
+La página no muestra datos en vivo y todavía no la publica ningún workflow.
