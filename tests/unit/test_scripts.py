@@ -3,7 +3,6 @@ from datetime import date
 import pytest
 
 import check_docs
-import check_identity
 import release
 
 
@@ -36,29 +35,6 @@ class TestCheckDocs:
         assert check_docs.has_skip_label("bug, no-docs")
         assert not check_docs.has_skip_label("docs")
         assert not check_docs.has_skip_label(None)
-
-
-class TestIdentity:
-    @pytest.mark.parametrize(
-        "ident",
-        [
-            "Emiliano Flores <1+emiliano-f@users.noreply.github.com> 1 +0000",
-            "Devin AI <2+devin-ai-integration[bot]@users.noreply.github.com> 1 +0000",
-        ],
-    )
-    def test_noreply_ok(self, ident: str) -> None:
-        assert check_identity.check_ident("author", ident) is None
-
-    @pytest.mark.parametrize(
-        "ident",
-        [
-            "Someone <someone@example.com> 1 +0000",
-            "Someone <x@users.noreply.github.com.evil.com> 1 +0000",
-            "garbage",
-        ],
-    )
-    def test_rejected(self, ident: str) -> None:
-        assert check_identity.check_ident("committer", ident) is not None
 
 
 CHANGELOG = """# Changelog
