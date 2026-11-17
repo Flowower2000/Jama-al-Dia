@@ -1,12 +1,6 @@
 repos:
   - repo: local
     hooks:
-      - id: identity-guard
-        name: identity guard (author/committer must be @users.noreply.github.com)
-        entry: uv run python scripts/check_identity.py
-        language: system
-        pass_filenames: false
-        always_run: true
       - id: ruff
         name: ruff
         entry: uv run ruff check --fix

@@ -31,6 +31,7 @@ All notable changes to this project are documented here. The format follows
   pages without metadata.
 
 ### Changed
+- Git identity: `AGENTS.md` no longer requires Emiliano Flores as commit author nor `@users.noreply.github.com` emails; removed the `identity-guard` pre-commit hook (`scripts/check_identity.py`, its tests) and the matching line in `CONTRIBUTING.md`.
 - Rules extractor (`PARSER_VERSION` 6): a suggested alternate route is not a closure of
   that route; an accented "cerró" no longer drops a per-route event; cut + protest actor
   (comunidades, vecinos, gremio…) → `protesta`; Jama closed by unspecified weather → `nieve`

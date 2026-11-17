@@ -21,8 +21,6 @@ runs only from `.github/workflows/jama_snapshot.yml`. Tests never touch the netw
 
 - Branch from `main` as `feature/<topic>`; never commit directly to `main`.
 - Conventional commits (`feat:`, `fix:`, `docs:`, `chore:`, `test:`, `refactor:`).
-- Commit identity: author and committer emails must end in `@users.noreply.github.com`
-  (enforced by the `identity-guard` pre-commit hook, `scripts/check_identity.py`).
 - Open a PR with the template. CI must be green. Follow
   [docs/playbooks/docs_sync.md](docs/playbooks/docs_sync.md): every PR adds a line under
   `## [Unreleased]` in `CHANGELOG.md`; the `no-docs` label skips the docs guard.
