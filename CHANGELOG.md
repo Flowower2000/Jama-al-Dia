@@ -5,9 +5,6 @@ All notable changes to this project are documented here. The format follows
 [Semantic Versioning](https://semver.org/). Feature PRs add a line under
 `## [Unreleased]`; only `make release` turns it into a versioned section.
 
-### Changed
-- `AGENTS.md`: the git identity rule no longer requires Emiliano Flores as commit author; author and committer emails must still end in `@users.noreply.github.com` (same as the `identity-guard` hook).
-
 ## [Unreleased]
 
 ### Added
@@ -34,6 +31,7 @@ All notable changes to this project are documented here. The format follows
   pages without metadata.
 
 ### Changed
+- `AGENTS.md`: the git identity rule no longer requires Emiliano Flores as commit author; author and committer emails must still end in `@users.noreply.github.com` (same as the `identity-guard` hook).
 - Rules extractor (`PARSER_VERSION` 6): a suggested alternate route is not a closure of
   that route; an accented "cerró" no longer drops a per-route event; cut + protest actor
   (comunidades, vecinos, gremio…) → `protesta`; Jama closed by unspecified weather → `nieve`
