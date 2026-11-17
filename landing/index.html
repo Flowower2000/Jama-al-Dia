@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="Jama al Día: el estado del Paso de Jama (RN 52 y CH-27), de cada lado, actualizado cada hora, con avisos por Telegram y pronóstico de nieve y viento a 72 h.">
+  <meta name="theme-color" content="#121922">
+  <title>Jama al Día — el Paso de Jama, hora a hora</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23121922'/%3E%3Cpath d='M4 24l8-12 5 7 3-4 8 9z' fill='%23e2733a'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-puna-50 font-sans text-puna-900 antialiased">
+  <a href="#contenido" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-puna-900">Saltar al contenido</a>
+
+  <header id="encabezado" class="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-puna-900/90 backdrop-blur transition-shadow">
+    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+      <a href="#inicio" class="flex items-center gap-2 text-lg font-bold text-white">
+        <svg class="h-8 w-8" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2a3442"/><path d="M4 24l8-12 5 7 3-4 8 9z" fill="#e2733a"/></svg>
+        Jama al Día
+      </a>
+      <nav class="hidden items-center gap-8 text-sm font-medium text-white/80 md:flex" aria-label="Principal">
+        <a class="hover:text-white" href="#caracteristicas">Qué ofrece</a>
+        <a class="hover:text-white" href="#como-funciona">Cómo funciona</a>
+        <a class="hover:text-white" href="#alertas">Alertas</a>
+        <a class="rounded-lg bg-telegram px-4 py-2 font-semibold text-white hover:brightness-110" href="https://t.me/jamaaldia" rel="noopener">Sumate al canal</a>
+      </nav>
+      <button id="menu-boton" type="button" class="flex h-11 w-11 items-center justify-center rounded-lg text-white hover:bg-white/10 md:hidden" aria-controls="menu-movil" aria-expanded="false" aria-label="Abrir el menú">
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+    <nav id="menu-movil" class="hidden border-t border-white/10 bg-puna-900 px-4 pb-4 pt-2 md:hidden" aria-label="Principal (móvil)">
+      <a class="block rounded-lg px-3 py-3 text-white/90 hover:bg-white/10" href="#caracteristicas">Qué ofrece</a>
+      <a class="block rounded-lg px-3 py-3 text-white/90 hover:bg-white/10" href="#como-funciona">Cómo funciona</a>
+      <a class="block rounded-lg px-3 py-3 text-white/90 hover:bg-white/10" href="#alertas">Alertas</a>
+      <a class="btn-primario mt-2 w-full" href="https://t.me/jamaaldia" rel="noopener">Sumate al canal</a>
+    </nav>
+  </header>
+
+  <main id="contenido">
+    <!-- Hero -->
+    <section id="inicio" class="relative overflow-hidden bg-gradient-to-b from-puna-950 via-puna-900 to-puna-800 pt-16 text-white">
+      <svg class="pointer-events-none absolute inset-x-0 bottom-0 h-40 w-full text-puna-700/60 sm:h-56" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+        <path fill="currentColor" d="M0 320V210l160-90 130 70 170-130 190 150 150-80 180 110 170-140 290 170v50z"/>
+        <path fill="#121922" fill-opacity=".55" d="M0 320v-60l220-70 180 50 230-90 210 80 200-50 400 100v40z"/>
+      </svg>
+      <div class="relative mx-auto grid max-w-6xl items-center gap-12 px-4 pb-28 pt-14 sm:px-6 sm:pb-36 sm:pt-20 lg:grid-cols-2">
+        <div>
+          <p class="mb-4 inline-flex items-center gap-2 rounded-full border border-arcilla-400/40 bg-arcilla-500/10 px-3 py-1 text-sm font-medium text-arcilla-300">
+            <span class="h-2 w-2 rounded-full bg-arcilla-400"></span>
+            RN 52 · CH-27 · Jujuy, Argentina
+          </p>
+          <h1 class="text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            El Paso de Jama, <span class="text-arcilla-400">hora a hora</span>
+          </h1>
+          <p class="mt-5 max-w-xl text-lg text-white/80">
+            Antes de salir a la ruta, mirá si el paso está abierto de los dos lados. Juntamos los partes
+            oficiales de Argentina y Chile, el pronóstico de nieve y viento, y te avisamos por Telegram
+            cuando algo cambia.
+          </p>
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <a class="btn-primario" href="https://t.me/jamaaldia" rel="noopener">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3l-3.2 15c-.2 1-.9 1.3-1.7.8l-4.8-3.6-2.3 2.200c-.3.3-.5.5-1 .5l.3-4.9 9-8.100c.4-.3-.1-.5-.6-.2L6.5 13l-4.8-1.500c-1-.3-1-1 .2-1.500L20.6 2.800c.9-.3 1.6.2 1.3 1.500z"/></svg>
+              Recibí los avisos por Telegram
+            </a>
+            <a class="btn-secundario" href="https://emiliano-f.github.io/corredor-quebrada-puna/" rel="noopener">
+              Ver el estado ahora
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+          <p class="mt-4 text-sm text-white/60">Gratis. No es un canal oficial: ante la duda, consultá siempre el estado oficial.</p>
+        </div>
+
+        <!-- Example of a Telegram post (format only; not live data). -->
+        <figure class="mx-auto w-full max-w-sm">
+          <div class="rounded-3xl border border-white/10 bg-puna-800/80 p-4 shadow-2xl shadow-black/40 backdrop-blur">
+            <div class="flex items-center gap-3 border-b border-white/10 pb-3">
+              <span class="flex h-10 w-10 items-center justify-center rounded-full bg-telegram text-sm font-bold">JD</span>
+              <div>
+                <p class="font-semibold leading-tight">Jama al Día</p>
+                <p class="text-xs text-white/60">canal de Telegram</p>
+              </div>
+            </div>
+            <div class="mt-4 space-y-2 rounded-2xl rounded-tl-sm bg-puna-700 p-4 text-sm leading-relaxed">
+              <p><span class="mr-1 inline-block h-3 w-3 rounded-full bg-abierto align-middle"></span>Jama — Argentina ABIERTO desde las 09:00</p>
+              <p><span class="mr-1 inline-block h-3 w-3 rounded-full bg-abierto align-middle"></span>Chile: ABIERTO desde hace 5 h</p>
+              <p class="text-white/70">Fuente: Pasos Fronterizos (AR) · MOP (CL). No es un canal oficial.</p>
+            </div>
+          </div>
+          <figcaption class="mt-3 text-center text-xs text-white/60">Ejemplo ilustrativo de un aviso. No es el estado actual.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Key facts -->
+    <section class="relative z-10 mx-auto -mt-14 max-w-6xl px-4 sm:px-6" aria-label="Datos clave">
+      <dl class="aparecer grid grid-cols-2 gap-px overflow-hidden rounded-2xl bg-puna-100 shadow-xl lg:grid-cols-4">
+        <div class="bg-white p-5 text-center sm:p-6">
+          <dt class="text-sm text-puna-700">Actualización</dt>
+          <dd class="mt-1 text-2xl font-extrabold text-puna-900 sm:text-3xl">Cada 1 h</dd>
+        </div>
+        <div class="bg-white p-5 text-center sm:p-6">
+          <dt class="text-sm text-puna-700">Fuentes oficiales</dt>
+          <dd class="mt-1 text-2xl font-extrabold text-puna-900 sm:text-3xl">2 países</dd>
+        </div>
+        <div class="bg-white p-5 text-center sm:p-6">
+          <dt class="text-sm text-puna-700">Pronóstico</dt>
+          <dd class="mt-1 text-2xl font-extrabold text-puna-900 sm:text-3xl">72 h</dd>
+        </div>
+        <div class="bg-white p-5 text-center sm:p-6">
+          <dt class="text-sm text-puna-700">Historia de cierres</dt>
+          <dd class="mt-1 text-2xl font-extrabold text-puna-900 sm:text-3xl">Desde 2016</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- Features -->
+    <section id="caracteristicas" class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+      <div class="aparecer mx-auto max-w-2xl text-center">
+        <p class="text-sm font-semibold uppercase tracking-wider text-arcilla-600">Qué ofrece</p>
+        <h2 class="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">Rutas y clima de Jujuy, en un solo lugar</h2>
+        <p class="mt-4 text-lg text-puna-700">Pensado para choferes y flotas que cruzan a Chile, y para quien viaja por la Quebrada y la Puna.</p>
+      </div>
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <article class="tarjeta aparecer">
+          <div class="icono"><svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V4M4 5h13l-2 4 2 4H4"/></svg></div>
+          <h3 class="text-lg font-bold">Estado de cada lado</h3>
+          <p class="mt-2 text-puna-700">Abierto, cerrado o restringido en Argentina (RN 52) y en Chile (CH-27), según los partes oficiales de Pasos Internacionales y del MOP.</p>
+        </article>
+        <article class="tarjeta aparecer">
+          <div class="icono"><svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 1112 0c0 7 3 8 3 8H3s3-1 3-8M10 20a2 2 0 004 0"/></svg></div>
+          <h3 class="text-lg font-bold">Avisos por Telegram</h3>
+          <p class="mt-2 text-puna-700">Un mensaje solo cuando cambia el estado real de algún lado, más un resumen a las 08:00. Sin avisos por el cierre nocturno por horario.</p>
+        </article>
+        <article class="tarjeta aparecer">
+          <div class="icono"><svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20M4.5 6.500l15 11M19.5 6.500l-15 11M9 4l3 3 3-3M9 20l3-3 3 3"/></svg></div>
+          <h3 class="text-lg font-bold">Nieve y viento a 72 h</h3>
+          <p class="mt-2 text-puna-700">El pronóstico de Open-Meteo para el paso y la CH-27, comparado con lo habitual para la época. No es un pronóstico de cierre.</p>
+        </article>
+        <article class="tarjeta aparecer">
+          <div class="icono"><svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></div>
+          <h3 class="text-lg font-bold">Cierres históricos</h3>
+          <p class="mt-2 text-puna-700">En qué meses se cierra más el paso y cuánto suelen durar los cierres, a partir de un catálogo armado con noticias locales desde 2016.</p>
+        </article>
+        <article class="tarjeta aparecer">
+          <div class="icono"><svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/></svg></div>
+          <h3 class="text-lg font-bold">Corredor Quebrada–Puna</h3>
+          <p class="mt-2 text-puna-700">El mismo proyecto sigue los cortes de la RN 9, de Yala a Humahuaca, y de la RN 52, de Purmamarca a Jama, cruzados con datos del clima.</p>
+        </article>
+        <article class="tarjeta aparecer">
+          <div class="icono"><svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3zM9 12l2 2 4-4"/></svg></div>
+          <h3 class="text-lg font-bold">Datos claros y honestos</h3>
+          <p class="mt-2 text-puna-700">Si un lado no se pudo consultar, la página dice "Estado no confirmado" en vez de mostrar un dato viejo. Código abierto y fuentes a la vista.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="como-funciona" class="bg-white py-20 sm:py-24">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <div class="aparecer mx-auto max-w-2xl text-center">
+          <p class="text-sm font-semibold uppercase tracking-wider text-arcilla-600">Cómo funciona</p>
+          <h2 class="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">Tres pasos, cada hora</h2>
+        </div>
+        <ol class="mt-12 grid gap-8 md:grid-cols-3">
+          <li class="aparecer rounded-2xl bg-puna-50 p-6">
+            <span class="flex h-10 w-10 items-center justify-center rounded-full bg-puna-900 font-bold text-white">1</span>
+            <h3 class="mt-4 text-lg font-bold">Consultamos las fuentes</h3>
+            <p class="mt-2 text-puna-700">Los partes oficiales de Argentina y de Chile, y el pronóstico de Open-Meteo. Guardamos solo los campos de estado, sin datos personales.</p>
+          </li>
+          <li class="aparecer rounded-2xl bg-puna-50 p-6">
+            <span class="flex h-10 w-10 items-center justify-center rounded-full bg-puna-900 font-bold text-white">2</span>
+            <h3 class="mt-4 text-lg font-bold">Actualizamos la página</h3>
+            <p class="mt-2 text-puna-700">Estado por lado, los últimos 7 días hora por hora, los cierres históricos y el pronóstico. Es liviana y se ve bien en el celular.</p>
+          </li>
+          <li class="aparecer rounded-2xl bg-puna-50 p-6">
+            <span class="flex h-10 w-10 items-center justify-center rounded-full bg-puna-900 font-bold text-white">3</span>
+            <h3 class="mt-4 text-lg font-bold">Te avisamos si cambia</h3>
+            <p class="mt-2 text-puna-700">Si un lado pasa de abierto a cerrado o restringido, o al revés, sale un aviso en el canal de Telegram.</p>
+          </li>
+        </ol>
+        <div class="aparecer mt-10 rounded-2xl border border-arcilla-300 bg-arcilla-500/10 p-6">
+          <h3 class="font-bold">Lo que tenés que saber</h3>
+          <ul class="mt-3 list-disc space-y-1 pl-5 text-puna-700">
+            <li>No es una fuente oficial: antes de cruzar, consultá a Gendarmería o Vialidad.</li>
+            <li>Un cambio puede tardar hasta una hora en aparecer, o más si se atrasa la corrida.</li>
+            <li>El parte de Chile puede pasar días sin actualizarse.</li>
+            <li>La historia sale de la prensa local: puede faltar algún cierre.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Alerts / contact -->
+    <section id="alertas" class="bg-gradient-to-b from-puna-900 to-puna-950 py-20 text-white sm:py-24">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <div class="aparecer mx-auto max-w-2xl text-center">
+          <p class="text-sm font-semibold uppercase tracking-wider text-arcilla-400">Alertas y contacto</p>
+          <h2 class="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">Enterate antes de salir</h2>
+          <p class="mt-4 text-lg text-white/75">Elegí cómo querés seguir el estado del paso.</p>
+        </div>
+        <div class="mt-12 grid gap-6 md:grid-cols-3">
+          <div class="aparecer flex flex-col rounded-2xl border border-white/10 bg-white/5 p-6">
+            <h3 class="text-lg font-bold">Canal de Telegram</h3>
+            <p class="mt-2 flex-1 text-white/75">Avisos cuando cambia el estado y un resumen diario a las 08:00.</p>
+            <a class="btn-primario mt-6" href="https://t.me/jamaaldia" rel="noopener">Sumate al canal</a>
+          </div>
+          <div class="aparecer flex flex-col rounded-2xl border border-white/10 bg-white/5 p-6">
+            <h3 class="text-lg font-bold">Plan para flotas</h3>
+            <p class="mt-2 flex-1 text-white/75">¿Tenés una empresa de transporte? Anotate en la lista de espera del plan de empresas.</p>
+            <a class="btn-secundario mt-6" href="https://forms.gle/KUt6bFF8EL8dPerw6" rel="noopener">Anotar mi flota</a>
+          </div>
+          <div class="aparecer flex flex-col rounded-2xl border border-white/10 bg-white/5 p-6">
+            <h3 class="text-lg font-bold">Errores y sugerencias</h3>
+            <p class="mt-2 flex-1 text-white/75">¿Viste un dato mal o falta una fuente? Contanos con un issue en GitHub.</p>
+            <a class="btn-secundario mt-6" href="https://github.com/emiliano-f/corredor-quebrada-puna/issues" rel="noopener">Abrir un issue</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-puna-950 py-10 text-sm text-white/60">
+    <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 sm:px-6 md:flex-row md:items-center md:justify-between">
+      <p>Jama al Día · Hackathon JujuyDev 2026. <strong class="text-white/80">No es un canal oficial.</strong></p>
+      <p>Fuentes: argentina.gob.ar · MOP Chile · Open-Meteo (CC BY 4.0) · prensa local de Jujuy (solo metadatos).</p>
+      <nav class="flex gap-5" aria-label="Pie">
+        <a class="hover:text-white" href="https://emiliano-f.github.io/corredor-quebrada-puna/" rel="noopener">Estado</a>
+        <a class="hover:text-white" href="https://t.me/jamaaldia" rel="noopener">Telegram</a>
+        <a class="hover:text-white" href="https://github.com/emiliano-f/corredor-quebrada-puna" rel="noopener">Código</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

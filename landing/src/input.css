@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+  :focus-visible {
+    outline: 2px solid #ec9560;
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex min-h-[48px] items-center sm:whitespace-nowrap justify-center gap-2 rounded-xl px-5 py-3 text-base font-semibold transition;
+  }
+  .btn-primario {
+    @apply btn bg-telegram text-white shadow-lg shadow-telegram/30 hover:brightness-110;
+  }
+  .btn-secundario {
+    @apply btn border border-white/25 bg-white/5 text-white hover:bg-white/10;
+  }
+  .tarjeta {
+    @apply rounded-2xl border border-puna-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg;
+  }
+  .icono {
+    @apply mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-arcilla-500/10 text-arcilla-600;
+  }
+}
+
+/* Hidden only when JS is running, so the page reads fine without it. */
+.js .aparecer {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.js .aparecer.visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .js .aparecer {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
