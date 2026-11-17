@@ -19,6 +19,7 @@ reales, para calibrar umbrales simples de lluvia y nieve por causa.
 **Qué es.** Una página pública y un canal de Telegram con el estado del Paso de Jama (RN 52 en
 Argentina, CH-27 en Chile), pensados para choferes y flotas que cruzan a Chile:
 
+- Landing del proyecto (presentación para la hackathon): https://jama-al-dia.vercel.app/
 - Página: https://emiliano-f.github.io/corredor-quebrada-puna/ (estado por lado, últimos 7
   días, cierres históricos y pronóstico de nieve y viento a 72 h).
 - Canal: https://t.me/jamaaldia. **No es un canal oficial.**

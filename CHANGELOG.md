@@ -9,6 +9,7 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 - `landing/`: hackathon landing page for "Jama al Día" (HTML + Tailwind CSS + vanilla JS, deployable files in `landing/public/`): hero with CTAs and an SVG map of the RN 9, RN 52 and Tren Solar from `assets/geo`, problem and solution, value proposition, technical features (weather, automated alerts, maps), use cases and alerts/contact. Static, no external resources. `vercel.json` deploys it to Vercel with no build step and security headers. Notes in `landing/README.md`.
+- README: link to the landing page deployed on Vercel (https://jama-al-dia.vercel.app/).
 - README: "Jama al Día" section (qué es, fuentes, cómo funciona, limitaciones) for the submission form.
 - `jama_snapshot.yml`: optional `workflow_dispatch` input `origen` shown in the run name ("Jama snapshot (cron-job.org)"); scheduled runs show "schedule".
 - "Jama al Día": `canal_desde: 2026-11-15`; Chile card with a fresh check but an official parte older than 24 h says "Sin parte nuevo" / "Último parte oficial (09/11 08:00): Abierto" / "Chile no actualiza este parte desde el 09/11…" (still amber; same wording in Telegram); administrative closures as one line "No incluye 1 cierre administrativo (enero 2022)."; forecast note reduced to one line "Alto = dentro del 10 % más alto para esta época, según el mismo modelo."; Telegram posts in at most 4 lines (🟢/🔴/🟠/⚪/🟡 per side, "Fuente: Pasos Fronterizos (AR) · MOP (CL). No es un canal oficial.", link), without the resolution line or the official-report time.
